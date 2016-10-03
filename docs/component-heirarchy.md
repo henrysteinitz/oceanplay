@@ -27,6 +27,8 @@
 **NowPlaying**
   - PlayButton
   - PlayBar
+  - NextButton
+  - LastButton
 
 **TrackPage**
   - Track

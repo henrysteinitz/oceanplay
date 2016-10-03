@@ -27,6 +27,7 @@
 `fetchAllTracksForStream`
 
 `createTrack`
+  - Invoked from UploadForm
 
 `fetchSingleTrackForStream`
 
@@ -43,7 +44,10 @@
 ### Other Track Actions
 
 `playNextTrack`
+  -Invoked from NextButton 'onClick' and custom event on NowPlaying
 
 `playLastTrack`
+  -Invoked from LastButton 'onClick'
 
 `pauseTrack`
+  -Invoked from PlayButton 'onClick'
