@@ -11,6 +11,40 @@
     currentTime: ,
     paused: false
   },
-  queue: [39, 21],
-
+  queue: [
+  {
+    id: 10,
+    title: "",
+    artist: "",
+    totalTime: ,
+    currentTime: ,
+    paused: false
+  },
+  ],
+  stream:[
+    {
+      id: 10,
+      title: "",
+      artist: "",
+      totalTime: ,
+      currentTime: ,
+      paused: false
+    },
+    {
+      id: 10,
+      title: "",
+      artist: "",
+      totalTime: ,
+      currentTime: ,
+      paused: false
+    },
+    {
+      id: 10,
+      title: "",
+      artist: "",
+      totalTime: ,
+      currentTime: ,
+      paused: false
+    }
+  ]
 }
