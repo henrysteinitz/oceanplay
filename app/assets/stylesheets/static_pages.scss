@@ -1,3 +1,108 @@
 // Place all the styles related to the StaticPages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.menu-bar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height:45px;
+  background: rgb(26,26,26);
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+}
+
+.left-menu{
+  color: white;
+  display: inline-block;
+  vertical-align: bottom;
+}
+.left-menu a{
+  margin-bottom: 15px;
+  margin-left: 34px;
+  margin-right: 6px;
+  letter-spacing: 1px;
+}
+.menu-bar a{
+  font: 16px "Helvetica";
+  font-weight: 500;
+  display: inline-block;
+}
+.right-menu{
+  color: white;
+  display: inline-block;
+  vertical-align: bottom;
+  float: right;
+  margin-right: 60px;
+}
+.right-menu a{
+  margin-top: 15px;
+  margin-left: 38px;
+  letter-spacing: 1px;
+}
+
+.logo{
+  padding-top: 5px;
+  padding-left: 10px;
+  padding-right: 9px;
+  background: rgb(28,128,180);
+  margin-left: 60px;
+  width:40px;
+  height:40px;
+  display: inline-block;
+}
+
+.logo:hover{
+  cursor: pointer;
+}
+
+/* stream */
+.stream{
+  width: calc(100% - 120px);
+  padding: 60px;
+  margin-top: 30px;
+}
+
+/* track */
+.track-art{
+  width: 180px;
+  height: 180px;
+  background: black;
+  border: 0;
+}
+.track{
+  margin-bottom: 30px;
+
+}
+.track-right{
+  padding-top: 20px;
+  margin-left: 20px;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.track-title{
+  font: 27px "Helvetica neue";
+  font-weight: 600;
+  color: rgb(56,56,56);
+}
+
+.track-artist{
+  font: 16px "Helvetica neue";
+  font-weight: 400;
+  color: rgb(126,126,126);
+}
+.play-bar{
+  margin-top: 14px;
+  margin-left: -4px;
+}
+.play-button{
+  width:34px;
+  height: 34px;
+  background: url('/play.png');
+  background-size: contain;
+}
+.play-button:hover{
+  cursor:pointer;
+}

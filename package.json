@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpack": "node_modules/webpack/bin/webpack.js -w"
+    "webpack": "./node_modules/webpack/bin/webpack.js -w"
   },
   "keywords": [],
   "author": "",
