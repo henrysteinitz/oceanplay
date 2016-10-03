@@ -34,3 +34,10 @@ body        | text      | not null
 user_id     | integer   | not null, foreign key (references users), indexed
 track_id    | integer   | not null, foreign key (references users), indexed
 track_time  | integer   | not_null
+
+## follows
+column name | data type | details
+------------|-----------|-----------------------
+id          | integer   | not null, primary key
+follower_id | integer   | not_null
+followed_id | integer   | not_null 

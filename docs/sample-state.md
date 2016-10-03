@@ -9,17 +9,18 @@
     artist: "",
     totalTime: ,
     currentTime: ,
-    paused: false
+    paused: false,
+    url: '""
   },
   queue: [
-  {
-    id: 10,
-    title: "",
-    artist: "",
-    totalTime: ,
-    currentTime: ,
-    paused: false
-  },
+    {
+      id: 13,
+      title: "",
+      artist: "",
+      totalTime: ,
+      currentTime: ,
+      paused: false
+    }
   ],
   stream:[
     {
