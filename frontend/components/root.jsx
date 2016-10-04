@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import App from './app';
 import Stream from './stream';
@@ -11,12 +12,14 @@ class Root extends React.Component{
 
   render(){
     return (
+    <Provider store={this.props.store}>
       <Router history={hashHistory}>
         <Route path="/" component={App}>
           <Route path="/stream" component={Stream} />
         </Route>
         <Route path="/signin" component={SignIn} />
       </Router>
+    </Provider>
     );
   }
 }

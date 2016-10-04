@@ -6,6 +6,11 @@ const speed = .004;
 const maxHeight = 20;
 const minHeight = 12;
 const width = 2;
+const reqAnimFrame =  window.requestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.webkitRequestAnimationFrame ||
+    window.msRequestAnimationFrame     ||
+    window.oRequestAnimationFrame;
 
 class Logo extends React.Component {
 
@@ -33,8 +38,8 @@ class Logo extends React.Component {
     const context = this.refs.canvas.getContext('2d');
     context.scale(scale, scale);
     context.fillStyle = "#ffffff";
-    //this.drawBars();
-    setInterval(this.update, 1000/60);
+
+    reqAnimFrame(this.update);
   }
 
   drawBars(){
@@ -53,23 +58,29 @@ class Logo extends React.Component {
     const newHeights = [0, 0, 0, 0];
     const newDirections = [];
 
-    for (let i = 0; i < this.state.heights.length; i++){
-      if (this.state.heights[i] >= maxHeight){
-        newDirections.push(-1);
-      } else if (this.state.heights[i] <= minHeight){
-        newDirections.push(1);
-      } else {
-        newDirections.push(this.state.directions[i]);
+    if (dt < 500){ // This conditional prevents weird behavior when window is inactive
+      for (let i = 0; i < this.state.heights.length; i++){
+        if (this.state.heights[i] >= maxHeight){
+          newDirections.push(-1);
+        } else if (this.state.heights[i] <= minHeight){
+          newDirections.push(1);
+        } else {
+          newDirections.push(this.state.directions[i]);
+        }
+        newHeights[i] = this.state.heights[i] + newDirections[i] * speed * dt;
       }
-      newHeights[i] = this.state.heights[i] + newDirections[i] * speed * dt;
+      this.setState({
+        heights: newHeights,
+        lastTime: now,
+        directions: newDirections
+      });
+      this.drawBars();
+    } else {
+      this.setState({
+        lastTime: now
+      });
     }
-    this.setState({
-      heights: newHeights,
-      lastTime: now,
-      directions: newDirections
-    });
-    this.drawBars();
-
+    reqAnimFrame(this.update)
   }
 
   render(){
