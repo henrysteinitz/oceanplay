@@ -27545,12 +27545,29 @@
 	  function SignIn(props) {
 	    _classCallCheck(this, SignIn);
 	
-	    return _possibleConstructorReturn(this, (SignIn.__proto__ || Object.getPrototypeOf(SignIn)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (SignIn.__proto__ || Object.getPrototypeOf(SignIn)).call(this, props));
+	
+	    _this.state = {
+	      type: 'signin'
+	    };
+	    return _this;
 	  }
 	
 	  _createClass(SignIn, [{
+	    key: '_handleSwitch',
+	    value: function _handleSwitch(type) {
+	      this.setState({ type: type });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var retype = "";
+	      var buttonText = 'Sign In';
+	      if (this.state.type === 'signup') {
+	        retype = _react2.default.createElement('input', { type: 'password', placeholder: 'Retype Password' });
+	        buttonText = 'Sign Up';
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'signin-background' },
@@ -27577,13 +27594,13 @@
 	            { className: 'formSwitcher' },
 	            _react2.default.createElement(
 	              'a',
-	              null,
+	              { onClick: this._handleSwitch.bind(this, 'signin') },
 	              'Sign In'
 	            ),
-	            '    or    ',
+	            'or',
 	            _react2.default.createElement(
 	              'a',
-	              null,
+	              { onClick: this._handleSwitch.bind(this, 'signup') },
 	              'Sign Up'
 	            )
 	          ),
@@ -27597,7 +27614,7 @@
 	              _react2.default.createElement('br', null),
 	              _react2.default.createElement('input', { type: 'password', placeholder: 'Password' }),
 	              _react2.default.createElement('br', null),
-	              _react2.default.createElement('input', { type: 'password', placeholder: 'Retype Password' })
+	              retype
 	            ),
 	            _react2.default.createElement(
 	              'span',
@@ -27605,7 +27622,9 @@
 	              _react2.default.createElement(
 	                'button',
 	                null,
-	                ' Sign In '
+	                ' ',
+	                buttonText,
+	                ' '
 	              )
 	            )
 	          )

@@ -4,9 +4,23 @@ import Logo from './logo';
 class SignIn extends React.Component{
   constructor(props){
     super(props);
+    this.state = {
+      type: 'signin'
+    };
+  }
+
+  _handleSwitch(type){
+    this.setState({type});
   }
 
   render(){
+    let retype = "";
+    let buttonText = 'Sign In';
+    if (this.state.type === 'signup'){
+      retype = <input type="password" placeholder="Retype Password"/>
+      buttonText = 'Sign Up';
+    }
+
     return (
       <div className='signin-background'>
         <div className='signin'>
@@ -16,16 +30,18 @@ class SignIn extends React.Component{
             <div className="logo-text">play</div>
           </div>
           <div className="formSwitcher">
-            <a>Sign In</a>    or    <a>Sign Up</a>
+            <a onClick={this._handleSwitch.bind(this, 'signin')}>Sign In</a>
+              or
+            <a onClick={this._handleSwitch.bind(this, 'signup')}>Sign Up</a>
           </div>
           <form className='signup-form'>
             <span>
             <input type="text" placeholder="Username"/><br />
             <input type="password" placeholder="Password"/><br />
-            <input type="password" placeholder="Retype Password"/>
+            {retype}
             </span>
             <span className="signin-button-container">
-              <button> Sign In </button>
+              <button> {buttonText} </button>
             </span>
           </form>
         </div>
