@@ -9,7 +9,7 @@ class MenuBar extends React.Component{
   render(){
     return (
       <nav className="menu-bar">
-        <Logo />
+        <Logo type="menu"/>
         <nav className="left-menu">
           <a>stream</a>
           <a>library</a>

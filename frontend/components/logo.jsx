@@ -11,17 +11,23 @@ class Logo extends React.Component {
 
   constructor(props){
     super(props);
+    let scaleFactor = 1
+    if (this.props.type === 'signin'){
+      scaleFactor = 3;
+    }
+
     this.state = {
       heights: [18, 14, 17, 18, 16, 14,16, 14,16],
       directions: [1,1,1,-1, -1,1,1,1,1],
-      lastTime: Date.now()
+      lastTime: Date.now(),
+      scaleFactor
     };
     this.update = this.update.bind(this);
   }
 
   componentDidMount(){
+    const scale = window.devicePixelRatio*this.state.scaleFactor;
     this.setState({
-      scale: window.devicePixelRatio,
       canvas: this.refs.canvas,
     });
     const context = this.refs.canvas.getContext('2d');
@@ -67,7 +73,15 @@ class Logo extends React.Component {
   }
 
   render(){
-    return ( <canvas ref="canvas" width="80" height="80" className="logo">igikugkjh</canvas> );
+    let classes = "";
+    let width = 80
+    if (this.props.type === 'menu'){
+      classes = "logo menu-logo";
+    } else {
+      classes = "logo signin-logo";
+      width = 240;
+    }
+    return ( <canvas ref="canvas" width={width} height={width} className={classes}></canvas> );
   }
 
 }
