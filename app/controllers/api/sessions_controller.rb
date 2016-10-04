@@ -6,12 +6,12 @@ class Api::SessionsController < ApplicationController
       sign_in(@user)
       render 'api/users/show'
     else
-      render json: {error: 'incorrect username/password'}
+      render json: {status: 401, errors: ['incorrect username/password']}
     end
   end
 
   def destroy
     sign_out if signed_in?
-    render json: {message: 'signed out successfully'}
+    render json: {status: 200, message: 'signed out successfully'}
   end
 end

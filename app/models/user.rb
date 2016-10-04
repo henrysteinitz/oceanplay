@@ -8,8 +8,9 @@ class User < ApplicationRecord
   attr_reader :password
 
   def self.find_by_credentials(username, password)
-    user = User.find_by(username: username, password: password)
-
+    user = User.find_by(username: username)
+    return user if user.isPassword?(password)
+    nil
   end
 
   def ensure_session_token
@@ -32,7 +33,7 @@ class User < ApplicationRecord
   end
 
   def isPassword?(password)
-    BCrypt.new(self.password_digest) == password
+    BCrypt::Password.new(self.password_digest) == password
   end
 
 end

@@ -8,3 +8,13 @@ export const signup = (user, success) => {
     success
   });
 }
+
+export const signin = (user, success) => {
+  $.ajax({
+    url: '/api/session',
+    method: 'POST',
+    dataType: 'json',
+    data: {user},
+    success
+  });
+}

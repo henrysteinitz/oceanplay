@@ -36,15 +36,23 @@ class SignIn extends React.Component{
 
   _handleSubmit(e){
     e.preventDefault();
-    if (this.state.inputs.password === this.state.inputs.retypedPass){
-      this.props.signup({
-        username: this.state.inputs.username,
-        password: this.state.inputs.password
-      },
-      (response) => {
-        hashHistory.push('/stream')
+    const success = (response) => hashHistory.push('/stream');
+    if (this.state.type === 'signup'){
+      if (this.state.inputs.password === this.state.inputs.retypedPass){
+        this.props.signup(
+          {
+            username: this.state.inputs.username,
+            password: this.state.inputs.password
+          }, success
+        );
       }
-    );
+    } else {
+      this.props.signin(
+        {
+          username: this.state.inputs.username,
+          password: this.state.inputs.password
+        }, success
+      );
     }
   }
 
@@ -94,10 +102,11 @@ class SignIn extends React.Component{
 // Container
 
 import { connect } from 'react-redux';
-import { signup } from '../actions/session_actions';
+import { signup, signin } from '../actions/session_actions';
 
 const mapDispatchToProps = (dispatch) => ({
-  signup: (user, success) => dispatch(signup(user, success))
+  signup: (user, success) => dispatch(signup(user, success)),
+  signin: (user, success) => dispatch(signin(user, success))
 });
 
 export default connect(null, mapDispatchToProps)(SignIn);
