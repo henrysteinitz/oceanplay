@@ -21492,11 +21492,9 @@
 	
 	  _createClass(Root, [{
 	    key: '_checkAuth',
-	    value: function _checkAuth() {
-	      if (!this.user) {
-	        console.log('adsf');
+	    value: function _checkAuth(nextState, replace) {
+	      if (!this.props.user) {
 	        replace('/signin');
-	        this.forceUpdate();
 	      }
 	    }
 	  }, {
@@ -21511,7 +21509,7 @@
 	          _react2.default.createElement(
 	            _reactRouter.Route,
 	            { path: '/', onEnter: this._checkAuth, component: _app2.default },
-	            _react2.default.createElement(_reactRouter.Route, { path: '/stream', component: _stream2.default, onEnter: this._checkAuth })
+	            _react2.default.createElement(_reactRouter.Route, { path: '/stream', onEnter: this._checkAuth, component: _stream2.default })
 	          ),
 	          _react2.default.createElement(_reactRouter.Route, { path: '/signin', component: _sign_in2.default })
 	        )
@@ -26182,8 +26180,8 @@
 	          return;
 	
 	        case _session_actions.RECEIVE_CURRENT_USER:
-	          action.success();
-	          return next(action);
+	          next(action);
+	          return action.success();
 	
 	        default:
 	          return next(action);

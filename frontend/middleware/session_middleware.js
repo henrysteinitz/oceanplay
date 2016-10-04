@@ -27,8 +27,8 @@ const SessionMiddleware = ({getState, dispatch}) => next => action => {
       return;
 
     case RECEIVE_CURRENT_USER:
-      action.success();
-      return next(action);
+      next(action);
+      return action.success();
 
     default:
       return next(action);

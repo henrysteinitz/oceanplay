@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { replace, Router, Route, IndexRoute, hashHistory } from 'react-router';
 import App from './app';
 import Stream from './stream';
 import SignIn from './sign_in';
@@ -11,11 +11,9 @@ class Root extends React.Component{
     this._checkAuth = this._checkAuth.bind(this);
   }
 
-  _checkAuth(){
-    if (!this.user){
-      console.log('adsf')
+  _checkAuth(nextState, replace){
+    if (!this.props.user){
       replace('/signin');
-      this.forceUpdate();
     }
   }
 
@@ -24,7 +22,7 @@ class Root extends React.Component{
     <Provider store={this.props.store}>
       <Router history={hashHistory}>
         <Route path="/" onEnter={this._checkAuth} component={App}>
-          <Route path="/stream" component={Stream} onEnter={this._checkAuth}/>
+          <Route path="/stream" onEnter={this._checkAuth} component={Stream} />
         </Route>
         <Route path="/signin" component={SignIn} />
       </Router>
