@@ -65,7 +65,13 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	document.addEventListener("DOMContentLoaded", function () {
-	  var store = (0, _store2.default)();
+	  var preloadedState = void 0;
+	  if (window.currentUser) {
+	    preloadedState = { session: { user: window.currentUser } };
+	  } else {
+	    preloadedState = {};
+	  }
+	  var store = (0, _store2.default)(preloadedState);
 	  window.store = store;
 	  var root = document.getElementById('root');
 	  _reactDom2.default.render(_react2.default.createElement(_root2.default, { store: store }), root);
