@@ -1,6 +1,7 @@
 import React from 'react';
 import Logo from './logo';
 import AccountNav from './account_nav';
+import { Link } from 'react-router';
 
 class MenuBar extends React.Component{
   constructor(props){
@@ -12,12 +13,12 @@ class MenuBar extends React.Component{
       <nav className="menu-bar">
         <Logo type="menu"/>
         <nav className="left-menu">
-          <a>stream</a>
-          <a>library</a>
+          <Link to={"/stream"} className="link">stream</Link>
+          <Link to={"/library"} className="link">library</Link>
         </nav>
         <nav className="right-menu">
           <AccountNav />
-          <a>upload</a>
+          <Link to={"/upload"}  className="link">upload</Link>
         </nav>
       </nav>
     )

@@ -10,7 +10,7 @@
   padding-left: 60px;
   padding-right: 60px;
 }
-.menu-bar a{
+.menu-bar .link{
   font-family: "Helvetica neue"
 }
 .left-menu{
@@ -18,7 +18,7 @@
   display: inline-block;
   vertical-align: bottom;
 }
-.left-menu > a{
+.left-menu > .link{
   font-size: 16px;
   font-weight: 300;
   display: inline-block;
@@ -28,7 +28,7 @@
   letter-spacing: 1px;
 }
 
-.menu-bar a:hover{
+.menu-bar .link:hover{
   cursor:pointer;
 }
 .right-menu{
@@ -37,7 +37,7 @@
   vertical-align: bottom;
   float: right;
 }
-.right-menu > a{
+.right-menu > .link{
   font-size: 16px;
   font-weight: 300;
   display: inline-block;
@@ -91,3 +91,18 @@
   color: white;
   cursor: pointer;
 }
+.link{
+  color: white;
+  text-decoration: none;
+}
+
+/*
+.now-playing-icon{
+  width:32px;
+  height: 32px;
+  margin-left: 0px;
+  margin-bottom: 7px;
+  padding-right: 8px;
+  border-radius: 3px;
+}
+*/

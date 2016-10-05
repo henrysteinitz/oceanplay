@@ -91,7 +91,9 @@ class Logo extends React.Component {
     } else {
       classes = "logo signin-logo";
     }
-    return ( <canvas ref="canvas" width={width} height={width} className={classes}></canvas> );
+    return (
+        <canvas ref="canvas" width={width} height={width} className={classes}></canvas>
+    );
   }
 
 }

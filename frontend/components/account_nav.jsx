@@ -1,5 +1,5 @@
 import React from 'react';
-import { hashHistory } from 'react-router';
+import { hashHistory, Link } from 'react-router';
 
 class AccountNav extends React.Component{
     constructor(props){
@@ -29,7 +29,7 @@ class AccountNav extends React.Component{
             <img src='test_prof.jpg'></img>
           </nav>
           <div className="account-dropdown" ref="dropdown">
-            <a onClick={this._signout} className='dropdown-link'>Sign Out</a>
+            <Link onClick={this._signout} className='dropdown-link link'>Sign Out</Link>
           </div>
         </div>
       );
