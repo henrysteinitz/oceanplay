@@ -1,4 +1,11 @@
 class Api::TracksController < ApplicationController
 
-  def create_table
+  def create
+  end
+
+  private
+  def track_params
+
+  end
+
 end

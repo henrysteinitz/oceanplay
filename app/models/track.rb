@@ -13,4 +13,5 @@ class Track < ApplicationRecord
     'audio/x-mpegaudio'
   ]
 
+  has_attached_file :art
 end
