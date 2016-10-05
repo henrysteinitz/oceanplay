@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo from './logo';
+import ReactVideo from 'react.video'
 import merge from 'lodash/merge';
 import { hashHistory } from 'react-router';
 

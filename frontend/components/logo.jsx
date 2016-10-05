@@ -25,13 +25,13 @@ class Logo extends React.Component {
       heights: [18, 14, 17, 18, 16, 14,16, 14,16],
       directions: [1,1,1,-1, -1,1,1,1,1],
       lastTime: Date.now(),
-      scaleFactor
+      scaleFactor: window.devicePixelRatio*scaleFactor
     };
     this.update = this.update.bind(this);
   }
 
   componentDidMount(){
-    const scale = window.devicePixelRatio*this.state.scaleFactor;
+    const scale = this.state.scaleFactor;
     this.setState({
       canvas: this.refs.canvas,
     });
@@ -85,12 +85,11 @@ class Logo extends React.Component {
 
   render(){
     let classes = "";
-    let width = 80
+    let width = 40*this.state.scaleFactor;
     if (this.props.type === 'menu'){
       classes = "logo menu-logo";
     } else {
       classes = "logo signin-logo";
-      width = 240;
     }
     return ( <canvas ref="canvas" width={width} height={width} className={classes}></canvas> );
   }

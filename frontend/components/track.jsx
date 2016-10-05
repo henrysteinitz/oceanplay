@@ -16,6 +16,13 @@ class Track extends React.Component{
           <button className="play-button"></button>
           <div className="scrubber"></div>
         </div>
+        <div className="like-and-comments">
+          <button className="like-button"></button>
+          <input type='text' className="comment-input"/>
+          <button className="comment-button"></button>
+
+
+        </div>
       </div>
     </div>
     );

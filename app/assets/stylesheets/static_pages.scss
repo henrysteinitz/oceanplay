@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 body{
-  background: rgb(242,244,246);
+  background: rgb(248,248,250);
 }
 .menu-bar{
   position: fixed;
@@ -31,6 +31,9 @@ body{
   font-weight: 500;
   display: inline-block;
 }
+.menu-bar a:hover{
+  cursor:pointer;
+}
 .right-menu{
   color: white;
   display: inline-block;
@@ -39,17 +42,44 @@ body{
   margin-right: 60px;
 }
 .right-menu a{
+  float: left;
   margin-top: 15px;
-  margin-left: 38px;
+  margin-right: 38px;
   letter-spacing: 1px;
 }
 
+.account-nav-container{
+  float: right;
+  text-align: center;
+  width: 45px;
+  height: 45px;
+  padding-left: 3px;
+  padding-right: 4px;
+}
+.account-nav-container:hover{
+  cursor: pointer;
+}
+
+.account-nav{
+  display: inline-block;
+  margin-top: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background: white;
+  overflow: hidden;
+}
+.account-nav img{
+  width: 100%;
+  height: auto;
+}
 .logo{
   padding-top: 5px;
   padding-left: 10px;
   padding-right: 9px;
   background: rgb(28,128,180);
   display: inline-block;
+  z-index: 999;
 }
 
 .logo:hover{
@@ -134,19 +164,40 @@ body{
 .signin-background{
   width: 100%;
   height: 100vh;
-  background: rgb(242,244,246);
+  background: rgb(248,248,250);
+
+}
+/*
+.signin-background{
+  width: 100%;
+  height: 100vh;
+  background: rgba(0,0,0,.90);
+  overflow: hidden;
+} */
+.background-video{
+  position: absolute;
+  top: 0;
+  left:0;
+  width: 100%;
+  height: auto;
+  z-index: -1;
 }
 .formSwitcher{
   width:100%;
   text-align: center;
   margin-bottom: 28px;
   font: 15px 'Helvetica neue';
+  color: rgb(100,100,100);
 }
 .formSwitcher a{
   font-size: 19px;
   font-weight: 500;
   margin-left: 12px;
   margin-right: 12px;
+}
+.formSwitcher a:hover{
+  color:rgb(28,128,250);
+  cursor: pointer;
 }
 
 /* stream */
@@ -165,7 +216,7 @@ body{
 }
 .track{
   margin-bottom: 30px;
-
+  width: 100%;
 }
 .track-right{
   padding-top: 20px;
@@ -190,11 +241,58 @@ body{
   margin-left: -4px;
 }
 .play-button{
-  width:34px;
-  height: 34px;
+  width:38px;
+  height: 38px;
   background: url('/play.png');
   background-size: contain;
 }
 .play-button:hover{
   cursor:pointer;
+}
+.like-and-comments{
+  display: relative;
+  width: 100%;
+  margin-top: 8px;
+  margin-left: -2px;
+}
+.like-button{
+  width:30px;
+  height: 28px;
+  background: url('/hearts_filled.png');
+  background-size: contain;
+  margin-right: 58px;
+  vertical-align: bottom;
+  margin-bottom: 1px
+}
+.like-counter{
+
+}
+.comment-input{
+  float: right;
+  height: 20px;
+  width: 200px;
+  border: 1px solid rgb(218,218,218);
+  font: 14px 'Helvetica neue';
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  vertical-align: bottom;
+  margin-right: 14px;
+  border-radius: 3px;
+}
+.comment-input:focus{
+  outline: none;
+}
+.comment-button{
+  float: right;
+  width:25px;
+  height: 25px;
+  margin-right: 10px;
+  background: url('/comments_filled.png');
+  background-size: contain;
+  vertical-align: bottom;
+}
+.comment-counter{
+
 }

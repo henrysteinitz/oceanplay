@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo from './logo';
+import AccountNav from './account_nav';
 
 class MenuBar extends React.Component{
   constructor(props){
@@ -15,6 +16,7 @@ class MenuBar extends React.Component{
           <a>library</a>
         </nav>
         <nav className="right-menu">
+          <AccountNav />
           <a>upload</a>
         </nav>
       </nav>
