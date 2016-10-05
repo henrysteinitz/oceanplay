@@ -1,0 +1,93 @@
+.menu-bar{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height:45px;
+  background: rgb(26,26,26);
+  text-align: left;
+  width: calc(100% - 120px);
+  overflow: visible;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+.menu-bar a{
+  font-family: "Helvetica neue"
+}
+.left-menu{
+  color: white;
+  display: inline-block;
+  vertical-align: bottom;
+}
+.left-menu > a{
+  font-size: 16px;
+  font-weight: 300;
+  display: inline-block;
+  margin-bottom: 17px;
+  margin-left: 34px;
+  margin-right: 6px;
+  letter-spacing: 1px;
+}
+
+.menu-bar a:hover{
+  cursor:pointer;
+}
+.right-menu{
+  color: white;
+  display: inline-block;
+  vertical-align: bottom;
+  float: right;
+}
+.right-menu > a{
+  font-size: 16px;
+  font-weight: 300;
+  display: inline-block;
+  float: left;
+  margin-top: 15px;
+  margin-right: 38px;
+  letter-spacing: 1px;
+}
+
+.account-nav-container{
+  float: right;
+  text-align: center;
+  width: 45px;
+  height: 45px;
+  padding-left: 3px;
+  padding-right: 4px;
+}
+
+.account-nav-container:hover{
+  background: black;
+}
+
+.account-nav{
+  display: inline-block;
+  margin-top: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background: white;
+  overflow: hidden;
+}
+.account-nav img{
+  width: 100%;
+  height: auto;
+}
+
+.account-dropdown{
+  display: none;
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  position: fixed;
+  top: 45px;
+  right: 60px;
+  background: black;
+}
+
+.dropdown-link{
+  font-size: 14px;
+  color: white;
+  cursor: pointer;
+}

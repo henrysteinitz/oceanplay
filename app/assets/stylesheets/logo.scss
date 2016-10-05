@@ -1,0 +1,45 @@
+.logo{
+  padding-top: 5px;
+  padding-left: 10px;
+  padding-right: 9px;
+  background: rgb(28,128,180);
+  display: inline-block;
+  z-index: 999;
+}
+
+.logo:hover{
+  cursor: pointer;
+}
+
+.menu-logo{
+  width:40px;
+  height:40px;
+}
+
+.signin-logo{
+  width:120px;
+  height:120px;
+  border-radius: 10px;
+  padding-left: 20px;
+  padding-right: 21px;
+  margin-left: 0px;
+  margin-top: 80px;
+}
+.logo-text{
+  color: rgb(26,26,26);
+  font: 80px 'helvetica neue';
+  font-weight: 200;
+  display: inline-block;
+  margin-bottom: 16px;
+  margin-left: 13px;
+  vertical-align: bottom;
+  letter-spacing: 0.5px;
+}
+.bold{
+  font-weight: 900;
+}
+.logo-container{
+  width: 100%;
+  text-align: center;
+  margin-bottom: 34px;
+}

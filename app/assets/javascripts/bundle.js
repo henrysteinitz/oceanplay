@@ -22476,6 +22476,11 @@
 	    case _session_actions.RECEIVE_CURRENT_USER:
 	      return (0, _merge2.default)({}, state, { user: action.user });
 	
+	    case _session_actions.ERASE_CURRENT_USER:
+	      var newState = (0, _merge2.default)({}, state);
+	      delete newState.user;
+	      return newState;
+	
 	    case _session_actions.RECEIVE_ERRORS:
 	      return (0, _merge2.default)({}, state, { errors: action.errors });
 	
@@ -22497,30 +22502,45 @@
 	});
 	var SIGNUP = exports.SIGNUP = 'SIGNUP';
 	var SIGNIN = exports.SIGNIN = 'SIGNIN';
+	var SIGNOUT = exports.SIGNOUT = 'SIGNOUT';
 	var RECEIVE_CURRENT_USER = exports.RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 	var RECEIVE_ERRORS = exports.RECEIVE_ERRORS = 'RECEIVE_ERRORS';
+	var ERASE_CURRENT_USER = exports.ERASE_CURRENT_USER = 'ERASE_CURRENT_USER';
 	
-	var signup = exports.signup = function signup(user, success) {
+	var signup = exports.signup = function signup(user, callback) {
 	  return {
 	    type: SIGNUP,
-	    success: success,
+	    callback: callback,
 	    user: user
 	  };
 	};
 	
-	var signin = exports.signin = function signin(user, success) {
+	var signin = exports.signin = function signin(user, callback) {
 	  return {
 	    type: SIGNIN,
-	    success: success,
+	    callback: callback,
+	    user: user
+	  };
+	};
+	var signout = exports.signout = function signout(callback) {
+	  return {
+	    type: SIGNOUT,
+	    callback: callback
+	  };
+	};
+	
+	var receiveCurrentUser = exports.receiveCurrentUser = function receiveCurrentUser(user, callback) {
+	  return {
+	    type: RECEIVE_CURRENT_USER,
+	    callback: callback,
 	    user: user
 	  };
 	};
 	
-	var receiveCurrentUser = exports.receiveCurrentUser = function receiveCurrentUser(user, success) {
+	var eraseCurrentUser = exports.eraseCurrentUser = function eraseCurrentUser(callback) {
 	  return {
-	    type: RECEIVE_CURRENT_USER,
-	    success: success,
-	    user: user
+	    type: ERASE_CURRENT_USER,
+	    callback: callback
 	  };
 	};
 	
@@ -26170,7 +26190,7 @@
 	
 	      var signinCallback = function signinCallback(res) {
 	        if (res.status === 200) {
-	          dispatch((0, _session_actions.receiveCurrentUser)(res.user, action.success));
+	          dispatch((0, _session_actions.receiveCurrentUser)(res.user, action.callback));
 	        } else {
 	          dispatch((0, _session_actions.receiveErrors)(res.errors));
 	        }
@@ -26185,9 +26205,19 @@
 	          (0, _session_api_util.signin)(action.user, signinCallback);
 	          return;
 	
+	        case _session_actions.SIGNOUT:
+	          (0, _session_api_util.signout)(function () {
+	            return dispatch((0, _session_actions.eraseCurrentUser)(action.callback));
+	          });
+	          return;
+	
 	        case _session_actions.RECEIVE_CURRENT_USER:
 	          next(action);
-	          return action.success();
+	          return action.callback();
+	
+	        case _session_actions.ERASE_CURRENT_USER:
+	          next(action);
+	          return action.callback();
 	
 	        default:
 	          return next(action);
@@ -26207,23 +26237,31 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var signup = exports.signup = function signup(user, success) {
+	var signup = exports.signup = function signup(user, callback) {
 	  $.ajax({
 	    url: '/api/users',
 	    method: 'POST',
 	    dataType: 'json',
 	    data: { user: user },
-	    success: success
+	    success: callback
 	  });
 	};
 	
-	var signin = exports.signin = function signin(user, success) {
+	var signin = exports.signin = function signin(user, callback) {
 	  $.ajax({
 	    url: '/api/session',
 	    method: 'POST',
 	    dataType: 'json',
 	    data: { user: user },
-	    success: success
+	    success: callback
+	  });
+	};
+	
+	var signout = exports.signout = function signout(callback) {
+	  $.ajax({
+	    url: 'api/session',
+	    method: 'DELETE',
+	    success: callback
 	  });
 	};
 
@@ -32838,13 +32876,6 @@
 	            { className: "play-bar" },
 	            _react2.default.createElement("button", { className: "play-button" }),
 	            _react2.default.createElement("div", { className: "scrubber" })
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "like-and-comments" },
-	            _react2.default.createElement("button", { className: "like-button" }),
-	            _react2.default.createElement("input", { type: "text", className: "comment-input" }),
-	            _react2.default.createElement("button", { className: "comment-button" })
 	          )
 	        )
 	      );
@@ -33061,7 +33092,7 @@
 /* 386 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -33072,6 +33103,12 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(319);
+	
+	var _reactRedux = __webpack_require__(310);
+	
+	var _session_actions = __webpack_require__(190);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -33087,19 +33124,49 @@
 	  function AccountNav(props) {
 	    _classCallCheck(this, AccountNav);
 	
-	    return _possibleConstructorReturn(this, (AccountNav.__proto__ || Object.getPrototypeOf(AccountNav)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (AccountNav.__proto__ || Object.getPrototypeOf(AccountNav)).call(this, props));
+	
+	    _this._signout = _this._signout.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(AccountNav, [{
-	    key: "render",
+	    key: '_signout',
+	    value: function _signout() {
+	      this.props.signout(function () {
+	        _reactRouter.hashHistory.push('/signin');
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      $(this.refs.container).hover(function (e) {
+	        $(_this2.refs.dropdown).slideDown("fast");
+	      }, function (e) {
+	        $(_this2.refs.dropdown).slideUp("fast");
+	      });
+	    }
+	  }, {
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "div",
-	        { className: "account-nav-container" },
+	        'div',
+	        { className: 'account-nav-container', ref: 'container' },
 	        _react2.default.createElement(
-	          "nav",
-	          { className: "account-nav" },
-	          _react2.default.createElement("img", { src: "test_prof.jpg" })
+	          'nav',
+	          { className: 'account-nav' },
+	          _react2.default.createElement('img', { src: 'test_prof.jpg' })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'account-dropdown', ref: 'dropdown' },
+	          _react2.default.createElement(
+	            'a',
+	            { onClick: this._signout, className: 'dropdown-link' },
+	            'Sign Out'
+	          )
 	        )
 	      );
 	    }
@@ -33108,7 +33175,15 @@
 	  return AccountNav;
 	}(_react2.default.Component);
 	
-	exports.default = AccountNav;
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    signout: function signout(callback) {
+	      return dispatch((0, _session_actions.signout)(callback));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(AccountNav);
 
 /***/ },
 /* 387 */
