@@ -15,9 +15,8 @@ column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
 title       | string    | not null
-body        | text      | not null
 artist_id   | integer   | not null, foreign key (references users), indexed
-art_url     | string    |
+
 
 ## re_tracks
 column name | data type | details
@@ -40,4 +39,4 @@ column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
 follower_id | integer   | not_null
-followed_id | integer   | not_null 
+followed_id | integer   | not_null
