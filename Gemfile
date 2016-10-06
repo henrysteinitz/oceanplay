@@ -30,6 +30,7 @@ gem 'rails_12factor'
 gem "paperclip", '5.0.0.beta1'
 gem 'figaro'
 gem 'aws-sdk', '>= 2.0'
+gem 'animate-rails'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

@@ -5,6 +5,17 @@ body{
   background: rgb(248,248,250);
 }
 
+.standard-input{
+  border-radius: 4px;
+  border: 1px solid rgb(218,218,218);
+  font: 14px 'Helvetica neue';
+  resize: none;
+}
+.standard-input:focus{
+  outline:none;
+  border-color: rgb(28,128,250);
+}
+
 /* stream */
 .stream{
   width: calc(100% - 120px);
@@ -100,4 +111,16 @@ body{
 }
 .comment-counter{
 
+}
+
+.full-width{
+  width: 100%;
+}
+
+.none{
+  display:none;
+}
+
+.center-text{
+  text-align: center;
 }

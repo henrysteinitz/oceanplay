@@ -7,7 +7,10 @@ class User < ApplicationRecord
 
   attr_reader :password
 
-  has_many :tracks
+  has_many :tracks,
+    class_name: 'Track',
+    foreign_key: :artist_id,
+    primary_key: :id
 
   def self.find_by_credentials(username, password)
     user = User.find_by(username: username)

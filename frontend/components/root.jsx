@@ -26,7 +26,6 @@ class Root extends React.Component{
         <Route path="/" onEnter={this._checkAuth} component={App}>
           <Route path="/stream" onEnter={this._checkAuth} component={Stream} />
           <Route path="/library" onEnter={this._checkAuth} component={Library} />
-          <Route path="/upload" onEnter={this._checkAuth} component={UploadForm} />
         </Route>
         <Route path="/signin" component={SignIn} />
       </Router>

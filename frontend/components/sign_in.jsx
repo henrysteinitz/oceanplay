@@ -63,6 +63,7 @@ class SignIn extends React.Component{
     if (this.state.type === 'signup'){
       retype = <input type="password"
                   placeholder="Retype Password"
+                  className="standard-input"
                   onChange={this._updateInput('retypedPass')}/>
       buttonText = 'Sign Up';
     }
@@ -84,9 +85,11 @@ class SignIn extends React.Component{
             <span>
             <input type="text"
               placeholder="Username"
+              className="standard-input"
               onChange={this._updateInput('username')}/><br />
             <input type="password"
                placeholder="Password"
+               className="standard-input"
                onChange={this._updateInput('password')}/><br />
             {retype}
             </span>

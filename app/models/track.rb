@@ -1,5 +1,7 @@
 class Track < ApplicationRecord
 
+  validates :title, :artist_id, presence: true
+
   has_attached_file :audio
   validates_attachment_content_type :audio, content_type: [
     'audio/mpeg',
@@ -14,4 +16,6 @@ class Track < ApplicationRecord
   ]
 
   has_attached_file :art
+  validates_attachment_content_type :art, content_type: /\Aimage\/.*\Z/
+
 end

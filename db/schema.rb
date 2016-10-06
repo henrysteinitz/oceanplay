@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005204443) do
+ActiveRecord::Schema.define(version: 20161005212347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(version: 20161005204443) do
     t.string   "art_content_type"
     t.integer  "art_file_size"
     t.datetime "art_updated_at"
+    t.text     "description"
+    t.index ["title"], name: "index_tracks_on_title", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

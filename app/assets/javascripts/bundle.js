@@ -21524,8 +21524,7 @@
 	            _reactRouter.Route,
 	            { path: '/', onEnter: this._checkAuth, component: _app2.default },
 	            _react2.default.createElement(_reactRouter.Route, { path: '/stream', onEnter: this._checkAuth, component: _stream2.default }),
-	            _react2.default.createElement(_reactRouter.Route, { path: '/library', onEnter: this._checkAuth, component: _library2.default }),
-	            _react2.default.createElement(_reactRouter.Route, { path: '/upload', onEnter: this._checkAuth, component: _upload_form2.default })
+	            _react2.default.createElement(_reactRouter.Route, { path: '/library', onEnter: this._checkAuth, component: _library2.default })
 	          ),
 	          _react2.default.createElement(_reactRouter.Route, { path: '/signin', component: _sign_in2.default })
 	        )
@@ -28717,6 +28716,10 @@
 	
 	var _account_nav2 = _interopRequireDefault(_account_nav);
 	
+	var _upload_form = __webpack_require__(264);
+	
+	var _upload_form2 = _interopRequireDefault(_upload_form);
+	
 	var _reactRouter = __webpack_require__(196);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -28733,40 +28736,104 @@
 	  function MenuBar(props) {
 	    _classCallCheck(this, MenuBar);
 	
-	    return _possibleConstructorReturn(this, (MenuBar.__proto__ || Object.getPrototypeOf(MenuBar)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (MenuBar.__proto__ || Object.getPrototypeOf(MenuBar)).call(this, props));
+	
+	    _this.state = { hidden: true, locked: false };
+	
+	    _this._releaseUploadForm = _this._releaseUploadForm.bind(_this);
+	    _this._returnUploadForm = _this._returnUploadForm.bind(_this);
+	    _this._toggleUploadForm = _this._toggleUploadForm.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(MenuBar, [{
+	    key: '_toggleUploadForm',
+	    value: function _toggleUploadForm() {
+	      if (!this.state.locked) {
+	        if (this.state.hidden) {
+	          this._releaseUploadForm();
+	        } else {
+	          this._returnUploadForm();
+	        }
+	      }
+	    }
+	  }, {
+	    key: '_releaseUploadForm',
+	    value: function _releaseUploadForm() {
+	      var _this2 = this;
+	
+	      if (!this.state.locked && this.state.hidden) {
+	        this.setState({ locked: true });
+	        $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
+	        $(this.refs.uploadForm.refs.uploadSheet).css('visibility', 'visible');
+	        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
+	        $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
+	
+	        setTimeout(function () {
+	          $(_this2.refs.uploadForm.refs.uploadSheet).removeClass('animated fadeInDown');
+	          $(_this2.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
+	          _this2.setState({ hidden: false, locked: false });
+	        }, 570);
+	      }
+	    }
+	  }, {
+	    key: '_returnUploadForm',
+	    value: function _returnUploadForm() {
+	      var _this3 = this;
+	
+	      if (!this.state.locked && !this.state.hidden) {
+	        this.setState({ locked: true });
+	        $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeOutUp');
+	        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeOut');
+	
+	        setTimeout(function () {
+	          _this3.setState({ hidden: true, locked: false });
+	          $(_this3.refs.uploadForm.refs.uploadSheet).css('visibility', 'hidden');
+	          $(_this3.refs.uploadForm.refs.uploadSheet).removeClass('animated fadeOutUp');
+	          $(_this3.refs.uploadForm.refs.uploadBackground).css('visibility', 'hidden');
+	          $(_this3.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeOut');
+	        }, 570);
+	      }
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {}
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'nav',
-	        { className: 'menu-bar' },
-	        _react2.default.createElement(_logo2.default, { type: 'menu' }),
+	        'div',
+	        { className: 'menu-bar-wrapper' },
 	        _react2.default.createElement(
 	          'nav',
-	          { className: 'left-menu' },
+	          { className: 'menu-bar', onClick: this._returnUploadForm },
+	          _react2.default.createElement(_logo2.default, { type: 'menu' }),
 	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: "/stream", className: 'link' },
-	            'stream'
+	            'nav',
+	            { className: 'left-menu' },
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: "/stream", className: 'link' },
+	              'stream'
+	            ),
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { to: "/library", className: 'link' },
+	              'library'
+	            )
 	          ),
 	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: "/library", className: 'link' },
-	            'library'
+	            'nav',
+	            { className: 'right-menu' },
+	            _react2.default.createElement(_account_nav2.default, null),
+	            _react2.default.createElement(
+	              _reactRouter.Link,
+	              { className: 'link', onClick: this._releaseUploadForm },
+	              'upload'
+	            )
 	          )
 	        ),
-	        _react2.default.createElement(
-	          'nav',
-	          { className: 'right-menu' },
-	          _react2.default.createElement(_account_nav2.default, null),
-	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: "/upload", className: 'link' },
-	            'upload'
-	          )
-	        )
+	        _react2.default.createElement(_upload_form2.default, { ref: 'uploadForm', returnUploadForm: this._returnUploadForm })
 	      );
 	    }
 	  }]);
@@ -29193,7 +29260,7 @@
 /* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -29219,19 +29286,83 @@
 	  function UploadForm(props) {
 	    _classCallCheck(this, UploadForm);
 	
-	    return _possibleConstructorReturn(this, (UploadForm.__proto__ || Object.getPrototypeOf(UploadForm)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (UploadForm.__proto__ || Object.getPrototypeOf(UploadForm)).call(this, props));
+	
+	    _this.state = { artUrl: 'test-art.jpg' };
+	
+	    _this._handleAudio = _this._handleAudio.bind(_this);
+	    _this._handleArt = _this._handleArt.bind(_this);
+	    _this._showTrackInfo = _this._showTrackInfo.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(UploadForm, [{
-	    key: "render",
+	    key: '_handleAudio',
+	    value: function _handleAudio(e) {
+	      var reader = new FileReader();
+	      var file = e.currentTarget.files[0];
+	      this.setState({ audioFile: file });
+	      this._showTrackInfo();
+	    }
+	  }, {
+	    key: '_handleArt',
+	    value: function _handleArt(e) {}
+	  }, {
+	    key: '_showTrackInfo',
+	    value: function _showTrackInfo() {
+	      $(this.refs.lower).animate({ height: "30%" }, 300);
+	      $(this.refs.upper).animate({ height: "70%" }, 300);
+	    }
+	  }, {
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "div",
-	        { className: "upload-form-container" },
+	        'div',
+	        { className: 'upload-container' },
+	        _react2.default.createElement('div', { className: 'upload-background',
+	          ref: 'uploadBackground',
+	          onClick: this.props.returnUploadForm }),
 	        _react2.default.createElement(
-	          "button",
-	          { className: "upload-button" },
-	          "Upload Track"
+	          'div',
+	          { className: 'upload-sheet', ref: 'uploadSheet' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'upload-form-upper', ref: 'upper' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'art-container' },
+	              _react2.default.createElement('img', { src: this.state.artUrl })
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'info-container' },
+	              _react2.default.createElement('input', { type: 'text',
+	                className: 'standard-input',
+	                placeholder: 'Title' }),
+	              _react2.default.createElement('br', null),
+	              _react2.default.createElement('textarea', {
+	                className: 'standard-input',
+	                rows: '6',
+	                placeholder: 'Description' })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'upload-form-lower', ref: 'lower' },
+	            _react2.default.createElement(
+	              'label',
+	              { className: 'full-width center-text' },
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'upload-button' },
+	                'Upload Track'
+	              ),
+	              _react2.default.createElement('input', { type: 'file',
+	                className: 'none',
+	                ref: 'uploadButton',
+	                onChange: this._handleAudio })
+	            )
+	          )
 	        )
 	      );
 	    }
@@ -29353,6 +29484,7 @@
 	      if (this.state.type === 'signup') {
 	        retype = _react2.default.createElement('input', { type: 'password',
 	          placeholder: 'Retype Password',
+	          className: 'standard-input',
 	          onChange: this._updateInput('retypedPass') });
 	        buttonText = 'Sign Up';
 	      }
@@ -29401,10 +29533,12 @@
 	              null,
 	              _react2.default.createElement('input', { type: 'text',
 	                placeholder: 'Username',
+	                className: 'standard-input',
 	                onChange: this._updateInput('username') }),
 	              _react2.default.createElement('br', null),
 	              _react2.default.createElement('input', { type: 'password',
 	                placeholder: 'Password',
+	                className: 'standard-input',
 	                onChange: this._updateInput('password') }),
 	              _react2.default.createElement('br', null),
 	              retype
