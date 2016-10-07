@@ -71,6 +71,11 @@
 	  } else {
 	    preloadedState = {};
 	  }
+	  preloadedState.stream = { tracks: [{
+	      artist: "James Blake",
+	      title: "Modern Soul"
+	    }] };
+	
 	  var store = (0, _store2.default)(preloadedState);
 	  window.store = store;
 	  var root = document.getElementById('root');
@@ -21476,6 +21481,10 @@
 	
 	var _library2 = _interopRequireDefault(_library);
 	
+	var _profile = __webpack_require__(550);
+	
+	var _profile2 = _interopRequireDefault(_profile);
+	
 	var _upload_form = __webpack_require__(264);
 	
 	var _upload_form2 = _interopRequireDefault(_upload_form);
@@ -21524,7 +21533,8 @@
 	            _reactRouter.Route,
 	            { path: '/', onEnter: this._checkAuth, component: _app2.default },
 	            _react2.default.createElement(_reactRouter.Route, { path: '/stream', onEnter: this._checkAuth, component: _stream2.default }),
-	            _react2.default.createElement(_reactRouter.Route, { path: '/library', onEnter: this._checkAuth, component: _library2.default })
+	            _react2.default.createElement(_reactRouter.Route, { path: '/library', onEnter: this._checkAuth, component: _library2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: '/profile/:id', component: _profile2.default })
 	          ),
 	          _react2.default.createElement(_reactRouter.Route, { path: '/signin', component: _sign_in2.default })
 	        )
@@ -28722,6 +28732,10 @@
 	
 	var _reactRouter = __webpack_require__(196);
 	
+	var _reactRedux = __webpack_require__(173);
+	
+	var _track_actions = __webpack_require__(547);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28763,6 +28777,7 @@
 	      var _this2 = this;
 	
 	      if (!this.state.locked && this.state.hidden) {
+	        console.log('asdfasd');
 	        this.setState({ locked: true });
 	        $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
 	        $(this.refs.uploadForm.refs.uploadSheet).css('visibility', 'visible');
@@ -28814,12 +28829,12 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { to: "/stream", className: 'link' },
-	              'stream'
+	              'Stream'
 	            ),
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { to: "/library", className: 'link' },
-	              'library'
+	              'Library'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -28829,11 +28844,15 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { className: 'link', onClick: this._releaseUploadForm },
-	              'upload'
+	              'Upload'
 	            )
 	          )
 	        ),
-	        _react2.default.createElement(_upload_form2.default, { ref: 'uploadForm', returnUploadForm: this._returnUploadForm })
+	        _react2.default.createElement(_upload_form2.default, {
+	          ref: 'uploadForm',
+	          returnUploadForm: this._returnUploadForm,
+	          uploadTrack: this.props.uploadTrack,
+	          currentUser: this.props.currentUser })
 	      );
 	    }
 	  }]);
@@ -28841,7 +28860,25 @@
 	  return MenuBar;
 	}(_react2.default.Component);
 	
-	exports.default = MenuBar;
+	// Redux Container
+	
+	
+	var mapStateToProps = function mapStateToProps(_ref) {
+	  var session = _ref.session;
+	  return {
+	    currentUser: session.user
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    uploadTrack: function uploadTrack(trackData, callback) {
+	      return dispatch((0, _track_actions.uploadTrack)(trackData, callback));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(MenuBar);
 
 /***/ },
 /* 259 */
@@ -28869,7 +28906,7 @@
 	
 	var scale = window.devicePixelRatio;
 	var ground = 29;
-	var speed = .004;
+	var speed = .0015;
 	var maxHeight = 20;
 	var minHeight = 12;
 	var width = 2;
@@ -29012,6 +29049,8 @@
 	
 	    var _this = _possibleConstructorReturn(this, (AccountNav.__proto__ || Object.getPrototypeOf(AccountNav)).call(this, props));
 	
+	    _this.state = { locked: false };
+	
 	    _this._signout = _this._signout.bind(_this);
 	    return _this;
 	  }
@@ -29029,14 +29068,27 @@
 	      var _this2 = this;
 	
 	      $(this.refs.container).hover(function (e) {
-	        $(_this2.refs.dropdown).slideDown("fast");
+	        if (!_this2.state.locked) {
+	          _this2.setState({ locked: true });
+	          $(_this2.refs.dropdown).slideDown("fast");
+	        }
 	      }, function (e) {
-	        $(_this2.refs.dropdown).slideUp("fast");
+	        if (_this2.state.locked) {
+	          $(_this2.refs.dropdown).slideUp("fast", function () {
+	            return _this2.setState({ locked: false });
+	          });
+	        }
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var profileLink = void 0;
+	      if (this.props.user) {
+	        profileLink = '/profile/' + this.props.user.id;
+	      } else {
+	        profileLink = '';
+	      }
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'account-nav-container', ref: 'container' },
@@ -29050,6 +29102,11 @@
 	          { className: 'account-dropdown', ref: 'dropdown' },
 	          _react2.default.createElement(
 	            _reactRouter.Link,
+	            { to: profileLink, className: 'dropdown-link link' },
+	            'Profile'
+	          ),
+	          _react2.default.createElement(
+	            _reactRouter.Link,
 	            { onClick: this._signout, className: 'dropdown-link link' },
 	            'Sign Out'
 	          )
@@ -29061,6 +29118,13 @@
 	  return AccountNav;
 	}(_react2.default.Component);
 	
+	var mapStateToProps = function mapStateToProps(_ref) {
+	  var session = _ref.session;
+	  return {
+	    user: session.user
+	  };
+	};
+	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
 	    signout: function signout(callback) {
@@ -29069,7 +29133,7 @@
 	  };
 	};
 	
-	exports.default = (0, _reactRedux.connect)(null, mapDispatchToProps)(AccountNav);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(AccountNav);
 
 /***/ },
 /* 261 */
@@ -29165,19 +29229,23 @@
 	  function Stream(props) {
 	    _classCallCheck(this, Stream);
 	
-	    return _possibleConstructorReturn(this, (Stream.__proto__ || Object.getPrototypeOf(Stream)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Stream.__proto__ || Object.getPrototypeOf(Stream)).call(this, props));
+	
+	    _this.state = { tracks: [] };
+	    return _this;
 	  }
 	
 	  _createClass(Stream, [{
 	    key: 'render',
 	    value: function render() {
+	      var tracks = this.props.tracks.map(function (track) {
+	        return _react2.default.createElement(_track2.default, { track: track });
+	      });
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'stream' },
-	        _react2.default.createElement(_track2.default, null),
-	        _react2.default.createElement(_track2.default, null),
-	        _react2.default.createElement(_track2.default, null),
-	        _react2.default.createElement(_track2.default, null)
+	        tracks
 	      );
 	    }
 	  }]);
@@ -29233,12 +29301,12 @@
 	          _react2.default.createElement(
 	            "div",
 	            { className: "track-title" },
-	            "Videotape"
+	            this.props.track.title
 	          ),
 	          _react2.default.createElement(
 	            "div",
 	            { className: "track-artist" },
-	            "Radiohead"
+	            this.props.track.artist
 	          ),
 	          _react2.default.createElement(
 	            "div",
@@ -29246,6 +29314,11 @@
 	            _react2.default.createElement("button", { className: "play-button" }),
 	            _react2.default.createElement("div", { className: "scrubber" })
 	          )
+	        ),
+	        _react2.default.createElement(
+	          "audio",
+	          { controls: true },
+	          _react2.default.createElement("source", { src: this.props.track.audioUrl })
 	        )
 	      );
 	    }
@@ -29274,6 +29347,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -29288,8 +29363,16 @@
 	
 	    var _this = _possibleConstructorReturn(this, (UploadForm.__proto__ || Object.getPrototypeOf(UploadForm)).call(this, props));
 	
-	    _this.state = { artUrl: 'test-art.jpg' };
+	    _this.state = {
+	      artUrl: 'test-art.jpg',
+	      fileUploaded: false,
+	      title: "",
+	      description: "",
+	      audioFile: null
+	    };
 	
+	    _this._handleUpload = _this._handleUpload.bind(_this);
+	    _this._handleInput = _this._handleInput.bind(_this);
 	    _this._handleAudio = _this._handleAudio.bind(_this);
 	    _this._handleArt = _this._handleArt.bind(_this);
 	    _this._showTrackInfo = _this._showTrackInfo.bind(_this);
@@ -29297,16 +29380,46 @@
 	  }
 	
 	  _createClass(UploadForm, [{
+	    key: '_handleInput',
+	    value: function _handleInput(type) {
+	      var _this2 = this;
+	
+	      console.log(this.state);
+	      return function (e) {
+	        return _this2.setState(_defineProperty({}, type, e.currentTarget.value));
+	      };
+	    }
+	  }, {
 	    key: '_handleAudio',
 	    value: function _handleAudio(e) {
-	      var reader = new FileReader();
-	      var file = e.currentTarget.files[0];
-	      this.setState({ audioFile: file });
-	      this._showTrackInfo();
+	      if (!this.state.fileUploaded) {
+	        var reader = new FileReader();
+	        var file = e.currentTarget.files[0];
+	        $(e.currentTarget).prop('disabled', true);
+	        this.setState({
+	          audioFile: file,
+	          fileUploaded: true
+	        });
+	        this._showTrackInfo();
+	      }
 	    }
 	  }, {
 	    key: '_handleArt',
 	    value: function _handleArt(e) {}
+	  }, {
+	    key: '_handleUpload',
+	    value: function _handleUpload() {
+	      if (this.state.fileUploaded) {
+	        var trackData = new FormData();
+	        trackData.append("track[title]", this.state.title);
+	        trackData.append("track[description]", this.state.description);
+	        trackData.append("track[artist_id]", this.props.currentUser.id);
+	        trackData.append("track[audio]", this.state.audioFile);
+	        this.props.uploadTrack(trackData, function (r) {
+	          return console.log(r);
+	        });
+	      }
+	    }
 	  }, {
 	    key: '_showTrackInfo',
 	    value: function _showTrackInfo() {
@@ -29338,12 +29451,14 @@
 	              { className: 'info-container' },
 	              _react2.default.createElement('input', { type: 'text',
 	                className: 'standard-input',
-	                placeholder: 'Title' }),
+	                placeholder: 'Title',
+	                onChange: this._handleInput("title") }),
 	              _react2.default.createElement('br', null),
 	              _react2.default.createElement('textarea', {
 	                className: 'standard-input',
 	                rows: '6',
-	                placeholder: 'Description' })
+	                placeholder: 'Description',
+	                onChange: this._handleInput("description") })
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -29352,15 +29467,16 @@
 	            _react2.default.createElement(
 	              'label',
 	              { className: 'full-width center-text' },
-	              _react2.default.createElement(
-	                'div',
-	                { className: 'upload-button' },
-	                'Upload Track'
-	              ),
 	              _react2.default.createElement('input', { type: 'file',
 	                className: 'none',
 	                ref: 'uploadButton',
-	                onChange: this._handleAudio })
+	                onChange: this._handleAudio }),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'upload-button',
+	                  onClick: this._handleUpload },
+	                'Upload Track'
+	              )
 	            )
 	          )
 	        )
@@ -53033,10 +53149,15 @@
 	
 	var _session_reducer2 = _interopRequireDefault(_session_reducer);
 	
+	var _stream_reducer = __webpack_require__(554);
+	
+	var _stream_reducer2 = _interopRequireDefault(_stream_reducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.combineReducers)({
-	  session: _session_reducer2.default
+	  session: _session_reducer2.default,
+	  stream: _stream_reducer2.default
 	});
 
 /***/ },
@@ -53097,9 +53218,17 @@
 	
 	var _session_middleware2 = _interopRequireDefault(_session_middleware);
 	
+	var _track_middleware = __webpack_require__(548);
+	
+	var _track_middleware2 = _interopRequireDefault(_track_middleware);
+	
+	var _profile_middleware = __webpack_require__(555);
+	
+	var _profile_middleware2 = _interopRequireDefault(_profile_middleware);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_session_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_session_middleware2.default, _track_middleware2.default, _profile_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
@@ -53244,6 +53373,391 @@
 	}(_react2.default.Component);
 	
 	exports.default = Library;
+
+/***/ },
+/* 547 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var UPLOAD_TRACK = exports.UPLOAD_TRACK = 'UPLOAD_TRACK';
+	
+	var uploadTrack = exports.uploadTrack = function uploadTrack(trackData, callback) {
+	  return {
+	    type: UPLOAD_TRACK,
+	    trackData: trackData,
+	    callback: callback
+	  };
+	};
+
+/***/ },
+/* 548 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _track_actions = __webpack_require__(547);
+	
+	var _track_api_util = __webpack_require__(549);
+	
+	var TrackMiddleware = function TrackMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	
+	        case _track_actions.UPLOAD_TRACK:
+	          (0, _track_api_util.uploadTrack)(action.trackData, action.callback);
+	
+	        default:
+	          next(action);
+	
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = TrackMiddleware;
+
+/***/ },
+/* 549 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var uploadTrack = exports.uploadTrack = function uploadTrack(trackData, callback) {
+	  console.log(trackData);
+	  $.ajax({
+	    url: 'api/tracks',
+	    method: 'POST',
+	    processData: false,
+	    contentType: false,
+	    data: trackData,
+	    success: callback
+	  });
+	};
+
+/***/ },
+/* 550 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _stream = __webpack_require__(262);
+	
+	var _stream2 = _interopRequireDefault(_stream);
+	
+	var _profile_panel = __webpack_require__(551);
+	
+	var _profile_panel2 = _interopRequireDefault(_profile_panel);
+	
+	var _reactRedux = __webpack_require__(173);
+	
+	var _profile_actions = __webpack_require__(552);
+	
+	var _stream_actions = __webpack_require__(553);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Profile = function (_React$Component) {
+	  _inherits(Profile, _React$Component);
+	
+	  function Profile(props) {
+	    _classCallCheck(this, Profile);
+	
+	    var _this = _possibleConstructorReturn(this, (Profile.__proto__ || Object.getPrototypeOf(Profile)).call(this, props));
+	
+	    _this.props.clearStream();
+	    _this.props.loadProfile(_this.props.params.id);
+	    return _this;
+	  }
+	
+	  _createClass(Profile, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'main',
+	        null,
+	        _react2.default.createElement(_profile_panel2.default, null),
+	        _react2.default.createElement(_stream2.default, { tracks: this.props.stream.tracks })
+	      );
+	    }
+	  }]);
+	
+	  return Profile;
+	}(_react2.default.Component);
+	
+	// Redux Container
+	
+	
+	var mapStateToProps = function mapStateToProps(_ref) {
+	  var stream = _ref.stream;
+	  return {
+	    stream: stream
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    loadProfile: function loadProfile(id) {
+	      return dispatch((0, _profile_actions.loadProfile)(id));
+	    },
+	    clearStream: function clearStream() {
+	      return dispatch((0, _stream_actions.clearStream)());
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Profile);
+
+/***/ },
+/* 551 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ProfilePanel = function (_React$Component) {
+	  _inherits(ProfilePanel, _React$Component);
+	
+	  function ProfilePanel(props) {
+	    _classCallCheck(this, ProfilePanel);
+	
+	    return _possibleConstructorReturn(this, (ProfilePanel.__proto__ || Object.getPrototypeOf(ProfilePanel)).call(this, props));
+	  }
+	
+	  _createClass(ProfilePanel, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'profile-panel' },
+	        _react2.default.createElement('div', { className: 'panel-shade' }),
+	        _react2.default.createElement('img', { className: 'panel-pic', src: 'test-panel.jpg' }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'display-name' },
+	          'Artist Name'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'panel-play-button' },
+	          'Play'
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { className: 'panel-follow-button' },
+	          'Follow'
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return ProfilePanel;
+	}(_react2.default.Component);
+	
+	exports.default = ProfilePanel;
+
+/***/ },
+/* 552 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var LOAD_PROFILE = exports.LOAD_PROFILE = 'LOAD_PROFILE';
+	
+	var loadProfile = exports.loadProfile = function loadProfile(id) {
+	  return {
+	    type: LOAD_PROFILE,
+	    id: id
+	  };
+	};
+
+/***/ },
+/* 553 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var LOAD_MAIN_STREAM = exports.LOAD_MAIN_STREAM = 'LOAD_MAIN_STREAM';
+	var RECEIVE_STREAM = exports.RECEIVE_STREAM = 'RECEIVE_STREAM';
+	var CLEAR_STREAM = exports.CLEAR_STREAM = 'CLEAR_STREAM';
+	
+	var receiveStream = exports.receiveStream = function receiveStream(tracks) {
+	  return {
+	    type: RECEIVE_STREAM,
+	    tracks: tracks
+	  };
+	};
+	
+	var clearStream = exports.clearStream = function clearStream() {
+	  return {
+	    type: CLEAR_STREAM
+	  };
+	};
+	
+	// caught by middleware / builds user's main stream via ajax
+	var loadMainStream = exports.loadMainStream = function loadMainStream(id) {
+	  return {
+	    type: LOAD_MAIN_STREAM,
+	    id: id
+	  };
+	};
+
+/***/ },
+/* 554 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _stream_actions = __webpack_require__(553);
+	
+	var _merge = __webpack_require__(424);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var StreamReducer = function StreamReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var action = arguments[1];
+	
+	  var newState = void 0;
+	
+	  switch (action.type) {
+	
+	    case _stream_actions.RECEIVE_STREAM:
+	      newState = (0, _merge2.default)({}, state, { tracks: action.tracks });
+	      return newState;
+	
+	    case _stream_actions.CLEAR_STREAM:
+	      return { tracks: [] };
+	
+	    default:
+	      return state;
+	
+	  }
+	};
+	
+	exports.default = StreamReducer;
+
+/***/ },
+/* 555 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _profile_actions = __webpack_require__(552);
+	
+	var _stream_actions = __webpack_require__(553);
+	
+	var _user_api_util = __webpack_require__(556);
+	
+	var ProfileMiddleware = function ProfileMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	
+	        case _profile_actions.LOAD_PROFILE:
+	          (0, _user_api_util.fetchFullUser)(action.id, function (res) {
+	            return dispatch((0, _stream_actions.receiveStream)(res.tracks));
+	          });
+	          return;
+	
+	        default:
+	          return next(action);
+	
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = ProfileMiddleware;
+
+/***/ },
+/* 556 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchFullUser = exports.fetchFullUser = function fetchFullUser(id, callback) {
+	  $.ajax({
+	    url: '/api/users/' + id + '/full',
+	    method: 'GET',
+	    success: callback
+	  });
+	};
+	
+	var fetchUser = exports.fetchUser = function fetchUser(id, callback) {
+	  $.ajax({
+	    url: '/api/users/' + id + '/full',
+	    method: 'GET',
+	    success: callback
+	  });
+	};
 
 /***/ }
 /******/ ]);

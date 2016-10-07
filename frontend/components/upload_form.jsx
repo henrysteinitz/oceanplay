@@ -4,22 +4,56 @@ class UploadForm extends React.Component{
 
   constructor(props){
     super(props);
-    this.state = { artUrl : 'test-art.jpg' };
+    this.state = {
+      artUrl: 'test-art.jpg',
+      fileUploaded: false,
+      title: "",
+      description: "",
+      audioFile: null
+    };
 
+    this._handleUpload = this._handleUpload.bind(this);
+    this._handleInput = this._handleInput.bind(this);
     this._handleAudio = this._handleAudio.bind(this);
     this._handleArt = this._handleArt.bind(this);
     this._showTrackInfo = this._showTrackInfo.bind(this);
   }
 
+  _handleInput(type){
+    console.log(this.state);
+    return (e) => this.setState({[type]: e.currentTarget.value});
+
+  }
+
   _handleAudio(e){
-    const reader = new FileReader();
-    const file = e.currentTarget.files[0];
-    this.setState({ audioFile: file });
-    this._showTrackInfo();
+    if (!this.state.fileUploaded){
+      const reader = new FileReader();
+      const file = e.currentTarget.files[0];
+      $(e.currentTarget).prop('disabled', true);
+      this.setState({
+        audioFile: file,
+        fileUploaded: true
+      });
+      this._showTrackInfo();
+    }
   }
 
   _handleArt(e){
 
+  }
+
+  _handleUpload(){
+    if (this.state.fileUploaded){
+      const trackData = new FormData();
+      trackData.append("track[title]", this.state.title);
+      trackData.append("track[description]", this.state.description);
+      trackData.append("track[artist_id]", this.props.currentUser.id);
+      trackData.append("track[audio]", this.state.audioFile);
+      this.props.uploadTrack(
+        trackData,
+        (r) => console.log(r)
+      );
+    }
   }
 
   _showTrackInfo(){
@@ -42,21 +76,26 @@ class UploadForm extends React.Component{
             <span className='info-container'>
               <input type="text"
                 className="standard-input"
-                placeholder="Title"></input><br/>
+                placeholder="Title"
+                onChange={this._handleInput("title")}>
+              </input><br/>
               <textarea
                 className="standard-input"
                 rows="6"
-                placeholder="Description">
+                placeholder="Description"
+                onChange={this._handleInput("description")}>
               </textarea>
             </span>
           </div>
           <div className="upload-form-lower" ref="lower">
             <label className='full-width center-text'>
-              <div className="upload-button">Upload Track</div>
               <input type='file'
                 className='none'
                 ref='uploadButton'
                 onChange={this._handleAudio}/>
+              <div className="upload-button"
+                onClick={this._handleUpload}>Upload Track
+              </div>
             </label>
           </div>
         </div>
@@ -65,5 +104,8 @@ class UploadForm extends React.Component{
   }
 
 }
+
+
+
 
 export default UploadForm;

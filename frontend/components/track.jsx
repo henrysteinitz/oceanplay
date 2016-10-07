@@ -10,8 +10,8 @@ class Track extends React.Component{
     <div className="track">
       <img src="/test-art.jpg" className="track-art"/>
       <div className="track-right">
-        <div className="track-title">Videotape</div>
-        <div className="track-artist">Radiohead</div>
+        <div className="track-title">{this.props.track.title}</div>
+        <div className="track-artist">{this.props.track.artist}</div>
         <div className="play-bar">
           <button className="play-button"></button>
           <div className="scrubber"></div>
@@ -25,6 +25,10 @@ class Track extends React.Component{
         */}
 
       </div>
+
+      <audio controls>
+        <source src={this.props.track.audioUrl} />
+      </audio>
     </div>
     );
   }

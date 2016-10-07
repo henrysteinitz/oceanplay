@@ -1,0 +1,98 @@
+.profile-panel{
+  position: relative;
+  margin-top: 45px;
+  width: 100%;
+  height: 380px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.panel-shade{
+  position: absolute;
+  top:220px;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.7));
+  z-index: -9;
+}
+
+.panel-pic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: -10;
+}
+
+.profile-pic-container{
+  margin-top: 100px;
+  width: 180px;
+  height: 180px;
+  display: inline-block;
+  background: white;
+  border-radius: 90px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px 0px rgba(0,0,0,.6);
+  line-height: 0px;
+}
+
+.profile-pic{
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+
+}
+
+.display-name{
+  margin-top: 260px;
+  margin-bottom: 6px;
+  margin-left: 60px;
+  color: white;
+  font: 37pt "Helvetica neue";
+  font-weight: 200;
+}
+
+.panel-play-button{
+  display: inline-block;
+  margin-left: 60px;
+  height: 34px;
+  padding: 7px;
+  padding-left: 47px;
+  padding-right: 47px;
+  border-radius: 3px;
+  border:1px solid rgba(250,250,250, .24);
+  background: rgba(0,0,0,.44);
+  text-align: center;
+  color: white;
+  font: 15px 'Helvetica neue';
+  font-weight: 600;
+  cursor: pointer;
+}
+.panel-play-button:hover{
+  background: rgb(28,128,210);
+  border: 1px solid rgb(28,128,210);
+}
+
+.panel-follow-button{
+  display: inline-block;
+  margin-left: 20px;
+  height: 34px;
+  padding: 7px;
+  padding-left: 47px;
+  padding-right: 47px;
+  border-radius: 3px;
+  border:1px solid rgba(250,250,250, .24);
+  background: rgba(0,0,0,.44);
+  text-align: center;
+  color: white;
+  font: 15px 'Helvetica neue';
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.panel-follow-button:hover{
+  background:rgb(40,205,125);
+  border: 1px solid rgb(40,205,125);
+}

@@ -25,7 +25,9 @@ class MenuBar extends React.Component{
   }
 
   _releaseUploadForm(){
+
     if (!this.state.locked && this.state.hidden){
+      console.log('asdfasd');
       this.setState({locked: true});
       $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
       $(this.refs.uploadForm.refs.uploadSheet).css('visibility', 'visible');
@@ -65,18 +67,36 @@ class MenuBar extends React.Component{
         <nav className="menu-bar" onClick={this._returnUploadForm}>
           <Logo type="menu"/>
           <nav className="left-menu">
-            <Link to={"/stream"} className="link">stream</Link>
-            <Link to={"/library"} className="link">library</Link>
+            <Link to={"/stream"} className="link">Stream</Link>
+            <Link to={"/library"} className="link">Library</Link>
           </nav>
           <nav className="right-menu">
             <AccountNav />
-            <Link className="link" onClick={this._releaseUploadForm}>upload</Link>
+            <Link className="link" onClick={this._releaseUploadForm}>Upload</Link>
           </nav>
         </nav>
-        <UploadForm ref='uploadForm' returnUploadForm={this._returnUploadForm}/>
+        <UploadForm
+          ref='uploadForm'
+          returnUploadForm={this._returnUploadForm}
+          uploadTrack={this.props.uploadTrack}
+          currentUser={this.props.currentUser} />
       </div>
     );
   }
 }
 
-export default MenuBar;
+// Redux Container
+import { connect } from 'react-redux';
+import { uploadTrack } from '../actions/track_actions';
+
+const mapStateToProps = ({ session }) => ({
+  currentUser: session.user
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  uploadTrack: (trackData, callback) => (
+    dispatch(uploadTrack(trackData, callback))
+  )
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MenuBar);

@@ -1,3 +1,92 @@
 // Place all the styles related to the tracks controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.track-art{
+  width: 180px;
+  height: 180px;
+  background: black;
+  border: 0;
+}
+.track{
+  margin-bottom: 30px;
+  width: 100%;
+}
+.track-right{
+  padding-top: 20px;
+  margin-left: 20px;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.track-title{
+  font: 27px "Helvetica neue";
+  font-weight: 600;
+  color: rgb(56,56,56);
+}
+
+.track-artist{
+  font: 16px "Helvetica neue";
+  font-weight: 400;
+  color: rgb(126,126,126);
+}
+.play-bar{
+  margin-top: 14px;
+  margin-left: -4px;
+}
+.play-button{
+  width:38px;
+  height: 38px;
+  background: url('/play.png');
+  background-size: contain;
+}
+.play-button:hover{
+  cursor:pointer;
+}
+.like-and-comments{
+  display: relative;
+  width: 100%;
+  margin-top: 8px;
+  margin-left: -2px;
+}
+.like-button{
+  width:30px;
+  height: 28px;
+  background: url('/hearts_filled.png');
+  background-size: contain;
+  margin-right: 58px;
+  vertical-align: bottom;
+  margin-bottom: 1px
+}
+.like-counter{
+
+}
+.comment-input{
+  float: right;
+  height: 20px;
+  width: 200px;
+  border: 1px solid rgb(218,218,218);
+  font: 14px 'Helvetica neue';
+  padding-left: 9px;
+  padding-right: 9px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  vertical-align: bottom;
+  margin-right: 14px;
+  border-radius: 3px;
+}
+.comment-input:focus{
+  outline: none;
+}
+.comment-button{
+  float: right;
+  width:25px;
+  height: 25px;
+  margin-right: 10px;
+  background: url('/comments_filled.png');
+  background-size: contain;
+  vertical-align: bottom;
+}
+.comment-counter{
+
+}

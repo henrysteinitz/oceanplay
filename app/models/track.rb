@@ -15,7 +15,12 @@ class Track < ApplicationRecord
     'audio/x-mpegaudio'
   ]
 
-  has_attached_file :art
-  validates_attachment_content_type :art, content_type: /\Aimage\/.*\Z/
+  belongs_to :artist,
+    class_name: 'User',
+    foreign_key: :artist_id,
+    primary_key: :id
+
+  #has_attached_file :art
+  #validates_attachment_content_type :art, content_type: /\Aimage\/.*\Z/
 
 end

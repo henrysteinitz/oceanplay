@@ -2,7 +2,7 @@ import React from 'react';
 
 const scale = window.devicePixelRatio;
 const ground = 29;
-const speed = .004;
+const speed = .0015;
 const maxHeight = 20;
 const minHeight = 12;
 const width = 2;

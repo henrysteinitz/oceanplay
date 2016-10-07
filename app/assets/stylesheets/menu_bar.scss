@@ -79,18 +79,22 @@
   display: none;
   padding-left: 28px;
   padding-right: 28px;
-  padding-top: 18px;
-  padding-bottom: 18px;
+  padding-top: 9px;
+  padding-bottom: 9px;
   position: fixed;
   top: 45px;
   right: 60px;
   background: black;
+  text-align: left;
 }
 
 .dropdown-link{
+  display: block;
   font-size: 14px;
   color: white;
   cursor: pointer;
+  padding-top: 9px;
+  padding-bottom: 9px;
 }
 .link{
   color: white;
