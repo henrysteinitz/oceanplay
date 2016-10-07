@@ -3,6 +3,16 @@ import React from 'react';
 class Track extends React.Component{
   constructor(props){
     super(props)
+    this._playpause = this._playpause.bind(this);
+  }
+
+
+  _playpause(){
+    if (this.props.playing){
+      this.props.pauseTrack();
+    } else {
+      this.props.playTrack(this.props.track);
+    }
   }
 
   render(){
@@ -13,7 +23,7 @@ class Track extends React.Component{
         <div className="track-title">{this.props.track.title}</div>
         <div className="track-artist">{this.props.track.artist}</div>
         <div className="play-bar">
-          <button className="play-button"></button>
+          <button className="play-button" onClick={this._playpause}></button>
           <div className="scrubber"></div>
         </div>
         {/*
@@ -26,12 +36,23 @@ class Track extends React.Component{
 
       </div>
 
-      <audio controls>
-        <source src={this.props.track.audioUrl} />
-      </audio>
     </div>
     );
   }
 }
 
-export default Track;
+// Redux Container
+import { playTrack, pauseTrack } from '../actions/track_actions';
+import { connect } from 'react-redux';
+
+const mapStateToProps = ({ nowPlaying }) => ({
+  playing: nowPlaying.playing,
+  currentTrack: nowPlaying.track
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  playTrack: (track) => dispatch(playTrack(track)),
+  pauseTrack: () => dispatch(pauseTrack())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Track);

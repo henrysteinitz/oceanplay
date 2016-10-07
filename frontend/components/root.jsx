@@ -20,25 +20,35 @@ class Root extends React.Component{
     }
   }
 
+  componentDidMount(){
+    if (this.props.nowPlaying.playing){
+      this.refs.audio.play
+    } else {
+      if (this.refs.audio){
+        this.refs.audio.pause
+      }
+    }
+  }
+
   render(){
     return (
-    <Provider store={this.props.store}>
-      <Router history={hashHistory}>
-        <Route path="/" onEnter={this._checkAuth} component={App}>
-          <Route path="/stream" onEnter={this._checkAuth} component={Stream} />
-          <Route path="/library" onEnter={this._checkAuth} component={Library} />
-          <Route path="/profile/:id" component={Profile} />
-        </Route>
-        <Route path="/signin" component={SignIn} />
-      </Router>
-    </Provider>
+        <Provider store={this.props.store}>
+          <Router history={hashHistory}>
+            <Route path="/" onEnter={this._checkAuth} component={App}>
+              <Route path="/stream" onEnter={this._checkAuth} component={Stream} />
+              <Route path="/library" onEnter={this._checkAuth} component={Library} />
+              <Route path="/profile/:id" component={Profile} />
+            </Route>
+            <Route path="/signin" component={SignIn} />
+          </Router>
+        </Provider>
     );
   }
 }
 
 import { connect } from 'react-redux';
 
-const mapStateToProps = ({session}) => ({
+const mapStateToProps = ({ session }) => ({
   user: session.user
 });
 

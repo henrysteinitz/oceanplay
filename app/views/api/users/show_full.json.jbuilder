@@ -4,8 +4,10 @@ end
 
 tracks = @user.tracks.map do |track|
   {
+    id: track.id,
     title: track.title,
     artist: track.artist.username,
+    artist_id: track.artist_id,
     audioUrl: track.audio.url
   }
 end

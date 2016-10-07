@@ -71,10 +71,10 @@
 	  } else {
 	    preloadedState = {};
 	  }
-	  preloadedState.stream = { tracks: [{
-	      artist: "James Blake",
-	      title: "Modern Soul"
-	    }] };
+	  preloadedState.stream = {
+	    tracks: [],
+	    nowPlaying: { playing: false }
+	  };
 	
 	  var store = (0, _store2.default)(preloadedState);
 	  window.store = store;
@@ -21521,6 +21521,17 @@
 	      }
 	    }
 	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.nowPlaying.playing) {
+	        this.refs.audio.play;
+	      } else {
+	        if (this.refs.audio) {
+	          this.refs.audio.pause;
+	        }
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -28677,6 +28688,8 @@
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -28689,18 +28702,74 @@
 	
 	var _stream2 = _interopRequireDefault(_stream);
 	
+	var _reactRedux = __webpack_require__(173);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var App = function App(props) {
-	  return _react2.default.createElement(
-	    'div',
-	    { id: 'app' },
-	    _react2.default.createElement(_menu_bar2.default, null),
-	    props.children
-	  );
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var App = function (_React$Component) {
+	  _inherits(App, _React$Component);
+	
+	  function App(props) {
+	    _classCallCheck(this, App);
+	
+	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	  }
+	
+	  _createClass(App, [{
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	
+	      if (this.props.nowPlaying.playing) {
+	        console.log('asdfasdf');
+	        this.refs.audio.play();
+	      } else {
+	        console.log('yo');
+	        if (this.refs.audio) {
+	          this.refs.audio.pause();
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var audio = void 0;
+	      if (this.props.nowPlaying.playing) {
+	        audio = _react2.default.createElement(
+	          'audio',
+	          { ref: 'audio' },
+	          _react2.default.createElement('source', { src: this.props.nowPlaying.track.audioUrl })
+	        );
+	      } else {
+	        audio = "";
+	      }
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'app' },
+	        _react2.default.createElement(_menu_bar2.default, null),
+	        this.props.children,
+	        audio
+	      );
+	    }
+	  }]);
+	
+	  return App;
+	}(_react2.default.Component);
+	
+	var mapStateToProps = function mapStateToProps(_ref) {
+	  var nowPlaying = _ref.nowPlaying;
+	  return {
+	    nowPlaying: nowPlaying
+	  };
 	};
 	
-	exports.default = App;
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(App);
 
 /***/ },
 /* 258 */
@@ -29271,6 +29340,10 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _track_actions = __webpack_require__(547);
+	
+	var _reactRedux = __webpack_require__(173);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29285,10 +29358,22 @@
 	  function Track(props) {
 	    _classCallCheck(this, Track);
 	
-	    return _possibleConstructorReturn(this, (Track.__proto__ || Object.getPrototypeOf(Track)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Track.__proto__ || Object.getPrototypeOf(Track)).call(this, props));
+	
+	    _this._playpause = _this._playpause.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(Track, [{
+	    key: "_playpause",
+	    value: function _playpause() {
+	      if (this.props.playing) {
+	        this.props.pauseTrack();
+	      } else {
+	        this.props.playTrack(this.props.track);
+	      }
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -29311,14 +29396,9 @@
 	          _react2.default.createElement(
 	            "div",
 	            { className: "play-bar" },
-	            _react2.default.createElement("button", { className: "play-button" }),
+	            _react2.default.createElement("button", { className: "play-button", onClick: this._playpause }),
 	            _react2.default.createElement("div", { className: "scrubber" })
 	          )
-	        ),
-	        _react2.default.createElement(
-	          "audio",
-	          { controls: true },
-	          _react2.default.createElement("source", { src: this.props.track.audioUrl })
 	        )
 	      );
 	    }
@@ -29327,7 +29407,29 @@
 	  return Track;
 	}(_react2.default.Component);
 	
-	exports.default = Track;
+	// Redux Container
+	
+	
+	var mapStateToProps = function mapStateToProps(_ref) {
+	  var nowPlaying = _ref.nowPlaying;
+	  return {
+	    playing: nowPlaying.playing,
+	    currentTrack: nowPlaying.track
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    playTrack: function playTrack(track) {
+	      return dispatch((0, _track_actions.playTrack)(track));
+	    },
+	    pauseTrack: function pauseTrack() {
+	      return dispatch((0, _track_actions.pauseTrack)());
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Track);
 
 /***/ },
 /* 264 */
@@ -53153,11 +53255,16 @@
 	
 	var _stream_reducer2 = _interopRequireDefault(_stream_reducer);
 	
+	var _now_playing_reducer = __webpack_require__(557);
+	
+	var _now_playing_reducer2 = _interopRequireDefault(_now_playing_reducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.combineReducers)({
 	  session: _session_reducer2.default,
-	  stream: _stream_reducer2.default
+	  stream: _stream_reducer2.default,
+	  nowPlaying: _now_playing_reducer2.default
 	});
 
 /***/ },
@@ -53384,12 +53491,27 @@
 	  value: true
 	});
 	var UPLOAD_TRACK = exports.UPLOAD_TRACK = 'UPLOAD_TRACK';
+	var PLAY_TRACK = exports.PLAY_TRACK = 'PLAY_TRACK';
+	var PAUSE_TRACK = exports.PAUSE_TRACK = 'PAUSE_TRACK';
 	
 	var uploadTrack = exports.uploadTrack = function uploadTrack(trackData, callback) {
 	  return {
 	    type: UPLOAD_TRACK,
 	    trackData: trackData,
 	    callback: callback
+	  };
+	};
+	
+	var playTrack = exports.playTrack = function playTrack(track) {
+	  return {
+	    type: PLAY_TRACK,
+	    track: track
+	  };
+	};
+	
+	var pauseTrack = exports.pauseTrack = function pauseTrack() {
+	  return {
+	    type: PAUSE_TRACK
 	  };
 	};
 
@@ -53758,6 +53880,50 @@
 	    success: callback
 	  });
 	};
+
+/***/ },
+/* 557 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.NowPlayingReducer = undefined;
+	
+	var _track_actions = __webpack_require__(547);
+	
+	var _merge = __webpack_require__(424);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var default_state = {
+	  playing: false,
+	  track: {}
+	};
+	
+	var NowPlayingReducer = exports.NowPlayingReducer = function NowPlayingReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : default_state;
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	
+	    case _track_actions.PLAY_TRACK:
+	      return (0, _merge2.default)({}, state, { playing: true, track: action.track });
+	
+	    case _track_actions.PAUSE_TRACK:
+	      return (0, _merge2.default)({}, state, { playing: false });
+	
+	    default:
+	      return state;
+	
+	  }
+	};
+	
+	exports.default = NowPlayingReducer;
 
 /***/ }
 /******/ ]);

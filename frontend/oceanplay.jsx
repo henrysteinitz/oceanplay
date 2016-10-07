@@ -11,12 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     preloadedState = {};
   }
-  preloadedState.stream = {tracks: [
-    {
-      artist: "James Blake",
-      title: "Modern Soul"
-    },
-  ]};
+  preloadedState.stream = {
+    tracks: [],
+    nowPlaying: {playing: false}
+  };
 
   const store = configureStore(preloadedState);
   window.store = store;
