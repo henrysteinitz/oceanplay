@@ -1,18 +1,38 @@
 import React from 'react';
+import PlayBar from './play_bar';
 
 class Track extends React.Component{
   constructor(props){
     super(props)
     this._playpause = this._playpause.bind(this);
+    this._addButtonIcon = this._addButtonIcon.bind(this);
   }
 
 
   _playpause(){
-    if (this.props.playing){
+    if (this.props.playing && this.props.currentTrack.id === this.props.track.id){
       this.props.pauseTrack();
     } else {
       this.props.playTrack(this.props.track);
     }
+  }
+
+  _addButtonIcon(){
+    if (this.props.playing && this.props.currentTrack.id === this.props.track.id){
+      $(this.refs.playButton).removeClass('play-image');
+      $(this.refs.playButton).addClass('pause-image');
+    } else {
+      $(this.refs.playButton).addClass('play-image');
+      $(this.refs.playButton).removeClass('pause-image');
+    }
+  }
+
+  componentDidUpdate(){
+    this._addButtonIcon();
+  }
+
+  componentDidMount(){
+    this._addButtonIcon();
   }
 
   render(){
@@ -23,8 +43,10 @@ class Track extends React.Component{
         <div className="track-title">{this.props.track.title}</div>
         <div className="track-artist">{this.props.track.artist}</div>
         <div className="play-bar">
-          <button className="play-button" onClick={this._playpause}></button>
-          <div className="scrubber"></div>
+          <button ref="playButton"
+            className="play-button play-image"
+            onClick={this._playpause}></button>
+          <PlayBar />
         </div>
         {/*
         <div className="like-and-comments">

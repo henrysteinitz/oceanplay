@@ -9,7 +9,9 @@ class Stream extends React.Component{
   }
 
   render(){
-    const tracks = this.props.tracks.map( (track) => <Track track={track}/> )
+    const tracks = this.props.tracks.map( (track) => (
+      <Track track={track} key={track.id} />
+    ));
 
     return (
       <div className="stream">

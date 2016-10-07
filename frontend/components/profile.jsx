@@ -1,6 +1,8 @@
 import React from 'react';
 import Stream from './stream';
 import ProfilePanel from './profile_panel';
+import ProfileTabs from  './profile_tabs';
+//import Stats from './stats';
 
 class Profile extends React.Component{
 
@@ -15,7 +17,9 @@ class Profile extends React.Component{
     return (
       <main>
         <ProfilePanel />
+        <ProfileTabs />
         <Stream tracks={this.props.stream.tracks} />
+        {/* <Stats /> */}
       </main>
     );
   }

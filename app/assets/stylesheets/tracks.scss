@@ -37,11 +37,18 @@
 .play-button{
   width:38px;
   height: 38px;
-  background: url('/play.png');
   background-size: contain;
 }
 .play-button:hover{
   cursor:pointer;
+}
+.play-image{
+  background: url('/play.png');
+  background-size: contain;
+}
+.pause-image{
+  background: url('/pause.png');
+  background-size: contain;
 }
 .like-and-comments{
   display: relative;
