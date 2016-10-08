@@ -1,5 +1,5 @@
 import React from 'react';
-import Analyser from 'web-audio-analyser';
+
 
 class PlayBar extends React.Component{
   constructor(props){
@@ -7,7 +7,7 @@ class PlayBar extends React.Component{
   }
 
   render(){
-    return (<div></div>);
+    return (<span className="outer-play-bar"></span>);
   }
 }
 

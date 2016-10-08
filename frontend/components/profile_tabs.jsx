@@ -20,6 +20,8 @@ class ProfileTabs extends React.Component{
         <span className="profile-tab">
           Reposts
         </span>
+
+        <button className="panel-follow-button">Follow</button>
       </div>
     );
   }

@@ -26,14 +26,12 @@
 }
 
 .profile-pic-container{
-  margin-top: 100px;
-  width: 180px;
-  height: 180px;
+  width: 140px;
+  height: 140px;
   display: inline-block;
-  background: white;
   border-radius: 90px;
   overflow: hidden;
-  box-shadow: 0 4px 6px 0px rgba(0,0,0,.6);
+  box-shadow: 0 2px 6px 0px rgba(20,20,20,.4);
   line-height: 0px;
 }
 
@@ -42,19 +40,27 @@
   width: 100%;
   height: auto;
   vertical-align: top;
-
 }
 
+
 .display-name{
-  margin-top: 260px;
+  display: block;
+  margin-top: 20px;
   margin-bottom: 6px;
   margin-left: 60px;
   color: white;
-  font: 37pt "Helvetica neue";
+  font: 47pt "Helvetica neue";
+  font-weight: 100;
+}
+
+.artist-info{
+  color: white;
+  font: 14px "Helvetica neue";
   font-weight: 200;
 }
 
 .panel-play-button{
+  float: right;
   display: inline-block;
   margin-left: 60px;
   height: 34px;
@@ -76,15 +82,17 @@
 }
 
 .panel-follow-button{
+  float: right;
   display: inline-block;
-  margin-left: 20px;
+  vertical-align: top;
+  margin-top: -8px;
+  margin-bottom: 8px;
   height: 34px;
   padding: 7px;
   padding-left: 47px;
   padding-right: 47px;
   border-radius: 3px;
-  border:1px solid rgba(250,250,250, .24);
-  background: rgba(0,0,0,.44);
+  background: rgb(48,23,75);
   text-align: center;
   color: white;
   font: 15px 'Helvetica neue';
@@ -93,20 +101,33 @@
 }
 
 .panel-follow-button:hover{
-  background:rgb(40,205,125);
-  border: 1px solid rgb(40,205,125);
+  background:rgb(18,18,80);
+}
+.button-contaier{
+  float: right;
+}
+
+.panel-row{
+  text-align: left;
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  width: 100%;
 }
 
 .profile-tabs{
   display: inline-block;
   position: relative;
-  margin-top: 32px;
+  margin-top: 26px;
   margin-left: 60px;
-  border-bottom: 1px solid rgb(200,200,200);
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgb(218,218,218);
+  width: calc(100% - 120px);
 }
 
 .profile-tab{
   font: 20px "Helvetica neue";
+  font-weight: 200;
   color: rgb(150,150,150);
   margin-right: 50px;
 }

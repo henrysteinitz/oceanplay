@@ -35,6 +35,7 @@
   margin-left: -4px;
 }
 .play-button{
+  display: inline-block;
   width:38px;
   height: 38px;
   background-size: contain;
@@ -96,4 +97,14 @@
 }
 .comment-counter{
 
+}
+
+.outer-play-bar{
+  display: inline-block;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  margin-left: 16px;
+  width:400px;
+  height:8px;
+  background: rgb(206,206,206);
 }
