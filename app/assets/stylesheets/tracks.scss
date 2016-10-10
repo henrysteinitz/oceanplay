@@ -13,32 +13,35 @@
   width: 100%;
 }
 .track-right{
-  padding-top: 20px;
+  width: calc(100% - 200px);
+  padding-top: 18px;
   margin-left: 20px;
   vertical-align: top;
   display: inline-block;
 }
 
 .track-title{
-  font: 27px "Helvetica neue";
-  font-weight: 600;
-  color: rgb(56,56,56);
+  font: 39px "Raleway";
+  font-weight: 300;
+  color: rgb(16,16,16);
 }
 
 .track-artist{
-  font: 16px "Helvetica neue";
+  font: 16px "Raleway";
   font-weight: 400;
   color: rgb(126,126,126);
 }
 .play-bar{
+  width: 100%;
   margin-top: 14px;
-  margin-left: -4px;
+  margin-left: -5px;
 }
 .play-button{
   display: inline-block;
-  width:38px;
-  height: 38px;
+  width:40px;
+  height: 32px;
   background-size: contain;
+  background-repeat: no-repeat;
 }
 .play-button:hover{
   cursor:pointer;
@@ -46,10 +49,12 @@
 .play-image{
   background: url('/play.png');
   background-size: contain;
+  background-repeat: no-repeat;
 }
 .pause-image{
   background: url('/pause.png');
   background-size: contain;
+  background-repeat: no-repeat;
 }
 .like-and-comments{
   display: relative;
@@ -58,14 +63,48 @@
   margin-left: -2px;
 }
 .like-button{
-  width:30px;
-  height: 28px;
-  background: url('/hearts_filled.png');
-  background-size: contain;
-  margin-right: 58px;
-  vertical-align: bottom;
-  margin-bottom: 1px
+  width: 19px;
+  height: 19px;
+  background: url('/like_filled.png');
+  margin-top: 6px;
 }
+.like-button:hover{
+
+}
+.save-button{
+  width: 27px;
+  height: 27px;
+  background: url('/plus.png');
+  margin-top: 3px;
+}
+.comment-button{
+  width: 18px;
+  height: 18px;
+  background: url('/comment_filled.png');
+  margin-top: 7px;
+}
+.retrack-button{
+  width: 20px;
+  height: 20px;
+  background: url('/retrack_filled.png');
+  margin-top: 7px;
+}
+
+.right-control{
+  float: right;
+  background-size: contain;
+  vertical-align: bottom;
+  margin-left: 17px;
+  filter: opacity(40%);
+}
+.right-control{
+  cursor: pointer;
+}
+.right-controls-container{
+  margin-top: 6px;
+  float: right;
+}
+
 .like-counter{
 
 }
@@ -86,6 +125,7 @@
 .comment-input:focus{
   outline: none;
 }
+/*
 .comment-button{
   float: right;
   width:25px;
@@ -94,17 +134,30 @@
   background: url('/comments_filled.png');
   background-size: contain;
   vertical-align: bottom;
-}
+} */
 .comment-counter{
 
 }
 
+.controls{
+  width: 100%;
+}
+
 .outer-play-bar{
-  display: inline-block;
-  border-radius: 2px;
-  margin-bottom: 12px;
-  margin-left: 16px;
-  width:400px;
-  height:8px;
-  background: rgb(206,206,206);
+  position: relative;
+  display: block;
+  border-radius: 0px;
+  margin-top: 14px;
+  margin-left: 5px;
+  width: calc(100% - 5px);
+  height:7px;
+  background: rgb(216,216,216);
+  cursor: pointer;
+}
+
+.inner-play-bar{
+  display: block;
+  height: 100%;
+  width: 0px;
+  background: black;
 }

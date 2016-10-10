@@ -5,11 +5,13 @@ class UploadForm extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      artUrl: 'test-art.jpg',
+      artUrl: '',
       fileUploaded: false,
+      artUpladed: false,
       title: "",
       description: "",
-      audioFile: null
+      audioFile: null,
+      artFile: null
     };
 
     this._handleUpload = this._handleUpload.bind(this);
@@ -22,7 +24,6 @@ class UploadForm extends React.Component{
   _handleInput(type){
     console.log(this.state);
     return (e) => this.setState({[type]: e.currentTarget.value});
-
   }
 
   _handleAudio(e){
@@ -39,7 +40,23 @@ class UploadForm extends React.Component{
   }
 
   _handleArt(e){
+    const reader = new FileReader();
+    const file = e.currentTarget.files[0];
+    console.log('asdfasdf');
+    //const preview = this.refs.artPreview;
 
+    reader.addEventListener('loadend', () => {
+      this.setState({artUrl: reader.result})
+    });
+
+    this.setState({
+      artFile: file,
+      artUploaded: true
+    })
+
+    if (file){
+      reader.readAsDataURL(file);
+    }
   }
 
   _handleUpload(){
@@ -49,10 +66,12 @@ class UploadForm extends React.Component{
       trackData.append("track[description]", this.state.description);
       trackData.append("track[artist_id]", this.props.currentUser.id);
       trackData.append("track[audio]", this.state.audioFile);
+      trackData.append("track[art]", this.state.artFile);
       this.props.uploadTrack(
         trackData,
         (r) => console.log(r)
       );
+      //this.setState()
     }
   }
 
@@ -70,9 +89,14 @@ class UploadForm extends React.Component{
         </div>
         <div className="upload-sheet" ref='uploadSheet'>
           <div className="upload-form-upper" ref="upper">
-            <span className='art-container'>
-              <img src={this.state.artUrl} />
-            </span>
+            <label className='art-preview-container'>
+              <img src={this.state.artUrl} ref="artPreview" />
+              <input type="file"
+                className="none"
+                ref="artUploadButton"
+                onChange={this._handleArt}>
+              </input>
+            </label>
             <span className='info-container'>
               <input type="text"
                 className="standard-input"
@@ -104,8 +128,5 @@ class UploadForm extends React.Component{
   }
 
 }
-
-
-
 
 export default UploadForm;

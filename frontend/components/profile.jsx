@@ -11,13 +11,14 @@ class Profile extends React.Component{
 
     this.props.clearStream();
     this.props.loadProfile(this.props.params.id);
+    console.log(this.props.params.id);
   }
 
   render(){
     return (
       <main>
         <ProfilePanel />
-        <ProfileTabs />
+        <ProfileTabs userId={this.props.params.id}/>
         <Stream tracks={this.props.stream.tracks} />
         {/* <Stats /> */}
       </main>

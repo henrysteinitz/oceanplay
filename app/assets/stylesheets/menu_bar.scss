@@ -12,7 +12,7 @@
   z-index: 998;
 }
 .menu-bar .link{
-  font-family: "Helvetica neue"
+  font-family: "Raleway"
 }
 .left-menu{
   color: white;
@@ -20,13 +20,13 @@
   vertical-align: bottom;
 }
 .left-menu > .link{
-  font-size: 18px;
-  font-weight: 100;
+  font-size: 16px;
+  font-weight: 300;
   display: inline-block;
   margin-bottom: 15px;
   margin-left: 34px;
   margin-right: 6px;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .menu-bar .link:hover{
@@ -40,12 +40,12 @@
 }
 .right-menu > .link{
   font-size: 16px;
-  font-weight: 100;
+  font-weight: 300;
   display: inline-block;
   float: left;
-  margin-top: 15px;
+  margin-top: 17px;
   margin-right: 38px;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .account-nav-container{

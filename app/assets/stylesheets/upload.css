@@ -35,22 +35,27 @@
   left: calc(50% - 144px);
   padding: 8px;
   border-radius: 2px;
-  background: rgb(40,205,125);
+  background: rgb(19,19,19);
   text-align: center;
   color: white;
-  font: 17px 'Helvetica neue';
+  font: 17px 'Raleway';
   cursor: pointer;
 
 }
-.art-container{
+.art-preview-container{
   margin-top: 50px;
   margin-right: 12px;
   display: inline-block;
   height: 240px;
   width:240px;
   vertical-align: top;
+  background: rgb(216,216,216);
 }
-.art-container img{
+.art-preview-container:hover{
+  cursor: pointer;
+  background: rgb(128,208,250);
+}
+.art-preview-container img{
   width: 100%;
   height: auto;
 }

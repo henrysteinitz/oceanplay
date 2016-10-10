@@ -15,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tracks: [],
     nowPlaying: {playing: false}
   };
+  preloadedState.profile = {
+    following: false
+  };
 
   const store = configureStore(preloadedState);
   window.store = store;

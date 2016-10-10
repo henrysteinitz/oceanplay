@@ -49,7 +49,7 @@
   margin-bottom: 6px;
   margin-left: 60px;
   color: white;
-  font: 47pt "Helvetica neue";
+  font: 47pt "Raleway";
   font-weight: 100;
 }
 
@@ -72,7 +72,7 @@
   background: rgba(0,0,0,.44);
   text-align: center;
   color: white;
-  font: 15px 'Helvetica neue';
+  font: 15px 'Raleway';
   font-weight: 600;
   cursor: pointer;
 }
@@ -89,19 +89,25 @@
   margin-bottom: 8px;
   height: 34px;
   padding: 7px;
-  padding-left: 47px;
-  padding-right: 47px;
+  padding-left: 40px;
+  padding-right: 40px;
   border-radius: 3px;
-  background: rgb(48,23,75);
   text-align: center;
   color: white;
-  font: 15px 'Helvetica neue';
+  font: 15px 'Raleway';
   cursor: pointer;
   font-weight: 600;
+  letter-spacing: 1px;
+}
+.not-following{
+  background: rgb(19,19,19);
+}
+.following{
+  background: blue;
 }
 
 .panel-follow-button:hover{
-  background:rgb(18,18,80);
+  background:rgb(75,0,170);
 }
 .button-contaier{
   float: right;
@@ -126,8 +132,8 @@
 }
 
 .profile-tab{
-  font: 20px "Helvetica neue";
-  font-weight: 200;
+  font: 20px "Raleway";
+  font-weight: 300;
   color: rgb(150,150,150);
   margin-right: 50px;
 }

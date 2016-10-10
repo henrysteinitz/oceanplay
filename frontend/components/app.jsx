@@ -11,31 +11,38 @@ class App extends React.Component{
     this._checkPlayPause = this._checkPlayPause.bind(this);
   }
 
-  componentWillUpdate(nextProps, nextState){
-    if (nextProps.nowPlaying && this.props.nowPlaying){
-      if(nextProps.nowPlaying.track.id == this.props.nowPlaying.track.id){
-        //this._checkPlayPause(nextProps);
-      }
-    }
-  }
-
-  _checkPlayPause(newProps){
-    if (newProps.nowPlaying.playing){
+  _checkPlayPause(){
+    if (this.props.nowPlaying.playing){
       this.refs.audio.play()
     } else {
       this.refs.audio.pause()
     }
   }
 
-  componentDidUpdate(){
-    this._checkPlayPause(this.props);
+  _checkNewTime(){
+    if(this.props.nowPlaying.newTime){
+      this.refs.audio.currentTime = this.props.nowPlaying.newTime
+      this.props.setTime(this.refs.audio.currentTime);
+      this.props.clearNewTime();
+    }
+  }
 
-    //this.refs.audio.crossOrigin = "anonymous";
+  componentDidUpdate(){
+    this._checkPlayPause();
+    this._checkNewTime();
     //let analyser = require('web-audio-analyser')(this.refs.audio);
     //console.log(analyser.waveform())
   }
 
-
+  componentDidMount(){
+    this.props.setDuration(this.refs.audio.duration)
+    setInterval(() => {
+      if (this.props.nowPlaying.playing){
+        this.props.setTime(this.refs.audio.currentTime);
+        this.props.setDuration(this.refs.audio.duration)
+      }
+    }, 1.0);
+  }
 
   render(){
     const source = this.props.nowPlaying.track.audioUrl;
@@ -44,7 +51,7 @@ class App extends React.Component{
       <div id='app'>
         <MenuBar />
         {this.props.children}
-        <audio id="testau" ref="audio" preload="none" src={source}>
+        <audio id="audio" ref="audio" preload="none" src={source}>
         </audio>
       </div>
     );
@@ -52,9 +59,16 @@ class App extends React.Component{
 }
 
 import { connect } from 'react-redux';
+import { setTime, setDuration, clearNewTime} from '../actions/track_actions';
 
 const mapStateToProps = ({ nowPlaying }) => ({
   nowPlaying
 });
 
-export default connect(mapStateToProps, null)(App);
+const mapDispatchToProps = (dispatch) => ({
+  setTime: (time) => dispatch(setTime(time)),
+  setDuration: (duration) => dispatch(setDuration(duration)),
+  clearNewTime: () => dispatch(clearNewTime())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

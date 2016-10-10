@@ -11,9 +11,37 @@ body{
   font: 14px 'Helvetica neue';
   resize: none;
 }
+
 .standard-input:focus{
   outline:none;
-  border-color: rgb(28,128,250);
+  /*border-color: rgb(28,128,250); */
+  border-color: rgb(128,208,250);
+}
+
+.tabs{
+  display: inline-block;
+  position: relative;
+  margin-top: 26px;
+  margin-left: 60px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgb(218,218,218);
+  width: calc(100% - 120px);
+}
+
+.tab{
+  font: 20px "Raleway";
+  font-weight: 300;
+  color: rgb(150,150,150);
+  margin-right: 50px;
+}
+
+.tab:hover{
+  cursor: pointer;
+}
+
+.selected-tab{
+  font-weight: 900;
+  color: rgb(26,26,26);
 }
 
 /* stream */

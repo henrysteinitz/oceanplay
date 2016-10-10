@@ -20,7 +20,7 @@ class Track < ApplicationRecord
     foreign_key: :artist_id,
     primary_key: :id
 
-  #has_attached_file :art
-  #validates_attachment_content_type :art, content_type: /\Aimage\/.*\Z/
+  has_attached_file :art
+  validates_attachment_content_type :art, content_type: /\Aimage\/.*\Z/
 
 end

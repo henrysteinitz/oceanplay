@@ -13,7 +13,7 @@ export const clearStream = () => ({
 })
 
 // caught by middleware / builds user's main stream via ajax
-export const loadMainStream = (id) => ({
+export const loadMainStream = (tab) => ({
   type: LOAD_MAIN_STREAM,
-  id
+  tab
 })

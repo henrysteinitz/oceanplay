@@ -10,16 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161005212347) do
+ActiveRecord::Schema.define(version: 20161010132920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "follows", force: :cascade do |t|
+    t.integer  "followed_id", null: false
+    t.integer  "follower_id", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
   create_table "tracks", force: :cascade do |t|
-    t.string   "title",              null: false
-    t.integer  "artist_id",          null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.string   "title",                          null: false
+    t.integer  "artist_id",                      null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.string   "audio_file_name"
     t.string   "audio_content_type"
     t.integer  "audio_file_size"
@@ -29,6 +36,7 @@ ActiveRecord::Schema.define(version: 20161005212347) do
     t.integer  "art_file_size"
     t.datetime "art_updated_at"
     t.text     "description"
+    t.integer  "play_count",         default: 0, null: false
     t.index ["title"], name: "index_tracks_on_title", using: :btree
   end
 
