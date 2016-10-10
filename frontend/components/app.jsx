@@ -7,7 +7,7 @@ class App extends React.Component{
 
   constructor(props){
     super(props);
-
+    props.loadLikes();
     this._checkPlayPause = this._checkPlayPause.bind(this);
   }
 
@@ -60,6 +60,7 @@ class App extends React.Component{
 
 import { connect } from 'react-redux';
 import { setTime, setDuration, clearNewTime} from '../actions/track_actions';
+import { loadLikes } from '../actions/like_actions';
 
 const mapStateToProps = ({ nowPlaying }) => ({
   nowPlaying
@@ -68,7 +69,8 @@ const mapStateToProps = ({ nowPlaying }) => ({
 const mapDispatchToProps = (dispatch) => ({
   setTime: (time) => dispatch(setTime(time)),
   setDuration: (duration) => dispatch(setDuration(duration)),
-  clearNewTime: () => dispatch(clearNewTime())
+  clearNewTime: () => dispatch(clearNewTime()),
+  loadLikes: () => dispatch(loadLikes())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

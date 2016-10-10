@@ -7,6 +7,7 @@
   height: 180px;
   background: black;
   border: 0;
+  cursor: pointer;
 }
 .track{
   margin-bottom: 30px;
@@ -24,6 +25,7 @@
   font: 39px "Raleway";
   font-weight: 300;
   color: rgb(16,16,16);
+  cursor: pointer;
 }
 
 .track-artist{
@@ -68,9 +70,6 @@
   background: url('/like_filled.png');
   margin-top: 6px;
 }
-.like-button:hover{
-
-}
 .save-button{
   width: 27px;
   height: 27px;
@@ -104,10 +103,23 @@
   margin-top: 6px;
   float: right;
 }
+.like-button:hover{
+  background: url('/like_filled_red.png');
+  background-size: contain;
+  filter: opacity(100%);
+}
+.liked{
+  width: 19px;
+  height: 19px;
+  background: url('/like_filled_red.png');
+  background-size: contain;
+  filter: opacity(100%);
+}
 
 .like-counter{
 
 }
+
 .comment-input{
   float: right;
   height: 20px;
@@ -160,4 +172,59 @@
   height: 100%;
   width: 0px;
   background: black;
+}
+
+.track-panel{
+  margin-top: 45px;
+  background: white;
+  width: calc(100% - 120px);
+  height: 400px;
+  margin-left: 60px;
+  margin-right: 60px;
+  border-bottom: 1px solid rgb(218,218,218);
+}
+
+.track-panel-art{
+  float: right;
+  margin-top: 20px;
+  display: inline-block;
+  width: 360px;
+  height: 360px;
+}
+
+.track-panel-title{
+  display: inline-block;
+  font: 70px 'Raleway';
+  font-weight: 200;
+  margin-top: 100px;
+}
+
+.track-panel-artist{
+  display: inline-block;
+  font: 40px 'Raleway';
+  font-weight: 400;
+  color: rgb(126,126,126)
+}
+
+.left-panel{
+  width: calc(100% - 380px);
+  display: inline-block;
+}
+
+.panel-right-controls-container{
+  margin-top: 50px;
+  vertical-align: bottom;
+}
+
+.panel-play-button{
+  float: left;
+  display: inline-block;
+  width:60px;
+  height: 48px;
+  margin-top: -20px;
+  margin-left: -4px;
+
+  vertical-align: bottom;
+  background-size: contain;
+  background-repeat: no-repeat;
 }

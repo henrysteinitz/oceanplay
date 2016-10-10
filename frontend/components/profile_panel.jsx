@@ -17,8 +17,7 @@ class ProfilePanel extends React.Component{
           <div className="display-name">
             Artist Name
           </div>
-          {/* <button className="panel-play-button">Play</button> */}
-          {/*}<button className="panel-follow-button">Follow</button> */}
+
         </div>
       </div>
     );

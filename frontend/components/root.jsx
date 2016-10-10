@@ -7,6 +7,7 @@ import Library from './library';
 import Profile from './profile';
 import UploadForm from './upload_form';
 import SignIn from './sign_in';
+import TrackPage from './track_page';
 
 class Root extends React.Component{
   constructor(props){
@@ -28,6 +29,7 @@ class Root extends React.Component{
               <Route path="/stream" onEnter={this._checkAuth} component={MainStream} />
               <Route path="/library" onEnter={this._checkAuth} component={Library} />
               <Route path="/profile/:id" component={Profile} />
+              <Route path="/track/:id" component={TrackPage} />
             </Route>
             <Route path="/signin" component={SignIn} />
           </Router>

@@ -3,7 +3,7 @@ class Api::TracksController < ApplicationController
   def show
     @track = Track.find(params[:id])
     if @track
-      render :track
+      render :show
     else
       render json: {status: 400, errors: ["Track not found."]}
     end

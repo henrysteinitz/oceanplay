@@ -21496,6 +21496,10 @@
 	
 	var _sign_in2 = _interopRequireDefault(_sign_in);
 	
+	var _track_page = __webpack_require__(569);
+	
+	var _track_page2 = _interopRequireDefault(_track_page);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21537,7 +21541,8 @@
 	            { path: '/', onEnter: this._checkAuth, component: _app2.default },
 	            _react2.default.createElement(_reactRouter.Route, { path: '/stream', onEnter: this._checkAuth, component: _main_stream2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: '/library', onEnter: this._checkAuth, component: _library2.default }),
-	            _react2.default.createElement(_reactRouter.Route, { path: '/profile/:id', component: _profile2.default })
+	            _react2.default.createElement(_reactRouter.Route, { path: '/profile/:id', component: _profile2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: '/track/:id', component: _track_page2.default })
 	          ),
 	          _react2.default.createElement(_reactRouter.Route, { path: '/signin', component: _sign_in2.default })
 	        )
@@ -28698,6 +28703,8 @@
 	
 	var _track_actions = __webpack_require__(263);
 	
+	var _like_actions = __webpack_require__(566);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28714,6 +28721,7 @@
 	
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
+	    props.loadLikes();
 	    _this._checkPlayPause = _this._checkPlayPause.bind(_this);
 	    return _this;
 	  }
@@ -28792,6 +28800,9 @@
 	    },
 	    clearNewTime: function clearNewTime() {
 	      return dispatch((0, _track_actions.clearNewTime)());
+	    },
+	    loadLikes: function loadLikes() {
+	      return dispatch((0, _like_actions.loadLikes)());
 	    }
 	  };
 	};
@@ -29489,6 +29500,9 @@
 	  value: true
 	});
 	var UPLOAD_TRACK = exports.UPLOAD_TRACK = 'UPLOAD_TRACK';
+	var LOAD_TRACK = exports.LOAD_TRACK = 'LOAD_TRACK';
+	var RECEIVE_TRACK = exports.RECEIVE_TRACK = 'RECEIVE_TRACK';
+	var CLEAR_TRACK = exports.CLEAR_TRACK = 'CLEAR_TRACK';
 	var PLAY_TRACK = exports.PLAY_TRACK = 'PLAY_TRACK';
 	var PAUSE_TRACK = exports.PAUSE_TRACK = 'PAUSE_TRACK';
 	var SET_TIME = exports.SET_TIME = 'SET_TIME';
@@ -29501,6 +29515,26 @@
 	    type: UPLOAD_TRACK,
 	    trackData: trackData,
 	    callback: callback
+	  };
+	};
+	
+	var loadTrack = exports.loadTrack = function loadTrack(id) {
+	  return {
+	    type: LOAD_TRACK,
+	    id: id
+	  };
+	};
+	
+	var receiveTrack = exports.receiveTrack = function receiveTrack(track) {
+	  return {
+	    type: RECEIVE_TRACK,
+	    track: track
+	  };
+	};
+	
+	var clearTrack = exports.clearTrack = function clearTrack() {
+	  return {
+	    type: CLEAR_TRACK
 	  };
 	};
 	
@@ -29624,7 +29658,11 @@
 	
 	var _play_bar2 = _interopRequireDefault(_play_bar);
 	
+	var _reactRouter = __webpack_require__(196);
+	
 	var _track_actions = __webpack_require__(263);
+	
+	var _like_actions = __webpack_require__(566);
 	
 	var _reactRedux = __webpack_require__(173);
 	
@@ -29654,6 +29692,8 @@
 	    _this._startScrub = _this._startScrub.bind(_this);
 	    _this._endScrub = _this._endScrub.bind(_this);
 	    _this._updateInner = _this._updateInner.bind(_this);
+	    _this._like = _this._like.bind(_this);
+	    _this._toTrack = _this._toTrack.bind(_this);
 	    return _this;
 	  }
 	
@@ -29714,6 +29754,20 @@
 	      }
 	    }
 	  }, {
+	    key: '_like',
+	    value: function _like() {
+	      if (this.props.liked) {
+	        this.props.unlike();
+	      } else {
+	        this.props.like();
+	      }
+	    }
+	  }, {
+	    key: '_toTrack',
+	    value: function _toTrack() {
+	      _reactRouter.hashHistory.push('/track/' + this.props.track.id);
+	    }
+	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
 	      this._addButtonIcon();
@@ -29736,18 +29790,26 @@
 	        }
 	      }
 	
+	      var likedClass = "";
+	      if (this.props.liked) {
+	        likedClass = "liked";
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'track',
 	          onMouseUp: this._endScrub,
 	          onMouseMove: this._updateInner },
-	        _react2.default.createElement('img', { src: this.props.track.artUrl, className: 'track-art' }),
+	        _react2.default.createElement('img', { src: this.props.track.artUrl,
+	          className: 'track-art',
+	          onClick: this._toTrack }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'track-right' },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'track-title' },
+	            { className: 'track-title',
+	              onClick: this._toTrack },
 	            this.props.track.title
 	          ),
 	          _react2.default.createElement(
@@ -29769,7 +29831,8 @@
 	                { className: 'right-controls-container' },
 	                _react2.default.createElement('button', { className: 'comment-button right-control' }),
 	                _react2.default.createElement('button', { className: 'retrack-button right-control' }),
-	                _react2.default.createElement('button', { className: 'like-button right-control' })
+	                _react2.default.createElement('button', { onClick: this._like,
+	                  className: 'like-button right-control ' + likedClass })
 	              )
 	            ),
 	            _react2.default.createElement(_play_bar2.default, { time: time,
@@ -29789,17 +29852,19 @@
 	// Redux Container
 	
 	
-	var mapStateToProps = function mapStateToProps(_ref) {
+	var mapStateToProps = function mapStateToProps(_ref, ownProps) {
 	  var nowPlaying = _ref.nowPlaying;
+	  var likes = _ref.likes;
 	  return {
 	    playing: nowPlaying.playing,
 	    currentTrack: nowPlaying.track,
 	    time: nowPlaying.time,
-	    duration: nowPlaying.duration
+	    duration: nowPlaying.duration,
+	    liked: likes[ownProps.track.id]
 	  };
 	};
 	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 	  return {
 	    playTrack: function playTrack(track) {
 	      return dispatch((0, _track_actions.playTrack)(track));
@@ -29809,6 +29874,12 @@
 	    },
 	    setNewTime: function setNewTime(time) {
 	      return dispatch((0, _track_actions.setNewTime)(time));
+	    },
+	    like: function like() {
+	      return dispatch((0, _like_actions.like)(ownProps.track.id));
+	    },
+	    unlike: function unlike() {
+	      return dispatch((0, _like_actions.unlike)(ownProps.track.id));
 	    }
 	  };
 	};
@@ -54062,13 +54133,21 @@
 	
 	var _stream_reducer2 = _interopRequireDefault(_stream_reducer);
 	
+	var _profile_reducer = __webpack_require__(560);
+	
+	var _profile_reducer2 = _interopRequireDefault(_profile_reducer);
+	
+	var _likes_reducer = __webpack_require__(564);
+	
+	var _likes_reducer2 = _interopRequireDefault(_likes_reducer);
+	
 	var _now_playing_reducer = __webpack_require__(552);
 	
 	var _now_playing_reducer2 = _interopRequireDefault(_now_playing_reducer);
 	
-	var _profile_reducer = __webpack_require__(560);
+	var _track_reducer = __webpack_require__(570);
 	
-	var _profile_reducer2 = _interopRequireDefault(_profile_reducer);
+	var _track_reducer2 = _interopRequireDefault(_track_reducer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -54076,7 +54155,9 @@
 	  session: _session_reducer2.default,
 	  stream: _stream_reducer2.default,
 	  profile: _profile_reducer2.default,
-	  nowPlaying: _now_playing_reducer2.default
+	  likes: _likes_reducer2.default,
+	  nowPlaying: _now_playing_reducer2.default,
+	  track: _track_reducer2.default
 	});
 
 /***/ },
@@ -54171,7 +54252,6 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.NowPlayingReducer = undefined;
 	
 	var _track_actions = __webpack_require__(263);
 	
@@ -54186,7 +54266,7 @@
 	  track: {}
 	};
 	
-	var NowPlayingReducer = exports.NowPlayingReducer = function NowPlayingReducer() {
+	var NowPlayingReducer = function NowPlayingReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : default_state;
 	  var action = arguments[1];
 	
@@ -54237,6 +54317,10 @@
 	
 	var _track_middleware2 = _interopRequireDefault(_track_middleware);
 	
+	var _likes_middleware = __webpack_require__(567);
+	
+	var _likes_middleware2 = _interopRequireDefault(_likes_middleware);
+	
 	var _profile_middleware = __webpack_require__(558);
 	
 	var _profile_middleware2 = _interopRequireDefault(_profile_middleware);
@@ -54247,7 +54331,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_session_middleware2.default, _track_middleware2.default, _profile_middleware2.default, _stream_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_session_middleware2.default, _track_middleware2.default, _likes_middleware2.default, _profile_middleware2.default, _stream_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
@@ -54370,10 +54454,15 @@
 	      switch (action.type) {
 	
 	        case _track_actions.UPLOAD_TRACK:
-	          (0, _track_api_util.uploadTrack)(action.trackData, action.callback);
+	          return (0, _track_api_util.uploadTrack)(action.trackData, action.callback);
+	
+	        case _track_actions.LOAD_TRACK:
+	          return (0, _track_api_util.fetchTrack)(action.id, function (res) {
+	            return dispatch((0, _track_actions.receiveTrack)(res.track));
+	          });
 	
 	        default:
-	          next(action);
+	          return next(action);
 	
 	      }
 	    };
@@ -54392,13 +54481,20 @@
 	  value: true
 	});
 	var uploadTrack = exports.uploadTrack = function uploadTrack(trackData, callback) {
-	  console.log(trackData);
 	  $.ajax({
 	    url: 'api/tracks',
 	    method: 'POST',
 	    processData: false,
 	    contentType: false,
 	    data: trackData,
+	    success: callback
+	  });
+	};
+	
+	var fetchTrack = exports.fetchTrack = function fetchTrack(id, callback) {
+	  $.ajax({
+	    url: '/api/tracks/' + id,
+	    method: 'GET',
 	    success: callback
 	  });
 	};
@@ -54680,6 +54776,349 @@
 	}(_react2.default.Component);
 	
 	exports.default = MainStreamTabs;
+
+/***/ },
+/* 564 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _like_actions = __webpack_require__(566);
+	
+	var _merge = __webpack_require__(432);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var LikesReducer = function LikesReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _like_actions.RECEIVE_LIKES:
+	      return action.likes;
+	
+	    case _like_actions.RECEIVE_SINGLE_LIKE:
+	      var newState = (0, _merge2.default)({}, state);
+	      var key = Object.keys(action.like)[0];
+	      newState[key] = action.like[key];
+	      return newState;
+	
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = LikesReducer;
+
+/***/ },
+/* 565 */,
+/* 566 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var LIKE = exports.LIKE = 'LIKE';
+	var UNLIKE = exports.UNLIKE = 'UNLIKE';
+	var RECEIVE_LIKES = exports.RECEIVE_LIKES = 'RECIEVE_LIKES';
+	var RECEIVE_SINGLE_LIKE = exports.RECEIVE_SINGLE_LIKE = 'RECEIVE_SINGLE_LIKE';
+	var LOAD_LIKES = exports.LOAD_LIKES = 'LOAD_LIKES';
+	
+	var like = exports.like = function like(track_id) {
+	  return {
+	    type: LIKE,
+	    track_id: track_id
+	  };
+	};
+	
+	var unlike = exports.unlike = function unlike(track_id) {
+	  return {
+	    type: UNLIKE,
+	    track_id: track_id
+	  };
+	};
+	
+	var receiveLikes = exports.receiveLikes = function receiveLikes(likes) {
+	  return {
+	    type: RECEIVE_LIKES,
+	    likes: likes
+	  };
+	};
+	
+	var receiveSingleLike = exports.receiveSingleLike = function receiveSingleLike(like) {
+	  return {
+	    type: RECEIVE_SINGLE_LIKE,
+	    like: like
+	  };
+	};
+	
+	var loadLikes = exports.loadLikes = function loadLikes() {
+	  return {
+	    type: LOAD_LIKES
+	  };
+	};
+
+/***/ },
+/* 567 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _like_actions = __webpack_require__(566);
+	
+	var _likes_api_util = __webpack_require__(568);
+	
+	var LikesMiddleware = function LikesMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	
+	        case _like_actions.LOAD_LIKES:
+	          return (0, _likes_api_util.fetchLikes)(function (res) {
+	            dispatch((0, _like_actions.receiveLikes)(res.likes));
+	          });
+	
+	        case _like_actions.LIKE:
+	          return (0, _likes_api_util.like)(action.track_id, function (res) {
+	            dispatch((0, _like_actions.receiveSingleLike)(res.like));
+	          });
+	
+	        case _like_actions.UNLIKE:
+	          return (0, _likes_api_util.unlike)(action.track_id, function (res) {
+	            return dispatch((0, _like_actions.receiveSingleLike)(res.like));
+	          });
+	
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = LikesMiddleware;
+
+/***/ },
+/* 568 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var fetchLikes = exports.fetchLikes = function fetchLikes(callback) {
+	  $.ajax({
+	    url: '/api/likes',
+	    method: 'GET',
+	    success: callback
+	  });
+	};
+	
+	var like = exports.like = function like(track_id, callback) {
+	  $.ajax({
+	    url: '/api/likes',
+	    method: 'POST',
+	    dataType: 'json',
+	    data: { like: { track_id: track_id } },
+	    success: callback
+	  });
+	};
+	
+	var unlike = exports.unlike = function unlike(track_id, callback) {
+	  $.ajax({
+	    url: '/api/likes',
+	    method: 'DELETE',
+	    dataType: 'json',
+	    data: { like: { track_id: track_id } },
+	    success: callback
+	  });
+	};
+
+/***/ },
+/* 569 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _play_bar = __webpack_require__(266);
+	
+	var _play_bar2 = _interopRequireDefault(_play_bar);
+	
+	var _reactRedux = __webpack_require__(173);
+	
+	var _track_actions = __webpack_require__(263);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var TrackPage = function (_React$Component) {
+	  _inherits(TrackPage, _React$Component);
+	
+	  function TrackPage(props) {
+	    _classCallCheck(this, TrackPage);
+	
+	    var _this = _possibleConstructorReturn(this, (TrackPage.__proto__ || Object.getPrototypeOf(TrackPage)).call(this, props));
+	
+	    _this.state = { scrubbing: false };
+	    props.loadTrack(props.params.id);
+	
+	    _this._playpause = _this._playpause.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(TrackPage, [{
+	    key: '_playpause',
+	    value: function _playpause() {
+	      if (this.props.playing && this.props.currentTrack.id === this.props.track.id) {
+	        this.props.pauseTrack();
+	      } else {
+	        this.props.playTrack(this.props.track);
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'track-page' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'track-panel' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'left-panel' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'track-panel-title' },
+	              this.props.track.title
+	            ),
+	            _react2.default.createElement('br', null),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'track-panel-artist' },
+	              this.props.track.artist
+	            ),
+	            _react2.default.createElement('br', null),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'controls' },
+	              _react2.default.createElement('button', { ref: 'playButton',
+	                className: 'panel-play-button play-image',
+	                onClick: this._playpause }),
+	              _react2.default.createElement(
+	                'div',
+	                { className: 'panel-right-controls-container' },
+	                _react2.default.createElement('button', { className: 'retrack-button right-control' }),
+	                _react2.default.createElement('button', { onClick: this._like,
+	                  className: 'like-button right-control' })
+	              )
+	            ),
+	            _react2.default.createElement('br', null),
+	            _react2.default.createElement(_play_bar2.default, { time: this.props.time,
+	              ref: 'playBar',
+	              duration: this.props.duration,
+	              scrubbing: this.state.scrubbing,
+	              startScrub: this._startScrub })
+	          ),
+	          _react2.default.createElement('img', { className: 'track-panel-art', src: this.props.track.artUrl })
+	        ),
+	        _react2.default.createElement('div', { className: 'comments-page' })
+	      );
+	    }
+	  }]);
+	
+	  return TrackPage;
+	}(_react2.default.Component);
+	
+	var mapStateToProps = function mapStateToProps(_ref, ownProps) {
+	  var track = _ref.track;
+	  var nowPlaying = _ref.nowPlaying;
+	  var likes = _ref.likes;
+	  return {
+	    playing: nowPlaying.playing,
+	    currentTrack: nowPlaying.track,
+	    time: nowPlaying.time,
+	    duration: nowPlaying.duration,
+	    liked: likes[track.id],
+	    track: track
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    loadTrack: function loadTrack(id) {
+	      return dispatch((0, _track_actions.loadTrack)(id));
+	    },
+	    playTrack: function playTrack(track) {
+	      return dispatch((0, _track_actions.playTrack)(track));
+	    },
+	    pauseTrack: function pauseTrack() {
+	      return dispatch((0, _track_actions.pauseTrack)());
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(TrackPage);
+
+/***/ },
+/* 570 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _track_actions = __webpack_require__(263);
+	
+	var TrackReducer = function TrackReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	
+	    case _track_actions.RECEIVE_TRACK:
+	      return action.track;
+	
+	    case _track_actions.CLEAR_TRACK:
+	      return {};
+	
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = TrackReducer;
 
 /***/ }
 /******/ ]);

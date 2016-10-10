@@ -1,5 +1,6 @@
 import React from 'react';
 import PlayBar from './play_bar';
+import { hashHistory } from 'react-router';
 
 class Track extends React.Component{
   constructor(props){
@@ -14,6 +15,8 @@ class Track extends React.Component{
     this._startScrub = this._startScrub.bind(this);
     this._endScrub = this._endScrub.bind(this);
     this._updateInner = this._updateInner.bind(this);
+    this._like = this._like.bind(this);
+    this._toTrack = this._toTrack.bind(this);
   }
 
 
@@ -50,8 +53,6 @@ class Track extends React.Component{
     }
   }
 
-
-
   _updateInner(e, pageX){
     if (e){
       pageX = e.pageX
@@ -64,6 +65,18 @@ class Track extends React.Component{
       inner.width(`${scrubPos}px`);
       this.setState({ scrubPos });
     }
+  }
+
+  _like(){
+    if (this.props.liked){
+      this.props.unlike();
+    } else {
+      this.props.like();
+    }
+  }
+
+  _toTrack(){
+    hashHistory.push(`/track/${this.props.track.id}`);
   }
 
   componentDidUpdate(){
@@ -85,14 +98,21 @@ class Track extends React.Component{
       }
     }
 
+    let likedClass = ""
+    if (this.props.liked){
+      likedClass = "liked";
+    }
 
     return (
     <div className="track"
       onMouseUp={this._endScrub}
       onMouseMove={this._updateInner}>
-      <img src={this.props.track.artUrl} className="track-art"/>
+      <img src={this.props.track.artUrl}
+        className="track-art"
+        onClick={this._toTrack}/>
       <div className="track-right">
-        <div className="track-title">{this.props.track.title}</div>
+        <div className="track-title"
+          onClick={this._toTrack}>{this.props.track.title}</div>
         <div className="track-artist">{this.props.track.artist}</div>
         <div className="play-bar">
           <div className="controls">
@@ -103,7 +123,8 @@ class Track extends React.Component{
             <div className='right-controls-container'>
               <button className="comment-button right-control"></button>
               <button className="retrack-button right-control"></button>
-              <button className="like-button right-control"></button>
+              <button onClick={this._like}
+                className={`like-button right-control ${likedClass}`}></button>
             </div>
           </div>
           <PlayBar time={time}
@@ -129,19 +150,23 @@ class Track extends React.Component{
 
 // Redux Container
 import { playTrack, pauseTrack, setNewTime } from '../actions/track_actions';
+import { like, unlike, loadLikes } from '../actions/like_actions'
 import { connect } from 'react-redux';
 
-const mapStateToProps = ({ nowPlaying }) => ({
+const mapStateToProps = ({ nowPlaying, likes }, ownProps) => ({
   playing: nowPlaying.playing,
   currentTrack: nowPlaying.track,
   time: nowPlaying.time,
-  duration: nowPlaying.duration
+  duration: nowPlaying.duration,
+  liked: likes[ownProps.track.id]
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   playTrack: (track) => dispatch(playTrack(track)),
   pauseTrack: () => dispatch(pauseTrack()),
-  setNewTime: (time) => dispatch(setNewTime(time))
+  setNewTime: (time) => dispatch(setNewTime(time)),
+  like: () => dispatch(like(ownProps.track.id)),
+  unlike: () => dispatch(unlike(ownProps.track.id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Track);

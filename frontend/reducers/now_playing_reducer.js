@@ -11,7 +11,7 @@ const default_state = {
   track: {}
 }
 
-export const NowPlayingReducer = (state = default_state, action) => {
+const NowPlayingReducer = (state = default_state, action) => {
   switch(action.type){
 
     case PLAY_TRACK:
