@@ -29694,6 +29694,7 @@
 	    _this._updateInner = _this._updateInner.bind(_this);
 	    _this._like = _this._like.bind(_this);
 	    _this._toTrack = _this._toTrack.bind(_this);
+	    _this._toProfile = _this._toTrack.bind(_this);
 	    return _this;
 	  }
 	
@@ -29768,6 +29769,11 @@
 	      _reactRouter.hashHistory.push('/track/' + this.props.track.id);
 	    }
 	  }, {
+	    key: '_toProfile',
+	    value: function _toProfile() {
+	      _reactRouter.hashHistory.push('/profile/' + this.props.track.artist_id);
+	    }
+	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
 	      this._addButtonIcon();
@@ -29814,7 +29820,8 @@
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'track-artist' },
+	            { className: 'track-artist',
+	              onClick: this._toProfile },
 	            this.props.track.artist
 	          ),
 	          _react2.default.createElement(
@@ -54968,6 +54975,8 @@
 	
 	var _play_bar2 = _interopRequireDefault(_play_bar);
 	
+	var _reactRouter = __webpack_require__(196);
+	
 	var _reactRedux = __webpack_require__(173);
 	
 	var _track_actions = __webpack_require__(263);
@@ -54992,6 +55001,7 @@
 	    props.loadTrack(props.params.id);
 	
 	    _this._playpause = _this._playpause.bind(_this);
+	    _this._toProfile = _this._toProfile.bind(_this);
 	    return _this;
 	  }
 	
@@ -55003,6 +55013,11 @@
 	      } else {
 	        this.props.playTrack(this.props.track);
 	      }
+	    }
+	  }, {
+	    key: '_toProfile',
+	    value: function _toProfile() {
+	      _reactRouter.hashHistory.push('/profile/' + this.props.track.artist_id);
 	    }
 	  }, {
 	    key: 'render',
@@ -55024,7 +55039,7 @@
 	            _react2.default.createElement('br', null),
 	            _react2.default.createElement(
 	              'div',
-	              { className: 'track-panel-artist' },
+	              { className: 'track-panel-artist', onClick: this._toProfile },
 	              this.props.track.artist
 	            ),
 	            _react2.default.createElement('br', null),

@@ -1,5 +1,6 @@
 import React from 'react';
 import PlayBar from './play_bar';
+import { hashHistory } from 'react-router';
 
 class TrackPage extends React.Component {
   constructor(props){
@@ -8,7 +9,8 @@ class TrackPage extends React.Component {
     this.state = {scrubbing: false};
     props.loadTrack(props.params.id);
 
-    this._playpause= this._playpause.bind(this);
+    this._playpause = this._playpause.bind(this);
+    this._toProfile = this._toProfile.bind(this);
   }
 
   _playpause(){
@@ -19,6 +21,10 @@ class TrackPage extends React.Component {
     }
   }
 
+  _toProfile(){
+    hashHistory.push(`/profile/${this.props.track.artist_id}`)
+  }
+
   render(){
     return (
       <div className="track-page">
@@ -27,7 +33,7 @@ class TrackPage extends React.Component {
             <div className="track-panel-title">
               {this.props.track.title}
             </div><br/>
-            <div className="track-panel-artist">
+          <div className="track-panel-artist" onClick={this._toProfile}>
               {this.props.track.artist}
             </div><br/>
             <div className="controls">

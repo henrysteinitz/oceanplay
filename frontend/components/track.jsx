@@ -17,6 +17,7 @@ class Track extends React.Component{
     this._updateInner = this._updateInner.bind(this);
     this._like = this._like.bind(this);
     this._toTrack = this._toTrack.bind(this);
+    this._toProfile = this._toTrack.bind(this);
   }
 
 
@@ -79,6 +80,10 @@ class Track extends React.Component{
     hashHistory.push(`/track/${this.props.track.id}`);
   }
 
+  _toProfile(){
+    hashHistory.push(`/profile/${this.props.track.artist_id}`);
+  }
+
   componentDidUpdate(){
     this._addButtonIcon();
   }
@@ -113,7 +118,8 @@ class Track extends React.Component{
       <div className="track-right">
         <div className="track-title"
           onClick={this._toTrack}>{this.props.track.title}</div>
-        <div className="track-artist">{this.props.track.artist}</div>
+        <div className="track-artist"
+          onClick={this._toProfile}>{this.props.track.artist}</div>
         <div className="play-bar">
           <div className="controls">
             <button ref="playButton"
