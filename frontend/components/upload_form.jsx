@@ -7,7 +7,7 @@ class UploadForm extends React.Component{
     this.state = {
       artUrl: '',
       fileUploaded: false,
-      artUpladed: false,
+      artUploaded: false,
       title: "",
       description: "",
       audioFile: null,
@@ -19,6 +19,8 @@ class UploadForm extends React.Component{
     this._handleAudio = this._handleAudio.bind(this);
     this._handleArt = this._handleArt.bind(this);
     this._showTrackInfo = this._showTrackInfo.bind(this);
+    this._fadeOut = this._fadeOut.bind(this);
+    this._fadeIn = this._fadeIn.bind(this);
   }
 
   _handleInput(type){
@@ -28,34 +30,38 @@ class UploadForm extends React.Component{
 
   _handleAudio(e){
     if (!this.state.fileUploaded){
-      const reader = new FileReader();
-      const file = e.currentTarget.files[0];
-      $(e.currentTarget).prop('disabled', true);
-      this.setState({
-        audioFile: file,
-        fileUploaded: true
-      });
-      this._showTrackInfo();
+      if (e.currentTarget.files.length > 0){
+        const reader = new FileReader();
+        const file = e.currentTarget.files[0];
+        $(e.currentTarget).prop('disabled', true);
+        this.setState({
+          audioFile: file,
+          fileUploaded: true
+        });
+        this._showTrackInfo();
+      }
     }
   }
 
   _handleArt(e){
-    const reader = new FileReader();
-    const file = e.currentTarget.files[0];
-    console.log('asdfasdf');
-    //const preview = this.refs.artPreview;
+    if (e.currentTarget.files.length > 0){
+      const reader = new FileReader();
+      const file = e.currentTarget.files[0];
+      console.log('asdfasdf');
+      //const preview = this.refs.artPreview;
 
-    reader.addEventListener('loadend', () => {
-      this.setState({artUrl: reader.result})
-    });
+      reader.addEventListener('loadend', () => {
+        this.setState({artUrl: reader.result})
+      });
 
-    this.setState({
-      artFile: file,
-      artUploaded: true
-    })
+      this.setState({
+        artFile: file,
+        artUploaded: true
+      });
 
-    if (file){
-      reader.readAsDataURL(file);
+      if (file){
+        reader.readAsDataURL(file);
+      }
     }
   }
 
@@ -67,10 +73,12 @@ class UploadForm extends React.Component{
       trackData.append("track[artist_id]", this.props.currentUser.id);
       trackData.append("track[audio]", this.state.audioFile);
       trackData.append("track[art]", this.state.artFile);
-      this.props.uploadTrack(
-        trackData,
-        (r) => console.log(r)
-      );
+      this.props.uploadTrack(trackData, (res) => {
+        this.props.returnUploadForm();
+        this._fadeIn();
+        this._resetForm();
+      });
+      this._fadeOut()
       //this.setState()
     }
   }
@@ -78,6 +86,25 @@ class UploadForm extends React.Component{
   _showTrackInfo(){
     $(this.refs.lower).animate({height: "30%"}, 300);
     $(this.refs.upper).animate({height: "70%"}, 300);
+  }
+
+  _fadeOut(){
+    $(this.refs.lower).animate({opacity: ".2"}, 300);
+    $(this.refs.upper).animate({opacity: ".2"}, 300);
+    $(this.refs.loadingIcon).animate({opacity: "1.0"}, 300);
+  }
+
+  _fadeIn(){
+    $(this.refs.lower).animate({opacity: "1.0"}, 300);
+    $(this.refs.upper).animate({opacity: "1.0"}, 300);
+    $(this.refs.loadingIcon).animate({opacity: "0.0"}, 300);
+  }
+
+  _resetForm(){
+    $(this.refs.lower).animate({height: "100%"}, 300);
+    $(this.refs.upper).animate({height: "0%"}, 300);
+    this.setState({fileUploaded: false, artUploaded: false, artUrl: ""});
+    $(this.refs.uploadButton).prop('disabled', false);
   }
 
   render(){
@@ -88,6 +115,9 @@ class UploadForm extends React.Component{
           onClick={this.props.returnUploadForm}>
         </div>
         <div className="upload-sheet" ref='uploadSheet'>
+          <img className="upload-loading-icon"
+            src="loading.gif"
+            ref="loadingIcon" />
           <div className="upload-form-upper" ref="upper">
             <label className='art-preview-container'>
               <img src={this.state.artUrl} ref="artPreview" />

@@ -29339,7 +29339,7 @@
 	    _this.state = {
 	      artUrl: '',
 	      fileUploaded: false,
-	      artUpladed: false,
+	      artUploaded: false,
 	      title: "",
 	      description: "",
 	      audioFile: null,
@@ -29351,6 +29351,8 @@
 	    _this._handleAudio = _this._handleAudio.bind(_this);
 	    _this._handleArt = _this._handleArt.bind(_this);
 	    _this._showTrackInfo = _this._showTrackInfo.bind(_this);
+	    _this._fadeOut = _this._fadeOut.bind(_this);
+	    _this._fadeIn = _this._fadeIn.bind(_this);
 	    return _this;
 	  }
 	
@@ -29368,14 +29370,16 @@
 	    key: '_handleAudio',
 	    value: function _handleAudio(e) {
 	      if (!this.state.fileUploaded) {
-	        var reader = new FileReader();
-	        var file = e.currentTarget.files[0];
-	        $(e.currentTarget).prop('disabled', true);
-	        this.setState({
-	          audioFile: file,
-	          fileUploaded: true
-	        });
-	        this._showTrackInfo();
+	        if (e.currentTarget.files.length > 0) {
+	          var reader = new FileReader();
+	          var file = e.currentTarget.files[0];
+	          $(e.currentTarget).prop('disabled', true);
+	          this.setState({
+	            audioFile: file,
+	            fileUploaded: true
+	          });
+	          this._showTrackInfo();
+	        }
 	      }
 	    }
 	  }, {
@@ -29383,27 +29387,33 @@
 	    value: function _handleArt(e) {
 	      var _this3 = this;
 	
-	      var reader = new FileReader();
-	      var file = e.currentTarget.files[0];
-	      console.log('asdfasdf');
-	      //const preview = this.refs.artPreview;
+	      if (e.currentTarget.files.length > 0) {
+	        (function () {
+	          var reader = new FileReader();
+	          var file = e.currentTarget.files[0];
+	          console.log('asdfasdf');
+	          //const preview = this.refs.artPreview;
 	
-	      reader.addEventListener('loadend', function () {
-	        _this3.setState({ artUrl: reader.result });
-	      });
+	          reader.addEventListener('loadend', function () {
+	            _this3.setState({ artUrl: reader.result });
+	          });
 	
-	      this.setState({
-	        artFile: file,
-	        artUploaded: true
-	      });
+	          _this3.setState({
+	            artFile: file,
+	            artUploaded: true
+	          });
 	
-	      if (file) {
-	        reader.readAsDataURL(file);
+	          if (file) {
+	            reader.readAsDataURL(file);
+	          }
+	        })();
 	      }
 	    }
 	  }, {
 	    key: '_handleUpload',
 	    value: function _handleUpload() {
+	      var _this4 = this;
+	
 	      if (this.state.fileUploaded) {
 	        var trackData = new FormData();
 	        trackData.append("track[title]", this.state.title);
@@ -29411,9 +29421,12 @@
 	        trackData.append("track[artist_id]", this.props.currentUser.id);
 	        trackData.append("track[audio]", this.state.audioFile);
 	        trackData.append("track[art]", this.state.artFile);
-	        this.props.uploadTrack(trackData, function (r) {
-	          return console.log(r);
+	        this.props.uploadTrack(trackData, function (res) {
+	          _this4.props.returnUploadForm();
+	          _this4._fadeIn();
+	          _this4._resetForm();
 	        });
+	        this._fadeOut();
 	        //this.setState()
 	      }
 	    }
@@ -29422,6 +29435,28 @@
 	    value: function _showTrackInfo() {
 	      $(this.refs.lower).animate({ height: "30%" }, 300);
 	      $(this.refs.upper).animate({ height: "70%" }, 300);
+	    }
+	  }, {
+	    key: '_fadeOut',
+	    value: function _fadeOut() {
+	      $(this.refs.lower).animate({ opacity: ".2" }, 300);
+	      $(this.refs.upper).animate({ opacity: ".2" }, 300);
+	      $(this.refs.loadingIcon).animate({ opacity: "1.0" }, 300);
+	    }
+	  }, {
+	    key: '_fadeIn',
+	    value: function _fadeIn() {
+	      $(this.refs.lower).animate({ opacity: "1.0" }, 300);
+	      $(this.refs.upper).animate({ opacity: "1.0" }, 300);
+	      $(this.refs.loadingIcon).animate({ opacity: "0.0" }, 300);
+	    }
+	  }, {
+	    key: '_resetForm',
+	    value: function _resetForm() {
+	      $(this.refs.lower).animate({ height: "100%" }, 300);
+	      $(this.refs.upper).animate({ height: "0%" }, 300);
+	      this.setState({ fileUploaded: false, artUploaded: false, artUrl: "" });
+	      $(this.refs.uploadButton).prop('disabled', false);
 	    }
 	  }, {
 	    key: 'render',
@@ -29435,6 +29470,9 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'upload-sheet', ref: 'uploadSheet' },
+	          _react2.default.createElement('img', { className: 'upload-loading-icon',
+	            src: 'loading.gif',
+	            ref: 'loadingIcon' }),
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'upload-form-upper', ref: 'upper' },
