@@ -3,7 +3,8 @@ import { LOAD_PROFILE,
   UNFOLLOW_USER,
   CHECK_FOLLOW,
   receiveFollow,
-  clearFollow } from '../actions/profile_actions';
+  clearFollow,
+  receiveUser} from '../actions/profile_actions';
 import { receiveStream } from '../actions/stream_actions';
 import { fetchFullUser,
   followUser,
@@ -15,7 +16,10 @@ const ProfileMiddleware = ({getState, dispatch}) => next => action => {
   switch (action.type) {
 
     case LOAD_PROFILE:
-      fetchFullUser(action.id, (res) => dispatch(receiveStream(res.tracks)));
+      fetchFullUser(action.id, (res) => {
+        dispatch(receiveUser(res.user))
+        dispatch(receiveStream(res.tracks))
+      });
       return;
 
     case FOLLOW_USER:

@@ -15,9 +15,13 @@ class Profile extends React.Component{
   }
 
   render(){
+    let displayName = "";
+    if (this.props.profile.user){
+      displayName = this.props.profile.user.username;
+    }
     return (
       <main>
-        <ProfilePanel />
+        <ProfilePanel displayName={displayName}/>
         <ProfileTabs userId={this.props.params.id}/>
         <Stream tracks={this.props.stream.tracks} />
         {/* <Stats /> */}
@@ -31,8 +35,9 @@ import { connect } from 'react-redux';
 import { loadProfile } from '../actions/profile_actions'
 import { clearStream } from '../actions/stream_actions'
 
-const mapStateToProps = ({ stream }) => ({
-  stream
+const mapStateToProps = ({ stream, profile }) => ({
+  stream,
+  profile
 })
 
 const mapDispatchToProps = (dispatch) => ({

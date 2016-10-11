@@ -15,7 +15,7 @@ class ProfilePanel extends React.Component{
         <div className="panel-row">
 
           <div className="display-name">
-            Artist Name
+            {this.props.displayName}
           </div>
 
         </div>

@@ -30167,10 +30167,14 @@
 	  _createClass(Profile, [{
 	    key: 'render',
 	    value: function render() {
+	      var displayName = "";
+	      if (this.props.profile.user) {
+	        displayName = this.props.profile.user.username;
+	      }
 	      return _react2.default.createElement(
 	        'main',
 	        null,
-	        _react2.default.createElement(_profile_panel2.default, null),
+	        _react2.default.createElement(_profile_panel2.default, { displayName: displayName }),
 	        _react2.default.createElement(_profile_tabs2.default, { userId: this.props.params.id }),
 	        _react2.default.createElement(_stream2.default, { tracks: this.props.stream.tracks })
 	      );
@@ -30185,8 +30189,10 @@
 	
 	var mapStateToProps = function mapStateToProps(_ref) {
 	  var stream = _ref.stream;
+	  var profile = _ref.profile;
 	  return {
-	    stream: stream
+	    stream: stream,
+	    profile: profile
 	  };
 	};
 	
@@ -30250,7 +30256,7 @@
 	          _react2.default.createElement(
 	            'div',
 	            { className: 'display-name' },
-	            'Artist Name'
+	            this.props.displayName
 	          )
 	        )
 	      );
@@ -30403,6 +30409,7 @@
 	var CHECK_FOLLOW = exports.CHECK_FOLLOW = 'CHECK_FOLLOW';
 	var RECEIVE_FOLLOW = exports.RECEIVE_FOLLOW = 'RECEIVE_FOLLOW';
 	var CLEAR_FOLLOW = exports.CLEAR_FOLLOW = 'CLEAR_FOLLOW';
+	var RECEIVE_USER = exports.RECEIVE_USER = 'RECEIVE_USER';
 	
 	var loadProfile = exports.loadProfile = function loadProfile(id) {
 	  return {
@@ -30446,6 +30453,13 @@
 	  return {
 	    type: CLEAR_FOLLOW,
 	    callback: callback
+	  };
+	};
+	
+	var receiveUser = exports.receiveUser = function receiveUser(user) {
+	  return {
+	    type: RECEIVE_USER,
+	    user: user
 	  };
 	};
 
@@ -54537,7 +54551,8 @@
 	
 	        case _profile_actions.LOAD_PROFILE:
 	          (0, _user_api_util.fetchFullUser)(action.id, function (res) {
-	            return dispatch((0, _stream_actions.receiveStream)(res.tracks));
+	            dispatch((0, _profile_actions.receiveUser)(res.user));
+	            dispatch((0, _stream_actions.receiveStream)(res.tracks));
 	          });
 	          return;
 	
@@ -54654,6 +54669,9 @@
 	  var action = arguments[1];
 	
 	  switch (action.type) {
+	
+	    case _profile_actions.RECEIVE_USER:
+	      return (0, _merge2.default)({}, state, { user: action.user });
 	
 	    case _profile_actions.RECEIVE_FOLLOW:
 	      return (0, _merge2.default)({}, state, { following: true });
