@@ -73,8 +73,8 @@ class SignIn extends React.Component{
         <div className='signin'>
           <div className='logo-container'>
             <Logo type='signin'/>
-            <div className="logo-text bold">soul</div>
-            <div className="logo-text">stream</div>
+            <div className="logo-text bold">ocean</div>
+            <div className="logo-text">play</div>
           </div>
           <div className="formSwitcher">
             <a onClick={this._handleSwitch.bind(this, 'signin')}>Sign In</a>

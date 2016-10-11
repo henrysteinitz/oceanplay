@@ -73,9 +73,9 @@ class TrackPage extends React.Component {
 
   _like(){
     if (this.props.liked){
-      this.props.unlike();
+      this.props.unlike(this.props.track);
     } else {
-      this.props.like();
+      this.props.like(this.props.track);
     }
   }
 
@@ -128,7 +128,7 @@ class TrackPage extends React.Component {
             <div className='panel-right-controls-container'>
               <button className="retrack-button right-control"></button>
               <button onClick={this._like}
-                className={`like-button right-control`}></button>
+                className={`like-button right-control ${likedClass}`}></button>
             </div>
           </div><br/>
           <PlayBar time={time}
@@ -172,8 +172,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   pauseTrack: () => dispatch(pauseTrack()),
   setNewTime: (time) => dispatch(setNewTime(time)),
   loadTrack: (id) => dispatch(loadTrack(id)),
-  like: () => dispatch(like(ownProps.track.id)),
-  unlike: () => dispatch(unlike(ownProps.track.id))
+  like: (track) => dispatch(like(track.id)),
+  unlike: (track) => dispatch(unlike(track.id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackPage);

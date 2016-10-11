@@ -30663,12 +30663,12 @@
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'logo-text bold' },
-	              'soul'
+	              'ocean'
 	            ),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'logo-text' },
-	              'stream'
+	              'play'
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -55140,9 +55140,9 @@
 	    key: '_like',
 	    value: function _like() {
 	      if (this.props.liked) {
-	        this.props.unlike();
+	        this.props.unlike(this.props.track);
 	      } else {
-	        this.props.like();
+	        this.props.like(this.props.track);
 	      }
 	    }
 	  }, {
@@ -55212,7 +55212,7 @@
 	                { className: 'panel-right-controls-container' },
 	                _react2.default.createElement('button', { className: 'retrack-button right-control' }),
 	                _react2.default.createElement('button', { onClick: this._like,
-	                  className: 'like-button right-control' })
+	                  className: 'like-button right-control ' + likedClass })
 	              )
 	            ),
 	            _react2.default.createElement('br', null),
@@ -55269,11 +55269,11 @@
 	    loadTrack: function loadTrack(id) {
 	      return dispatch((0, _track_actions.loadTrack)(id));
 	    },
-	    like: function like() {
-	      return dispatch((0, _like_actions.like)(ownProps.track.id));
+	    like: function like(track) {
+	      return dispatch((0, _like_actions.like)(track.id));
 	    },
-	    unlike: function unlike() {
-	      return dispatch((0, _like_actions.unlike)(ownProps.track.id));
+	    unlike: function unlike(track) {
+	      return dispatch((0, _like_actions.unlike)(track.id));
 	    }
 	  };
 	};
