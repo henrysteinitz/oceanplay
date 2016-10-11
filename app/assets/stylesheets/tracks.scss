@@ -33,6 +33,9 @@
   font-weight: 400;
   color: rgb(126,126,126);
 }
+.track-artist:hover{
+  cursor:pointer;
+}
 .play-bar{
   width: 100%;
   margin-top: 14px;
@@ -204,9 +207,11 @@
   font: 28px 'Raleway';
   font-weight: 400;
   margin-left: 3px;
-  color: rgb(126,126,126)
+  color: rgb(126,126,126);
 }
-
+.track-panel-artist:hover{
+  cursor: pointer;
+}
 .left-panel{
   width: calc(100% - 380px);
   display: inline-block;
@@ -228,4 +233,32 @@
   vertical-align: bottom;
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+.comments-page{
+  width: 100%;
+  max-width: 500px;
+  height: 100px;
+  margin-left: 60px;
+  margin-top: 20px;
+}
+
+.comments-page p{
+  padding-right: 10px;
+  padding-bottom: 20px;
+  padding-left: 0px;
+  font: 14px 'Raleway';
+  font-weight: 500;
+}
+
+.new-comment{
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid rgb(218,218,218);
+  font: 14px 'Raleway';
+  outline: none;
+  padding: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  resize: none;
 }

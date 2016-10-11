@@ -17,7 +17,7 @@ class Track extends React.Component{
     this._updateInner = this._updateInner.bind(this);
     this._like = this._like.bind(this);
     this._toTrack = this._toTrack.bind(this);
-    this._toProfile = this._toTrack.bind(this);
+    this._toProfile = this._toProfile.bind(this);
   }
 
 
@@ -41,8 +41,12 @@ class Track extends React.Component{
 
   _startScrub(e){
     e.preventDefault();
-    const pageX = e.pageX;
-    this.setState({scrubbing: true}, () => this._updateInner(null, pageX));
+    if (this.props.currentTrack && this.props.currentTrack.id === this.props.track.id){
+      const pageX = e.pageX;
+      this.setState({scrubbing: true}, () => this._updateInner(null, pageX));
+    } else {
+      this.props.playTrack(this.props.track);
+    }
   }
 
   _endScrub(e){

@@ -29694,7 +29694,7 @@
 	    _this._updateInner = _this._updateInner.bind(_this);
 	    _this._like = _this._like.bind(_this);
 	    _this._toTrack = _this._toTrack.bind(_this);
-	    _this._toProfile = _this._toTrack.bind(_this);
+	    _this._toProfile = _this._toProfile.bind(_this);
 	    return _this;
 	  }
 	
@@ -29724,10 +29724,16 @@
 	      var _this2 = this;
 	
 	      e.preventDefault();
-	      var pageX = e.pageX;
-	      this.setState({ scrubbing: true }, function () {
-	        return _this2._updateInner(null, pageX);
-	      });
+	      if (this.props.currentTrack && this.props.currentTrack.id === this.props.track.id) {
+	        (function () {
+	          var pageX = e.pageX;
+	          _this2.setState({ scrubbing: true }, function () {
+	            return _this2._updateInner(null, pageX);
+	          });
+	        })();
+	      } else {
+	        this.props.playTrack(this.props.track);
+	      }
 	    }
 	  }, {
 	    key: '_endScrub',
@@ -54981,6 +54987,8 @@
 	
 	var _track_actions = __webpack_require__(263);
 	
+	var _like_actions = __webpack_require__(566);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -54997,10 +55005,15 @@
 	
 	    var _this = _possibleConstructorReturn(this, (TrackPage.__proto__ || Object.getPrototypeOf(TrackPage)).call(this, props));
 	
-	    _this.state = { scrubbing: false };
+	    _this.state = { scrubbing: false, scrubPos: 0 };
 	    props.loadTrack(props.params.id);
 	
 	    _this._playpause = _this._playpause.bind(_this);
+	    _this._addButtonIcon = _this._addButtonIcon.bind(_this);
+	    _this._startScrub = _this._startScrub.bind(_this);
+	    _this._endScrub = _this._endScrub.bind(_this);
+	    _this._updateInner = _this._updateInner.bind(_this);
+	    _this._like = _this._like.bind(_this);
 	    _this._toProfile = _this._toProfile.bind(_this);
 	    return _this;
 	  }
@@ -55015,16 +55028,105 @@
 	      }
 	    }
 	  }, {
+	    key: '_addButtonIcon',
+	    value: function _addButtonIcon() {
+	      if (this.props.playing && this.props.currentTrack.id === this.props.track.id) {
+	        $(this.refs.playButton).removeClass('play-image');
+	        $(this.refs.playButton).addClass('pause-image');
+	      } else {
+	        $(this.refs.playButton).addClass('play-image');
+	        $(this.refs.playButton).removeClass('pause-image');
+	      }
+	    }
+	  }, {
+	    key: '_startScrub',
+	    value: function _startScrub(e) {
+	      var _this2 = this;
+	
+	      e.preventDefault();
+	      if (this.props.currentTrack && this.props.currentTrack.id === this.props.track.id) {
+	        (function () {
+	          var pageX = e.pageX;
+	          _this2.setState({ scrubbing: true }, function () {
+	            return _this2._updateInner(null, pageX);
+	          });
+	        })();
+	      } else {
+	        this.props.playTrack(this.props.track);
+	      }
+	    }
+	  }, {
+	    key: '_endScrub',
+	    value: function _endScrub(e) {
+	      e.preventDefault();
+	      if (this.state.scrubbing) {
+	        var width = $(this.refs.playBar.refs.outer).width();
+	        this.props.setNewTime(this.state.scrubPos / width * this.props.duration);
+	        this.setState({ scrubbing: false });
+	      }
+	    }
+	  }, {
+	    key: '_updateInner',
+	    value: function _updateInner(e, pageX) {
+	      if (e) {
+	        pageX = e.pageX;
+	        e.preventDefault();
+	      }
+	      if (this.state.scrubbing) {
+	        var inner = $(this.refs.playBar.refs.inner);
+	        var offset = inner.offset();
+	        var scrubPos = pageX - offset.left;
+	        inner.width(scrubPos + 'px');
+	        this.setState({ scrubPos: scrubPos });
+	      }
+	    }
+	  }, {
+	    key: '_like',
+	    value: function _like() {
+	      if (this.props.liked) {
+	        this.props.unlike();
+	      } else {
+	        this.props.like();
+	      }
+	    }
+	  }, {
 	    key: '_toProfile',
 	    value: function _toProfile() {
 	      _reactRouter.hashHistory.push('/profile/' + this.props.track.artist_id);
 	    }
 	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this._addButtonIcon();
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this._addButtonIcon();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var time = 0;
+	      if (this.props.currentTrack && this.props.currentTrack.id === this.props.track.id) {
+	        if (this.state.scrubbing) {
+	          var width = $(this.refs.playBar.refs.outer).width();
+	          time = this.state.scrubPos / width * this.props.duration;
+	        } else {
+	          time = this.props.time;
+	        }
+	      }
+	
+	      var likedClass = "";
+	      if (this.props.liked) {
+	        likedClass = "liked";
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'track-page' },
+	        { className: 'track-page',
+	          onMouseUp: this._endScrub,
+	          onMouseMove: this._updateInner },
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'track-panel' },
@@ -55042,7 +55144,7 @@
 	              { className: 'track-panel-artist', onClick: this._toProfile },
 	              this.props.track.artist
 	            ),
-	            _react2.default.createElement('br', null),
+	            _react2.default.createElement('img', { src: '', className: 'artist-icon' }),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'controls' },
@@ -55058,7 +55160,7 @@
 	              )
 	            ),
 	            _react2.default.createElement('br', null),
-	            _react2.default.createElement(_play_bar2.default, { time: this.props.time,
+	            _react2.default.createElement(_play_bar2.default, { time: time,
 	              ref: 'playBar',
 	              duration: this.props.duration,
 	              scrubbing: this.state.scrubbing,
@@ -55066,7 +55168,16 @@
 	          ),
 	          _react2.default.createElement('img', { className: 'track-panel-art', src: this.props.track.artUrl })
 	        ),
-	        _react2.default.createElement('div', { className: 'comments-page' })
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'comments-page' },
+	          _react2.default.createElement(
+	            'p',
+	            { className: '' },
+	            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+	          ),
+	          _react2.default.createElement('textarea', { rows: '3', className: 'new-comment', placeholder: 'Write a comment.' })
+	        )
 	      );
 	    }
 	  }]);
@@ -55088,16 +55199,25 @@
 	  };
 	};
 	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 	  return {
-	    loadTrack: function loadTrack(id) {
-	      return dispatch((0, _track_actions.loadTrack)(id));
-	    },
 	    playTrack: function playTrack(track) {
 	      return dispatch((0, _track_actions.playTrack)(track));
 	    },
 	    pauseTrack: function pauseTrack() {
 	      return dispatch((0, _track_actions.pauseTrack)());
+	    },
+	    setNewTime: function setNewTime(time) {
+	      return dispatch((0, _track_actions.setNewTime)(time));
+	    },
+	    loadTrack: function loadTrack(id) {
+	      return dispatch((0, _track_actions.loadTrack)(id));
+	    },
+	    like: function like() {
+	      return dispatch((0, _like_actions.like)(ownProps.track.id));
+	    },
+	    unlike: function unlike() {
+	      return dispatch((0, _like_actions.unlike)(ownProps.track.id));
 	    }
 	  };
 	};
