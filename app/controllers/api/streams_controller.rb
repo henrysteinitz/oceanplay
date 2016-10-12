@@ -14,7 +14,7 @@ class Api::StreamsController < ApplicationController
       SQL
       @stream = @stream.order('created_at DESC').includes(:comments)
     else
-      @stream = Track.find_by_sql(<<-SQL).includes(:comments)
+      @stream = Track.find_by_sql(<<-SQL)
         SELECT
           tracks.*
         FROM
@@ -23,12 +23,16 @@ class Api::StreamsController < ApplicationController
           follows
         ON
           tracks.artist_id = follows.followed_id
+        LEFT OUTER JOIN
+          comments
+        ON
+          tracks.id = comments.track_id
         WHERE
           #{current_user.id} = follows.follower_id
         OR
           #{current_user.id} = tracks.artist_id
         ORDER BY
-          tracks.play_count DESC
+          tracks.play_count DESC, comments.created_at DESC
       SQL
 
     end
