@@ -8,6 +8,8 @@ export const SET_TIME = 'SET_TIME';
 export const SET_NEW_TIME = 'SET_NEW_TIME';
 export const CLEAR_NEW_TIME = 'CLEAR_NEW_TIME';
 export const SET_DURATION = 'SET_DURATION';
+export const RECEIVE_COMMENT_FOR_TRACK = 'RECEIVE_COMMENT_FOR_TRACK';
+export const POST_COMMENT = 'POST_COMMENT';
 
 export const uploadTrack = (trackData, callback) => ({
   type: UPLOAD_TRACK,
@@ -56,3 +58,13 @@ export const setDuration = (duration) => ({
   type: SET_DURATION,
   duration
 });
+
+export const receiveCommentForTrack = (comment) => ({
+  type: RECEIVE_COMMENT_FOR_TRACK,
+  comment
+})
+
+export const postComment = (comment) => ({
+  type: POST_COMMENT,
+  comment
+})

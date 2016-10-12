@@ -1,5 +1,6 @@
 import React from 'react';
 import PlayBar from './play_bar';
+import CommentList from './comment_list';
 import { hashHistory } from 'react-router';
 
 class TrackPage extends React.Component {
@@ -16,6 +17,7 @@ class TrackPage extends React.Component {
     this._updateInner = this._updateInner.bind(this);
     this._like = this._like.bind(this);
     this._toProfile = this._toProfile.bind(this);
+    this._postComment = this._postComment.bind(this);
   }
 
 
@@ -83,6 +85,23 @@ class TrackPage extends React.Component {
     hashHistory.push(`/profile/${this.props.track.artist_id}`)
   }
 
+  _postComment(e){
+    if (e.key === 'Enter'){
+      let time;
+      if (this.props.time){
+        time = this.props.time;
+      } else {
+        time = 0;
+      }
+
+      this.props.postComment({
+        track_id: this.props.params.id,
+        body: e.currentTarget.value,
+        time
+      });
+    }
+  }
+
   componentDidUpdate(){
     this._addButtonIcon();
   }
@@ -140,10 +159,13 @@ class TrackPage extends React.Component {
           <img className="track-panel-art" src={this.props.track.artUrl} />
         </div>
         <div className="comments-page">
-          <p className="">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          <textarea rows="3" className="new-comment" placeholder="Write a comment.">
+          <input type="text"
+            className="new-comment"
+            placeholder="Write a comment."
+            onKeyPress={this._postComment}>
+          </input>
+          <CommentList />
 
-          </textarea>
         </div>
       </div>
     );
@@ -155,7 +177,8 @@ import { connect } from 'react-redux';
 import { loadTrack,
   playTrack,
   pauseTrack,
-  setNewTime } from '../actions/track_actions';
+  setNewTime,
+  postComment } from '../actions/track_actions';
 import { like, unlike } from '../actions/like_actions';
 
 const mapStateToProps = ({ track, nowPlaying, likes }, ownProps) => ({
@@ -173,7 +196,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   setNewTime: (time) => dispatch(setNewTime(time)),
   loadTrack: (id) => dispatch(loadTrack(id)),
   like: (track) => dispatch(like(track.id)),
-  unlike: (track) => dispatch(unlike(track.id))
+  unlike: (track) => dispatch(unlike(track.id)),
+  postComment: (comment) => dispatch(postComment(comment))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackPage);

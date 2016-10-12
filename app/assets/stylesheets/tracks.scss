@@ -237,28 +237,50 @@
 
 .comments-page{
   width: 100%;
-  max-width: 500px;
+  max-width: 560px;
   height: 100px;
   margin-left: 60px;
   margin-top: 20px;
 }
 
-.comments-page p{
-  padding-right: 10px;
-  padding-bottom: 20px;
-  padding-left: 0px;
-  font: 14px 'Raleway';
-  font-weight: 500;
-}
 
 .new-comment{
-  width: 100%;
+  width: calc(100% - 66px);
+  height: 18px;
+  display: inline-block;
+  vertical-align: top;
   border-radius: 3px;
   border: 1px solid rgb(218,218,218);
-  font: 14px 'Raleway';
+  font: 15px 'Raleway';
+  font-weight: 500;
   outline: none;
   padding: 10px;
   padding-top: 8px;
   padding-bottom: 8px;
   resize: none;
+  margin-left: 0px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+.comment-icon{
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+}
+
+.comment{
+  width: 100%;
+  margin-bottom: 20px;
+}
+.comment p{
+  width: calc(100% - 61px);
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 20px;
+  font: 15px 'Raleway';
+  font-weight: 500;
+}
+.comment img{
+  vertical-align: top;
 }

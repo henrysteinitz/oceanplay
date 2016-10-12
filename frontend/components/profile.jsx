@@ -29,6 +29,18 @@ class Profile extends React.Component{
     if (e.currentTarget.files.length > 0){
       const reader = new FileReader();
       const file = e.currentTarget.files[0];
+
+      reader.addEventListener('loadend', () => {
+        this.setState({profUrl: reader.result})
+      });
+
+      this.setState({
+        uploadData: merge(this.state.updateData, {profpic: file})
+      });
+
+      if (file){
+        reader.readAsDataURL(file);
+      }
     }
   }
 
@@ -63,11 +75,15 @@ class Profile extends React.Component{
   _edit(){
     this.setState({editing: true}, () => {
       $(this.refs.panel.refs.input).prop('disabled', false);
+      $(this.refs.profpicInput).prop('disabled', false);
     });
   }
 
   _save(){
     this.setState({editing: false}, () => {
+      $(this.refs.panel.refs.input).prop('disabled', true);
+      $(this.refs.profpicInput).prop('disabled', true);
+
       const data = new FormData();
       if (this.state.updateData.panelpic){
         data.append('user[panelpic]', this.state.updateData.panelpic);
@@ -78,6 +94,17 @@ class Profile extends React.Component{
       this.props.updateProfile(this.props.params.id, data);
     });
   }
+
+  componentDidUpdate(){
+    if (this.refs.profpic.naturalWidth > this.refs.profpic.naturalHeight){
+      $(this.refs.profpic).height('100%');
+      $(this.refs.profpic).width('auto');
+    } else {
+      $(this.refs.profpic).height('auto');
+      $(this.refs.profpic).width('100%');
+    }
+  }
+
 
   render(){
     let displayName = "";
@@ -102,6 +129,7 @@ class Profile extends React.Component{
         profUrl = this.props.profile.user.profUrl;
       }
     }
+
     return (
       <main>
         <ProfilePanel
@@ -113,8 +141,22 @@ class Profile extends React.Component{
           userId={parseInt(this.props.params.id)}
           editing={this.state.editing}
           handleClick={this._handleClick} />
-        <Stream tracks={this.props.stream.tracks} />
-        {/* <Stats /> */}
+        <div className='profile-stream-container'>
+          <Stream tracks={this.props.stream.tracks} />
+        </div>
+        <div className="artist-info">
+          <div className="artist-profpic-container">
+            <label>
+              <img ref='profpic' src={profUrl} className="artist-profpic" />
+              <input type="file"
+                className="none"
+                ref="profpicInput"
+                onChange={this._handleProf}
+                disabled />
+            </label>
+          </div>
+
+        </div>
       </main>
     );
   }

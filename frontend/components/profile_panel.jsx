@@ -18,10 +18,10 @@ class ProfilePanel extends React.Component{
             ref='input'
             disabled/>
           <div className="panel-row">
+
             <div className="display-name">
               {this.props.displayName}
             </div>
-
           </div>
         </label>
 

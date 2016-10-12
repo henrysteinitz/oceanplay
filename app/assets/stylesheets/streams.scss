@@ -3,4 +3,24 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .main-stream-container{
   margin-top: 45px;
+  margin-right: 0px;
+}
+
+.main-inner-stream-container{
+  margin-right: 56px;
+}
+
+.stream{
+  width: calc(100% - 60px);
+  padding-left: 60px;
+  padding-right: 0px;
+  padding-top: 0px;
+  margin-top: 30px;
+}
+
+.profile-stream-container{
+  vertical-align: top;
+  display: inline-block;
+  margin-right: 20px;
+  width: calc(100% - 440px);
 }

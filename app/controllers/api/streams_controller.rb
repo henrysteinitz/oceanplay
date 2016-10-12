@@ -12,8 +12,7 @@ class Api::StreamsController < ApplicationController
         OR
           #{current_user.id} = tracks.artist_id
       SQL
-
-      @stream = @stream.order('created_at DESC')
+      @stream = @stream.order('created_at DESC').includes(:comments)
     else
       @stream = Track.find_by_sql(<<-SQL)
         SELECT
@@ -31,8 +30,9 @@ class Api::StreamsController < ApplicationController
         ORDER BY
           tracks.play_count DESC
       SQL
-    end
+      @stream = @stream.includes(:comments)
 
+    end
     render :show
   end
 

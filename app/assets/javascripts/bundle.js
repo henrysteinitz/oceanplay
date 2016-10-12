@@ -29575,6 +29575,8 @@
 	var SET_NEW_TIME = exports.SET_NEW_TIME = 'SET_NEW_TIME';
 	var CLEAR_NEW_TIME = exports.CLEAR_NEW_TIME = 'CLEAR_NEW_TIME';
 	var SET_DURATION = exports.SET_DURATION = 'SET_DURATION';
+	var RECEIVE_COMMENT_FOR_TRACK = exports.RECEIVE_COMMENT_FOR_TRACK = 'RECEIVE_COMMENT_FOR_TRACK';
+	var POST_COMMENT = exports.POST_COMMENT = 'POST_COMMENT';
 	
 	var uploadTrack = exports.uploadTrack = function uploadTrack(trackData, callback) {
 	  return {
@@ -29641,6 +29643,20 @@
 	  return {
 	    type: SET_DURATION,
 	    duration: duration
+	  };
+	};
+	
+	var receiveCommentForTrack = exports.receiveCommentForTrack = function receiveCommentForTrack(comment) {
+	  return {
+	    type: RECEIVE_COMMENT_FOR_TRACK,
+	    comment: comment
+	  };
+	};
+	
+	var postComment = exports.postComment = function postComment(comment) {
+	  return {
+	    type: POST_COMMENT,
+	    comment: comment
 	  };
 	};
 
@@ -30114,7 +30130,11 @@
 	        'div',
 	        { className: 'main-stream-container' },
 	        _react2.default.createElement(_main_stream_tabs2.default, { ref: 'tabs', loadStream: this._loadStream }),
-	        _react2.default.createElement(_stream2.default, { tracks: this.props.stream.tracks })
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'main-inner-stream-container' },
+	          _react2.default.createElement(_stream2.default, { tracks: this.props.stream.tracks })
+	        )
 	      );
 	    }
 	  }]);
@@ -30259,14 +30279,6 @@
 	  _createClass(Profile, [{
 	    key: '_handleProf',
 	    value: function _handleProf(e) {
-	      if (e.currentTarget.files.length > 0) {
-	        var reader = new FileReader();
-	        var file = e.currentTarget.files[0];
-	      }
-	    }
-	  }, {
-	    key: '_handlePanel',
-	    value: function _handlePanel(e) {
 	      var _this2 = this;
 	
 	      if (e.currentTarget.files.length > 0) {
@@ -30275,11 +30287,35 @@
 	          var file = e.currentTarget.files[0];
 	
 	          reader.addEventListener('loadend', function () {
-	            _this2.setState({ panelUrl: reader.result });
+	            _this2.setState({ profUrl: reader.result });
 	          });
 	
 	          _this2.setState({
-	            uploadData: (0, _merge2.default)(_this2.state.updateData, { panelpic: file })
+	            uploadData: (0, _merge2.default)(_this2.state.updateData, { profpic: file })
+	          });
+	
+	          if (file) {
+	            reader.readAsDataURL(file);
+	          }
+	        })();
+	      }
+	    }
+	  }, {
+	    key: '_handlePanel',
+	    value: function _handlePanel(e) {
+	      var _this3 = this;
+	
+	      if (e.currentTarget.files.length > 0) {
+	        (function () {
+	          var reader = new FileReader();
+	          var file = e.currentTarget.files[0];
+	
+	          reader.addEventListener('loadend', function () {
+	            _this3.setState({ panelUrl: reader.result });
+	          });
+	
+	          _this3.setState({
+	            uploadData: (0, _merge2.default)(_this3.state.updateData, { panelpic: file })
 	          });
 	
 	          if (file) {
@@ -30300,27 +30336,42 @@
 	  }, {
 	    key: '_edit',
 	    value: function _edit() {
-	      var _this3 = this;
+	      var _this4 = this;
 	
 	      this.setState({ editing: true }, function () {
-	        $(_this3.refs.panel.refs.input).prop('disabled', false);
+	        $(_this4.refs.panel.refs.input).prop('disabled', false);
+	        $(_this4.refs.profpicInput).prop('disabled', false);
 	      });
 	    }
 	  }, {
 	    key: '_save',
 	    value: function _save() {
-	      var _this4 = this;
+	      var _this5 = this;
 	
 	      this.setState({ editing: false }, function () {
+	        $(_this5.refs.panel.refs.input).prop('disabled', true);
+	        $(_this5.refs.profpicInput).prop('disabled', true);
+	
 	        var data = new FormData();
-	        if (_this4.state.updateData.panelpic) {
-	          data.append('user[panelpic]', _this4.state.updateData.panelpic);
+	        if (_this5.state.updateData.panelpic) {
+	          data.append('user[panelpic]', _this5.state.updateData.panelpic);
 	        }
-	        if (_this4.state.updateData.profpic) {
-	          data.append('user[profpic]', _this4.state.updateData.profpic);
+	        if (_this5.state.updateData.profpic) {
+	          data.append('user[profpic]', _this5.state.updateData.profpic);
 	        }
-	        _this4.props.updateProfile(_this4.props.params.id, data);
+	        _this5.props.updateProfile(_this5.props.params.id, data);
 	      });
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      if (this.refs.profpic.naturalWidth > this.refs.profpic.naturalHeight) {
+	        $(this.refs.profpic).height('100%');
+	        $(this.refs.profpic).width('auto');
+	      } else {
+	        $(this.refs.profpic).height('auto');
+	        $(this.refs.profpic).width('100%');
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -30347,6 +30398,7 @@
 	          profUrl = this.props.profile.user.profUrl;
 	        }
 	      }
+	
 	      return _react2.default.createElement(
 	        'main',
 	        null,
@@ -30359,7 +30411,29 @@
 	          userId: parseInt(this.props.params.id),
 	          editing: this.state.editing,
 	          handleClick: this._handleClick }),
-	        _react2.default.createElement(_stream2.default, { tracks: this.props.stream.tracks })
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'profile-stream-container' },
+	          _react2.default.createElement(_stream2.default, { tracks: this.props.stream.tracks })
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'artist-info' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'artist-profpic-container' },
+	            _react2.default.createElement(
+	              'label',
+	              null,
+	              _react2.default.createElement('img', { ref: 'profpic', src: profUrl, className: 'artist-profpic' }),
+	              _react2.default.createElement('input', { type: 'file',
+	                className: 'none',
+	                ref: 'profpicInput',
+	                onChange: this._handleProf,
+	                disabled: true })
+	            )
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -54706,6 +54780,11 @@
 	            return dispatch((0, _track_actions.receiveTrack)(res.track));
 	          });
 	
+	        case _track_actions.POST_COMMENT:
+	          return (0, _track_api_util.postComment)(action.comment, function (res) {
+	            dispatch((0, _track_actions.receiveCommentForTrack)(res));
+	          });
+	
 	        default:
 	          return next(action);
 	
@@ -54740,6 +54819,16 @@
 	  $.ajax({
 	    url: '/api/tracks/' + id,
 	    method: 'GET',
+	    success: callback
+	  });
+	};
+	
+	var postComment = exports.postComment = function postComment(comment, callback) {
+	  $.ajax({
+	    url: '/api/comments/',
+	    method: 'POST',
+	    dataType: 'json',
+	    data: { comment: comment },
 	    success: callback
 	  });
 	};
@@ -55236,6 +55325,10 @@
 	
 	var _play_bar2 = _interopRequireDefault(_play_bar);
 	
+	var _comment_list = __webpack_require__(572);
+	
+	var _comment_list2 = _interopRequireDefault(_comment_list);
+	
 	var _reactRouter = __webpack_require__(196);
 	
 	var _reactRedux = __webpack_require__(173);
@@ -55270,6 +55363,7 @@
 	    _this._updateInner = _this._updateInner.bind(_this);
 	    _this._like = _this._like.bind(_this);
 	    _this._toProfile = _this._toProfile.bind(_this);
+	    _this._postComment = _this._postComment.bind(_this);
 	    return _this;
 	  }
 	
@@ -55350,6 +55444,24 @@
 	      _reactRouter.hashHistory.push('/profile/' + this.props.track.artist_id);
 	    }
 	  }, {
+	    key: '_postComment',
+	    value: function _postComment(e) {
+	      if (e.key === 'Enter') {
+	        var time = void 0;
+	        if (this.props.time) {
+	          time = this.props.time;
+	        } else {
+	          time = 0;
+	        }
+	
+	        this.props.postComment({
+	          track_id: this.props.params.id,
+	          body: e.currentTarget.value,
+	          time: time
+	        });
+	      }
+	    }
+	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
 	      this._addButtonIcon();
@@ -55426,12 +55538,11 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'comments-page' },
-	          _react2.default.createElement(
-	            'p',
-	            { className: '' },
-	            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-	          ),
-	          _react2.default.createElement('textarea', { rows: '3', className: 'new-comment', placeholder: 'Write a comment.' })
+	          _react2.default.createElement('input', { type: 'text',
+	            className: 'new-comment',
+	            placeholder: 'Write a comment.',
+	            onKeyPress: this._postComment }),
+	          _react2.default.createElement(_comment_list2.default, null)
 	        )
 	      );
 	    }
@@ -55473,6 +55584,9 @@
 	    },
 	    unlike: function unlike(track) {
 	      return dispatch((0, _like_actions.unlike)(track.id));
+	    },
+	    postComment: function postComment(comment) {
+	      return dispatch((0, _track_actions.postComment)(comment));
 	    }
 	  };
 	};
@@ -55491,6 +55605,16 @@
 	
 	var _track_actions = __webpack_require__(263);
 	
+	var _merge = __webpack_require__(432);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	var defaultState = { comments: [] };
+	
 	var TrackReducer = function TrackReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	  var action = arguments[1];
@@ -55503,12 +55627,139 @@
 	    case _track_actions.CLEAR_TRACK:
 	      return {};
 	
+	    case _track_actions.RECEIVE_COMMENT_FOR_TRACK:
+	      return (0, _merge2.default)({}, state, { comments: [action.comment].concat(_toConsumableArray(state.comments)) });
+	
 	    default:
 	      return state;
 	  }
 	};
 	
 	exports.default = TrackReducer;
+
+/***/ },
+/* 571 */,
+/* 572 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _comment = __webpack_require__(573);
+	
+	var _comment2 = _interopRequireDefault(_comment);
+	
+	var _reactRedux = __webpack_require__(173);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var CommentList = function (_React$Component) {
+	  _inherits(CommentList, _React$Component);
+	
+	  function CommentList(props) {
+	    _classCallCheck(this, CommentList);
+	
+	    return _possibleConstructorReturn(this, (CommentList.__proto__ || Object.getPrototypeOf(CommentList)).call(this, props));
+	  }
+	
+	  _createClass(CommentList, [{
+	    key: 'render',
+	    value: function render() {
+	      var comments = void 0;
+	      if (this.props.comments) {
+	        comments = this.props.comments.map(function (comment) {
+	          return _react2.default.createElement(_comment2.default, { comment: comment, key: comment.id });
+	        });
+	      }
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'comments-container' },
+	        comments
+	      );
+	    }
+	  }]);
+	
+	  return CommentList;
+	}(_react2.default.Component);
+	
+	var mapStateToProps = function mapStateToProps(_ref) {
+	  var track = _ref.track;
+	  return {
+	    comments: track.comments
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(CommentList);
+
+/***/ },
+/* 573 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Comment = function (_React$Component) {
+	  _inherits(Comment, _React$Component);
+	
+	  function Comment(props) {
+	    _classCallCheck(this, Comment);
+	
+	    return _possibleConstructorReturn(this, (Comment.__proto__ || Object.getPrototypeOf(Comment)).call(this, props));
+	  }
+	
+	  _createClass(Comment, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "comment" },
+	        _react2.default.createElement("img", { src: this.props.comment.profpic_url, className: "comment-icon" }),
+	        _react2.default.createElement(
+	          "p",
+	          { className: "" },
+	          this.props.comment.body
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Comment;
+	}(_react2.default.Component);
+	
+	exports.default = Comment;
 
 /***/ }
 /******/ ]);

@@ -11,8 +11,18 @@ export const uploadTrack = (trackData, callback) => {
 
 export const fetchTrack = (id, callback) => {
   $.ajax({
-    url:`/api/tracks/${id}`,
-    method:'GET',
+    url: `/api/tracks/${id}`,
+    method: 'GET',
     success: callback
   });
+}
+
+export const postComment = (comment, callback) => {
+  $.ajax({
+    url:`/api/comments/`,
+    method: 'POST',
+    dataType: 'json',
+    data: { comment },
+    success: callback
+  })
 }

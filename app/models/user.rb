@@ -18,6 +18,8 @@ class User < ApplicationRecord
     foreign_key: :artist_id,
     primary_key: :id
 
+  has_many :comments
+
   def self.find_by_credentials(username, password)
     user = User.find_by(username: username)
     return user if user.isPassword?(password)

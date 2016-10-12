@@ -32,7 +32,9 @@ class MainStream extends React.Component{
     return (
       <div className="main-stream-container">
         <MainStreamTabs ref='tabs' loadStream={this._loadStream}/>
-        <Stream tracks={this.props.stream.tracks} />
+        <div className="main-inner-stream-container">
+          <Stream tracks={this.props.stream.tracks} />
+        </div>
       </div>
     );
   }
