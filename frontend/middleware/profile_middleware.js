@@ -52,7 +52,6 @@ const ProfileMiddleware = ({getState, dispatch}) => next => action => {
       return;
 
       case UPDATE_PROFILE:
-        debugger
         updateProfile(action.id, action.data, (r) => console.log(r));
         return;
 

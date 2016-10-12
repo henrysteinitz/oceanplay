@@ -54802,7 +54802,6 @@
 	          return;
 	
 	        case _profile_actions.UPDATE_PROFILE:
-	          debugger;
 	          (0, _user_api_util.updateProfile)(action.id, action.data, function (r) {
 	            return console.log(r);
 	          });

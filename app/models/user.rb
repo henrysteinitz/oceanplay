@@ -25,6 +25,10 @@ class User < ApplicationRecord
   end
 
   def ensure_session_token
+    self.session_token ||= new_session_token
+  end
+
+  def new_session_token
     self.session_token = SecureRandom.base64
     while User.find_by(session_token: self.session_token)
       self.session_token = SecureRandom.base64
