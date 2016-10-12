@@ -14,7 +14,7 @@ class Api::StreamsController < ApplicationController
       SQL
       @stream = @stream.order('created_at DESC').includes(:comments)
     else
-      @stream = Track.find_by_sql(<<-SQL)
+      @stream = Track.find_by_sql(<<-SQL).includes(:comments)
         SELECT
           tracks.*
         FROM
@@ -30,7 +30,6 @@ class Api::StreamsController < ApplicationController
         ORDER BY
           tracks.play_count DESC
       SQL
-      @stream = @stream.includes(:comments)
 
     end
     render :show
