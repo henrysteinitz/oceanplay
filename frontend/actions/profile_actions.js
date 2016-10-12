@@ -5,6 +5,7 @@ export const CHECK_FOLLOW = 'CHECK_FOLLOW';
 export const RECEIVE_FOLLOW = 'RECEIVE_FOLLOW';
 export const CLEAR_FOLLOW = 'CLEAR_FOLLOW';
 export const RECEIVE_USER = 'RECEIVE_USER';
+export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 
 export const loadProfile = (id) => ({
   type: LOAD_PROFILE,
@@ -32,14 +33,20 @@ export const checkFollow = (id, callback) => ({
 export const receiveFollow = (callback) => ({
   type: RECEIVE_FOLLOW,
   callback
-})
+});
 
 export const clearFollow = (callback) => ({
   type: CLEAR_FOLLOW,
   callback
-})
+});
 
 export const receiveUser = (user) => ({
   type: RECEIVE_USER,
   user
-})
+});
+
+export const updateProfile = (id, data) => ({
+  type: UPDATE_PROFILE,
+  id,
+  data
+});

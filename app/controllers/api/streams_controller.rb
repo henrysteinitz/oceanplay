@@ -3,13 +3,16 @@ class Api::StreamsController < ApplicationController
   def show
     if stream_params[:tab] == 'recent'
       @stream = Track.joins(<<-SQL)
-        JOIN
+        LEFT OUTER JOIN
           follows
         ON
           tracks.artist_id = follows.followed_id
-        AND
+        WHERE
           #{current_user.id} = follows.follower_id
+        OR
+          #{current_user.id} = tracks.artist_id
       SQL
+
       @stream = @stream.order('created_at DESC')
     else
       @stream = Track.find_by_sql(<<-SQL)
@@ -17,12 +20,14 @@ class Api::StreamsController < ApplicationController
           tracks.*
         FROM
           tracks
-        JOIN
+        LEFT OUTER JOIN
           follows
         ON
           tracks.artist_id = follows.followed_id
-        AND
+        WHERE
           #{current_user.id} = follows.follower_id
+        OR
+          #{current_user.id} = tracks.artist_id
         ORDER BY
           tracks.play_count DESC
       SQL

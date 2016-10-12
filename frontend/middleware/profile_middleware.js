@@ -2,6 +2,7 @@ import { LOAD_PROFILE,
   FOLLOW_USER,
   UNFOLLOW_USER,
   CHECK_FOLLOW,
+  UPDATE_PROFILE,
   receiveFollow,
   clearFollow,
   receiveUser} from '../actions/profile_actions';
@@ -9,7 +10,8 @@ import { receiveStream } from '../actions/stream_actions';
 import { fetchFullUser,
   followUser,
   unfollowUser,
-  checkFollow } from '../util/user_api_util';
+  checkFollow,
+  updateProfile } from '../util/user_api_util';
 
 
 const ProfileMiddleware = ({getState, dispatch}) => next => action => {
@@ -47,6 +49,13 @@ const ProfileMiddleware = ({getState, dispatch}) => next => action => {
           dispatch(clearFollow(action.callback));
         }
       });
+      return;
+
+      case UPDATE_PROFILE:
+        debugger
+        updateProfile(action.id, action.data, (r) => console.log(r));
+        return;
+
     default:
       return next(action);
 

@@ -28721,8 +28721,12 @@
 	
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
+	    _this.state = {};
+	    _this.setState({ newTrack: false });
 	    props.loadLikes();
+	
 	    _this._checkPlayPause = _this._checkPlayPause.bind(_this);
+	    _this._analyseAudio = _this._analyseAudio.bind(_this);
 	    return _this;
 	  }
 	
@@ -28745,12 +28749,37 @@
 	      }
 	    }
 	  }, {
+	    key: '_analyseAudio',
+	    value: function _analyseAudio() {
+	      // const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+	      // const analyser = audioCtx.createAnalyser();
+	      //
+	      // const source = audioCtx.createMediaElementSource(this.refs.audio);
+	      // source.connect(analyser);
+	      //
+	      // const bufferLength = analyser.frequencyBinCount;
+	      // const data = new Uint8Array(bufferLength);
+	      // analyser.getByteTimeDomainData(data);
+	      // debugger
+	    }
+	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
 	      this._checkPlayPause();
 	      this._checkNewTime();
-	      //let analyser = require('web-audio-analyser')(this.refs.audio);
-	      //console.log(analyser.waveform())
+	
+	      if (this.state.newTrack) {
+	        this.setState({ newTrack: false }, this._analyseAudio);
+	      }
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.nowPlaying.playing) {
+	        if (!this.props.nowPlaying.playing || this.props.nowPlaying.track.id !== nextProps.nowPlaying.track.id) {
+	          this.setState({ newTrack: true });
+	        }
+	      }
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -29391,7 +29420,6 @@
 	        (function () {
 	          var reader = new FileReader();
 	          var file = e.currentTarget.files[0];
-	          console.log('asdfasdf');
 	          //const preview = this.refs.artPreview;
 	
 	          reader.addEventListener('loadend', function () {
@@ -29967,12 +29995,25 @@
 	  function PlayBar(props) {
 	    _classCallCheck(this, PlayBar);
 	
-	    return _possibleConstructorReturn(this, (PlayBar.__proto__ || Object.getPrototypeOf(PlayBar)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (PlayBar.__proto__ || Object.getPrototypeOf(PlayBar)).call(this, props));
+	
+	    _this._renderTime = _this._renderTime.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(PlayBar, [{
 	    key: "componentDidUpdate",
 	    value: function componentDidUpdate() {
+	      this._renderTime();
+	    }
+	  }, {
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      this._renderTime();
+	    }
+	  }, {
+	    key: "_renderTime",
+	    value: function _renderTime() {
 	      if (!this.props.scrubbing) {
 	        var newWidth = this.props.time / this.props.duration;
 	        $(this.refs.inner).width(newWidth * 100 + "%");
@@ -30172,6 +30213,10 @@
 	
 	var _profile_tabs2 = _interopRequireDefault(_profile_tabs);
 	
+	var _merge = __webpack_require__(432);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
 	var _reactRedux = __webpack_require__(173);
 	
 	var _profile_actions = __webpack_require__(272);
@@ -30198,22 +30243,122 @@
 	
 	    _this.props.clearStream();
 	    _this.props.loadProfile(_this.props.params.id);
-	    console.log(_this.props.params.id);
+	    _this.state = {
+	      editing: false,
+	      updateData: {}
+	    };
+	
+	    _this._handleProf = _this._handleProf.bind(_this);
+	    _this._handlePanel = _this._handlePanel.bind(_this);
+	    _this._handleClick = _this._handleClick.bind(_this);
+	    _this._edit = _this._edit.bind(_this);
+	    _this._save = _this._save.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Profile, [{
+	    key: '_handleProf',
+	    value: function _handleProf(e) {
+	      if (e.currentTarget.files.length > 0) {
+	        var reader = new FileReader();
+	        var file = e.currentTarget.files[0];
+	      }
+	    }
+	  }, {
+	    key: '_handlePanel',
+	    value: function _handlePanel(e) {
+	      var _this2 = this;
+	
+	      if (e.currentTarget.files.length > 0) {
+	        (function () {
+	          var reader = new FileReader();
+	          var file = e.currentTarget.files[0];
+	
+	          reader.addEventListener('loadend', function () {
+	            _this2.setState({ panelUrl: reader.result });
+	          });
+	
+	          _this2.setState({
+	            uploadData: (0, _merge2.default)(_this2.state.updateData, { panelpic: file })
+	          });
+	
+	          if (file) {
+	            reader.readAsDataURL(file);
+	          }
+	        })();
+	      }
+	    }
+	  }, {
+	    key: '_handleClick',
+	    value: function _handleClick() {
+	      if (this.state.editing) {
+	        this._save();
+	      } else {
+	        this._edit();
+	      }
+	    }
+	  }, {
+	    key: '_edit',
+	    value: function _edit() {
+	      var _this3 = this;
+	
+	      this.setState({ editing: true }, function () {
+	        $(_this3.refs.panel.refs.input).prop('disabled', false);
+	      });
+	    }
+	  }, {
+	    key: '_save',
+	    value: function _save() {
+	      var _this4 = this;
+	
+	      this.setState({ editing: false }, function () {
+	        var data = new FormData();
+	        if (_this4.state.updateData.panelpic) {
+	          data.append('user[panelpic]', _this4.state.updateData.panelpic);
+	        }
+	        if (_this4.state.updateData.profpic) {
+	          data.append('user[profpic]', _this4.state.updateData.profpic);
+	        }
+	        _this4.props.updateProfile(_this4.props.params.id, data);
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var displayName = "";
 	      if (this.props.profile.user) {
 	        displayName = this.props.profile.user.username;
 	      }
+	
+	      var panelUrl = "";
+	      if (this.state.panelUrl) {
+	        panelUrl = this.state.panelUrl;
+	      } else {
+	        if (this.props.profile.user) {
+	          panelUrl = this.props.profile.user.panelUrl;
+	        }
+	      }
+	
+	      var profUrl = "";
+	      if (this.state.profUrl) {
+	        profUrl = this.state.profUrl;
+	      } else {
+	        if (this.props.profile.user) {
+	          profUrl = this.props.profile.user.profUrl;
+	        }
+	      }
 	      return _react2.default.createElement(
 	        'main',
 	        null,
-	        _react2.default.createElement(_profile_panel2.default, { displayName: displayName }),
-	        _react2.default.createElement(_profile_tabs2.default, { userId: this.props.params.id }),
+	        _react2.default.createElement(_profile_panel2.default, {
+	          displayName: displayName,
+	          handlePanel: this._handlePanel,
+	          ref: 'panel',
+	          panelUrl: panelUrl }),
+	        _react2.default.createElement(_profile_tabs2.default, {
+	          userId: parseInt(this.props.params.id),
+	          editing: this.state.editing,
+	          handleClick: this._handleClick }),
 	        _react2.default.createElement(_stream2.default, { tracks: this.props.stream.tracks })
 	      );
 	    }
@@ -30236,6 +30381,9 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	  return {
+	    updateProfile: function updateProfile(id, data) {
+	      return dispatch((0, _profile_actions.updateProfile)(id, data));
+	    },
 	    loadProfile: function loadProfile(id) {
 	      return dispatch((0, _profile_actions.loadProfile)(id));
 	    },
@@ -30251,7 +30399,7 @@
 /* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -30281,20 +30429,29 @@
 	  }
 	
 	  _createClass(ProfilePanel, [{
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
-	        'div',
-	        { className: 'profile-panel' },
-	        _react2.default.createElement('div', { className: 'panel-shade' }),
-	        _react2.default.createElement('img', { className: 'panel-pic', src: 'test-panel.jpg' }),
+	        "div",
+	        { className: "profile-panel" },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'panel-row' },
+	          "label",
+	          { className: "panel-label" },
+	          _react2.default.createElement("div", { className: "panel-shade" }),
+	          _react2.default.createElement("img", { className: "panel-pic", src: this.props.panelUrl }),
+	          _react2.default.createElement("input", { type: "file",
+	            className: "none",
+	            onChange: this.props.handlePanel,
+	            ref: "input",
+	            disabled: true }),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'display-name' },
-	            this.props.displayName
+	            "div",
+	            { className: "panel-row" },
+	            _react2.default.createElement(
+	              "div",
+	              { className: "display-name" },
+	              this.props.displayName
+	            )
 	          )
 	        )
 	      );
@@ -30363,14 +30520,26 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      var followButtonClass = void 0;
-	      var followButtonText = void 0;
-	      if (this.props.following) {
-	        followButtonClass = "panel-follow-button following";
-	        followButtonText = "Following";
+	      var buttonClass = void 0;
+	      var buttonText = void 0;
+	      var buttonClick = void 0;
+	      if (this.props.session.user.id === this.props.userId) {
+	        buttonClass = "panel-follow-button not-following";
+	        buttonClick = this.props.handleClick;
+	        if (this.props.editing) {
+	          buttonText = "Save";
+	        } else {
+	          buttonText = "Edit";
+	        }
 	      } else {
-	        followButtonClass = "panel-follow-button not-following";
-	        followButtonText = "Follow";
+	        buttonClick = this._follow;
+	        if (this.props.following) {
+	          buttonClass = "panel-follow-button following";
+	          buttonText = "Following";
+	        } else {
+	          buttonClass = "panel-follow-button not-following";
+	          buttonText = "Follow";
+	        }
 	      }
 	
 	      return _react2.default.createElement(
@@ -30398,9 +30567,9 @@
 	        ),
 	        _react2.default.createElement(
 	          "button",
-	          { className: followButtonClass,
-	            onClick: this._follow },
-	          followButtonText
+	          { className: buttonClass,
+	            onClick: buttonClick },
+	          buttonText
 	        )
 	      );
 	    }
@@ -30411,8 +30580,10 @@
 	
 	var mapStateToProps = function mapStateToProps(_ref) {
 	  var profile = _ref.profile;
+	  var session = _ref.session;
 	  return {
-	    following: profile.following
+	    following: profile.following,
+	    session: session
 	  };
 	};
 	
@@ -30448,6 +30619,7 @@
 	var RECEIVE_FOLLOW = exports.RECEIVE_FOLLOW = 'RECEIVE_FOLLOW';
 	var CLEAR_FOLLOW = exports.CLEAR_FOLLOW = 'CLEAR_FOLLOW';
 	var RECEIVE_USER = exports.RECEIVE_USER = 'RECEIVE_USER';
+	var UPDATE_PROFILE = exports.UPDATE_PROFILE = 'UPDATE_PROFILE';
 	
 	var loadProfile = exports.loadProfile = function loadProfile(id) {
 	  return {
@@ -30498,6 +30670,14 @@
 	  return {
 	    type: RECEIVE_USER,
 	    user: user
+	  };
+	};
+	
+	var updateProfile = exports.updateProfile = function updateProfile(id, data) {
+	  return {
+	    type: UPDATE_PROFILE,
+	    id: id,
+	    data: data
 	  };
 	};
 
@@ -54619,6 +54799,15 @@
 	              dispatch((0, _profile_actions.clearFollow)(action.callback));
 	            }
 	          });
+	          return;
+	
+	        case _profile_actions.UPDATE_PROFILE:
+	          debugger;
+	          (0, _user_api_util.updateProfile)(action.id, action.data, function (r) {
+	            return console.log(r);
+	          });
+	          return;
+	
 	        default:
 	          return next(action);
 	
@@ -54680,6 +54869,17 @@
 	    method: 'GET',
 	    dataType: 'json',
 	    data: { follow: { followed_id: id } },
+	    success: callback
+	  });
+	};
+	
+	var updateProfile = exports.updateProfile = function updateProfile(id, data, callback) {
+	  $.ajax({
+	    url: '/api/users/' + id,
+	    method: 'PATCH',
+	    processData: false,
+	    contentType: false,
+	    data: data,
 	    success: callback
 	  });
 	};

@@ -43,3 +43,14 @@ export const checkFollow = (id, callback) => {
     success: callback
   })
 }
+
+export const updateProfile = (id, data, callback) => {
+  $.ajax({
+    url: `/api/users/${id}`,
+    method: 'PATCH',
+    processData: false,
+    contentType: false,
+    data,
+    success: callback
+  });
+}

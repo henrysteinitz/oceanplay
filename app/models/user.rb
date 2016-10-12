@@ -7,6 +7,12 @@ class User < ApplicationRecord
 
   attr_reader :password
 
+  has_attached_file :panelpic
+  validates_attachment_content_type :panelpic, content_type: /\Aimage\/.*\Z/
+
+  has_attached_file :profpic
+  validates_attachment_content_type :profpic, content_type: /\Aimage\/.*\Z/
+
   has_many :tracks,
     class_name: 'Track',
     foreign_key: :artist_id,

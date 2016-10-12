@@ -47,7 +47,6 @@ class UploadForm extends React.Component{
     if (e.currentTarget.files.length > 0){
       const reader = new FileReader();
       const file = e.currentTarget.files[0];
-      console.log('asdfasdf');
       //const preview = this.refs.artPreview;
 
       reader.addEventListener('loadend', () => {

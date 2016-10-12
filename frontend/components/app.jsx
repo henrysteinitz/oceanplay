@@ -7,8 +7,13 @@ class App extends React.Component{
 
   constructor(props){
     super(props);
+
+    this.state = {};
+    this.setState({newTrack: false});
     props.loadLikes();
+
     this._checkPlayPause = this._checkPlayPause.bind(this);
+    this._analyseAudio = this._analyseAudio.bind(this);
   }
 
   _checkPlayPause(){
@@ -27,11 +32,35 @@ class App extends React.Component{
     }
   }
 
+  _analyseAudio(){
+    // const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // const analyser = audioCtx.createAnalyser();
+    //
+    // const source = audioCtx.createMediaElementSource(this.refs.audio);
+    // source.connect(analyser);
+    //
+    // const bufferLength = analyser.frequencyBinCount;
+    // const data = new Uint8Array(bufferLength);
+    // analyser.getByteTimeDomainData(data);
+    // debugger
+  }
+
   componentDidUpdate(){
     this._checkPlayPause();
     this._checkNewTime();
-    //let analyser = require('web-audio-analyser')(this.refs.audio);
-    //console.log(analyser.waveform())
+
+    if (this.state.newTrack){
+      this.setState({newTrack: false}, this._analyseAudio);
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    if (nextProps.nowPlaying.playing){
+      if (!this.props.nowPlaying.playing ||
+        this.props.nowPlaying.track.id !== nextProps.nowPlaying.track.id){
+          this.setState({newTrack: true});
+      }
+    }
   }
 
   componentDidMount(){

@@ -28,8 +28,21 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  def update
+    if params[:id].to_i == current_user.id
+      @user = User.find(params[:id])
+      @user.profpic = user_params[:profpic] if user_params[:profpic]
+      @user.panelpic = user_params[:panelpic] if user_params[:panelpic]
+      if @user.save
+        render :show
+      else
+        render json: {status: 400, errors: @user.errors.full_messages}
+      end
+    end
+  end
+
   private
   def user_params
-    params.require(:user).permit(:username, :password)
+    params.require(:user).permit(:username, :password, :profpic, :panelpic)
   end
 end

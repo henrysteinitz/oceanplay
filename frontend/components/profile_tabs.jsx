@@ -17,15 +17,30 @@ class ProfileTabs extends React.Component{
   }
 
   render(){
-    let followButtonClass;
-    let followButtonText;
-    if (this.props.following){
-      followButtonClass = "panel-follow-button following"
-      followButtonText = "Following"
-    } else {
-      followButtonClass = "panel-follow-button not-following"
-      followButtonText = "Follow"
+    let buttonClass;
+    let buttonText;
+    let buttonClick;
+    if (this.props.session.user.id === this.props.userId){
+      buttonClass = "panel-follow-button not-following"
+      buttonClick = this.props.handleClick;
+      if (this.props.editing){
+        buttonText = "Save";
+      } else {
+        buttonText = "Edit";
+      }
+
+    } else{
+      buttonClick = this._follow
+      if (this.props.following){
+        buttonClass = "panel-follow-button following"
+        buttonText = "Following"
+      } else {
+        buttonClass = "panel-follow-button not-following"
+        buttonText = "Follow"
+      }
     }
+
+
 
     return (
       <div className="tabs">
@@ -42,8 +57,9 @@ class ProfileTabs extends React.Component{
           Reposts
         </span>
 
-        <button className={followButtonClass}
-          onClick={this._follow}>{followButtonText}</button>
+
+        <button className={buttonClass}
+          onClick={buttonClick}>{buttonText}</button>
       </div>
     );
   }
@@ -52,8 +68,9 @@ class ProfileTabs extends React.Component{
 import { connect } from 'react-redux';
 import { followUser, unfollowUser, checkFollow } from '../actions/profile_actions';
 
-const mapStateToProps = ({ profile }) => ({
-  following: profile.following
+const mapStateToProps = ({ profile, session }) => ({
+  following: profile.following,
+  session
 })
 
 const mapDispatchToProps = (dispatch) => ({
