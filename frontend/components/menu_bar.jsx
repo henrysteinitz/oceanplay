@@ -98,7 +98,9 @@ class MenuBar extends React.Component{
 
 // Redux Container
 import { connect } from 'react-redux';
-import { uploadTrack, receiveTrackForStream } from '../actions/track_actions';
+import { uploadTrack,
+  receiveTrackForStream,
+  clearNowPlaying } from '../actions/track_actions';
 
 const mapStateToProps = ({ session, profile, stream }) => ({
   currentUser: session.user,
@@ -112,8 +114,8 @@ const mapDispatchToProps = (dispatch) => ({
   ),
   receiveTrack: (track) => {
     dispatch(receiveTrackForStream(track));
-    debugger
-  }
+  },
+  clearNowPlaying: () => dispatch(clearNowPlaying())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar);

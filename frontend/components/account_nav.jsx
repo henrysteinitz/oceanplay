@@ -51,14 +51,16 @@ class AccountNav extends React.Component{
 }
 
 import { connect } from 'react-redux';
-import { signout } from '../actions/session_actions'
+import { signout } from '../actions/session_actions';
+import { clearNowPlaying } from '../actions/track_actions';
 
 const mapStateToProps = ({ session }) => ({
   user: session.user
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  signout: (callback) => dispatch(signout(callback))
+  signout: (callback) => dispatch(signout(callback)),
+  clearNowPlaying: () => dispatch(clearNowPlaying())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountNav);

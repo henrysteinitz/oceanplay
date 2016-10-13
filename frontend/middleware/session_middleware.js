@@ -38,8 +38,8 @@ const SessionMiddleware = ({getState, dispatch}) => next => action => {
       return action.callback();
 
     case ERASE_CURRENT_USER:
-      next(action);
-      return action.callback();
+      action.callback();
+      return next(action);
 
     default:
       return next(action);

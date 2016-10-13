@@ -13,6 +13,7 @@ export const RECEIVE_COMMENT_FOR_TRACK = 'RECEIVE_COMMENT_FOR_TRACK';
 export const POST_COMMENT = 'POST_COMMENT';
 export const SHOW_NOW_PLAYING = 'SHOW_NOW_PLAYING';
 export const HIDE_NOW_PLAYING = 'HIDE_NOW_PLAYING';
+export const CLEAR_NOW_PLAYING = 'CLEAR_NOW_PLAYING';
 
 export const uploadTrack = (trackData, callback) => ({
   type: UPLOAD_TRACK,
@@ -84,3 +85,7 @@ export const showNowPlaying = () => ({
 export const hideNowPlaying = () => ({
   type: HIDE_NOW_PLAYING
 });
+
+export const clearNowPlaying = () => ({
+  type: CLEAR_NOW_PLAYING
+})

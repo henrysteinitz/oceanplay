@@ -67,8 +67,10 @@ class App extends React.Component{
     this.props.setDuration(this.refs.audio.duration)
     setInterval(() => {
       if (this.props.nowPlaying.playing){
-        this.props.setTime(this.refs.audio.currentTime);
-        this.props.setDuration(this.refs.audio.duration)
+        if (this.refs.audio){
+          this.props.setTime(this.refs.audio.currentTime);
+          this.props.setDuration(this.refs.audio.duration);
+        }  
       }
     }, 1.0);
   }

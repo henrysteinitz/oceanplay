@@ -28835,8 +28835,10 @@
 	      this.props.setDuration(this.refs.audio.duration);
 	      setInterval(function () {
 	        if (_this2.props.nowPlaying.playing) {
-	          _this2.props.setTime(_this2.refs.audio.currentTime);
-	          _this2.props.setDuration(_this2.refs.audio.duration);
+	          if (_this2.refs.audio) {
+	            _this2.props.setTime(_this2.refs.audio.currentTime);
+	            _this2.props.setDuration(_this2.refs.audio.duration);
+	          }
 	        }
 	      }, 1.0);
 	    }
@@ -29067,7 +29069,9 @@
 	    },
 	    receiveTrack: function receiveTrack(track) {
 	      dispatch((0, _track_actions.receiveTrackForStream)(track));
-	      debugger;
+	    },
+	    clearNowPlaying: function clearNowPlaying() {
+	      return dispatch((0, _track_actions.clearNowPlaying)());
 	    }
 	  };
 	};
@@ -29231,6 +29235,8 @@
 	
 	var _session_actions = __webpack_require__(261);
 	
+	var _track_actions = __webpack_require__(263);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29327,6 +29333,9 @@
 	  return {
 	    signout: function signout(callback) {
 	      return dispatch((0, _session_actions.signout)(callback));
+	    },
+	    clearNowPlaying: function clearNowPlaying() {
+	      return dispatch((0, _track_actions.clearNowPlaying)());
 	    }
 	  };
 	};
@@ -29646,6 +29655,7 @@
 	var POST_COMMENT = exports.POST_COMMENT = 'POST_COMMENT';
 	var SHOW_NOW_PLAYING = exports.SHOW_NOW_PLAYING = 'SHOW_NOW_PLAYING';
 	var HIDE_NOW_PLAYING = exports.HIDE_NOW_PLAYING = 'HIDE_NOW_PLAYING';
+	var CLEAR_NOW_PLAYING = exports.CLEAR_NOW_PLAYING = 'CLEAR_NOW_PLAYING';
 	
 	var uploadTrack = exports.uploadTrack = function uploadTrack(trackData, callback) {
 	  return {
@@ -29745,6 +29755,12 @@
 	var hideNowPlaying = exports.hideNowPlaying = function hideNowPlaying() {
 	  return {
 	    type: HIDE_NOW_PLAYING
+	  };
+	};
+	
+	var clearNowPlaying = exports.clearNowPlaying = function clearNowPlaying() {
+	  return {
+	    type: CLEAR_NOW_PLAYING
 	  };
 	};
 
@@ -54740,6 +54756,9 @@
 	    case _track_actions.HIDE_NOW_PLAYING:
 	      return (0, _merge2.default)({}, state, { showPlayer: false });
 	
+	    case _track_actions.CLEAR_NOW_PLAYING:
+	      return {};
+	
 	    default:
 	      return state;
 	  }
@@ -54833,8 +54852,8 @@
 	          return action.callback();
 	
 	        case _session_actions.ERASE_CURRENT_USER:
-	          next(action);
-	          return action.callback();
+	          action.callback();
+	          return next(action);
 	
 	        default:
 	          return next(action);
