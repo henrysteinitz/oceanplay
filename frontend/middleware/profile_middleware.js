@@ -20,7 +20,7 @@ const ProfileMiddleware = ({getState, dispatch}) => next => action => {
     case LOAD_PROFILE:
       fetchFullUser(action.id, (res) => {
         dispatch(receiveUser(res.user))
-        dispatch(receiveStream(res.tracks))
+        dispatch(receiveStream(res.tracks, "tracks"))
       });
       return;
 

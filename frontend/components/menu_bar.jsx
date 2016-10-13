@@ -87,7 +87,10 @@ class MenuBar extends React.Component{
           ref='uploadForm'
           returnUploadForm={this._returnUploadForm}
           uploadTrack={this.props.uploadTrack}
-          currentUser={this.props.currentUser} />
+          currentUser={this.props.currentUser}
+          receiveTrack={this.props.receiveTrack}
+          profile={this.props.profile}
+          streamKind={this.props.streamKind} />
       </div>
     );
   }
@@ -95,16 +98,22 @@ class MenuBar extends React.Component{
 
 // Redux Container
 import { connect } from 'react-redux';
-import { uploadTrack } from '../actions/track_actions';
+import { uploadTrack, receiveTrackForStream } from '../actions/track_actions';
 
-const mapStateToProps = ({ session }) => ({
-  currentUser: session.user
+const mapStateToProps = ({ session, profile, stream }) => ({
+  currentUser: session.user,
+  streamKind: stream.kind,
+  profile
 });
 
 const mapDispatchToProps = (dispatch) => ({
   uploadTrack: (trackData, callback) => (
     dispatch(uploadTrack(trackData, callback))
-  )
+  ),
+  receiveTrack: (track) => {
+    dispatch(receiveTrackForStream(track));
+    debugger
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar);

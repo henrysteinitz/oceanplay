@@ -12,7 +12,7 @@ class Api::TracksController < ApplicationController
   def create
     @track = Track.new(track_params)
     if @track.save
-      render json: {status: 200, message: "track uploaded"}
+      render :show
     else
       render json: {status: 400, errors: @track.errors.full_messages}
     end

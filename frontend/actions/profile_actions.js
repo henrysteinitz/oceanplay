@@ -5,6 +5,7 @@ export const CHECK_FOLLOW = 'CHECK_FOLLOW';
 export const RECEIVE_FOLLOW = 'RECEIVE_FOLLOW';
 export const CLEAR_FOLLOW = 'CLEAR_FOLLOW';
 export const RECEIVE_USER = 'RECEIVE_USER';
+export const CLEAR_USER = 'CLEAR_USER';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
 
 export const loadProfile = (id) => ({
@@ -44,6 +45,10 @@ export const receiveUser = (user) => ({
   type: RECEIVE_USER,
   user
 });
+
+export const clearUser = () => ({
+  type: CLEAR_USER
+})
 
 export const updateProfile = (id, data) => ({
   type: UPDATE_PROFILE,

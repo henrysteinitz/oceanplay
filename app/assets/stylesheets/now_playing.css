@@ -68,6 +68,10 @@
   background: white;
 }
 
+.now-playing-play-button:hover{
+  cursor:pointer;
+}
+
 .np-outer-play-bar{
   position: relative;
   display: block;

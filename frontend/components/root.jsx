@@ -36,7 +36,7 @@ class Root extends React.Component{
   }
 
   _trackLeave(){
-    if(this.props.playing){
+    if(this.props.currentTrackId){
       this.props.show();
     }
   }

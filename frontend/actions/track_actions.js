@@ -1,6 +1,7 @@
 export const UPLOAD_TRACK = 'UPLOAD_TRACK';
 export const LOAD_TRACK = 'LOAD_TRACK';
 export const RECEIVE_TRACK = 'RECEIVE_TRACK';
+export const RECEIVE_TRACK_FOR_STREAM = 'RECEIVE_TRACK_FOR_STREAM';
 export const CLEAR_TRACK = 'CLEAR_TRACK';
 export const PLAY_TRACK = 'PLAY_TRACK';
 export const PAUSE_TRACK = 'PAUSE_TRACK';
@@ -28,6 +29,11 @@ export const receiveTrack = (track) => ({
   type: RECEIVE_TRACK,
   track
 });
+
+export const receiveTrackForStream = (track) => ({
+  type: RECEIVE_TRACK_FOR_STREAM,
+  track
+})
 
 export const clearTrack = () => ({
   type: CLEAR_TRACK

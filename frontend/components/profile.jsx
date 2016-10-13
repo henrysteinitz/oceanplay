@@ -105,6 +105,10 @@ class Profile extends React.Component{
     }
   }
 
+  componentWillUnmount(){
+
+  }
+
 
   render(){
     let displayName = "";
@@ -164,7 +168,7 @@ class Profile extends React.Component{
 
 // Redux Container
 import { connect } from 'react-redux';
-import { loadProfile, updateProfile } from '../actions/profile_actions'
+import { loadProfile, updateProfile, clearUser } from '../actions/profile_actions'
 import { clearStream } from '../actions/stream_actions'
 
 const mapStateToProps = ({ stream, profile }) => ({
@@ -175,7 +179,8 @@ const mapStateToProps = ({ stream, profile }) => ({
 const mapDispatchToProps = (dispatch) => ({
   updateProfile: (id, data) => dispatch(updateProfile(id, data)),
   loadProfile: (id) => dispatch(loadProfile(id)),
-  clearStream: () => dispatch(clearStream())
+  clearStream: () => dispatch(clearStream()),
+  clearUser: () => dispatch(clearUser())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

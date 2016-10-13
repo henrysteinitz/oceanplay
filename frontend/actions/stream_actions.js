@@ -3,9 +3,10 @@ export const LOAD_MAIN_STREAM = 'LOAD_MAIN_STREAM';
 export const RECEIVE_STREAM = 'RECEIVE_STREAM';
 export const CLEAR_STREAM = 'CLEAR_STREAM'
 
-export const receiveStream = (tracks) => ({
+export const receiveStream = (tracks, kind) => ({
   type: RECEIVE_STREAM,
-  tracks
+  tracks,
+  kind
 });
 
 export const clearStream = () => ({

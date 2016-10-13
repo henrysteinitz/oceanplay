@@ -1,4 +1,5 @@
 import React from 'react';
+import { uploadTrack, receiveTrackForStream } from '../actions/track_actions';
 
 class UploadForm extends React.Component{
 
@@ -24,7 +25,6 @@ class UploadForm extends React.Component{
   }
 
   _handleInput(type){
-    console.log(this.state);
     return (e) => this.setState({[type]: e.currentTarget.value});
   }
 
@@ -76,6 +76,12 @@ class UploadForm extends React.Component{
         this.props.returnUploadForm();
         this._fadeIn();
         this._resetForm();
+        if (this.props.streamKind === 'recent' ||
+          (this.props.streamKind === 'tracks' &&
+            this.props.profile.user.id === this.props.currentUser.id)){
+              this.props.receiveTrack(res.track);
+        }
+
       });
       this._fadeOut()
       //this.setState()

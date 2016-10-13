@@ -7,7 +7,7 @@ const StreamMiddleware = ({getState, dispatch}) => next => action => {
 
     case LOAD_MAIN_STREAM:
       return fetchStream(action.tab, (res) => {
-        dispatch(receiveStream(res));
+        dispatch(receiveStream(res, action.tab));
       });
 
     default:

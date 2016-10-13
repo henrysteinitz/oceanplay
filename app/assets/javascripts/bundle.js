@@ -21548,7 +21548,7 @@
 	  }, {
 	    key: '_trackLeave',
 	    value: function _trackLeave() {
-	      if (this.props.playing) {
+	      if (this.props.currentTrackId) {
 	        this.props.show();
 	      }
 	    }
@@ -29035,7 +29035,10 @@
 	          ref: 'uploadForm',
 	          returnUploadForm: this._returnUploadForm,
 	          uploadTrack: this.props.uploadTrack,
-	          currentUser: this.props.currentUser })
+	          currentUser: this.props.currentUser,
+	          receiveTrack: this.props.receiveTrack,
+	          profile: this.props.profile,
+	          streamKind: this.props.streamKind })
 	      );
 	    }
 	  }]);
@@ -29048,8 +29051,12 @@
 	
 	var mapStateToProps = function mapStateToProps(_ref) {
 	  var session = _ref.session;
+	  var profile = _ref.profile;
+	  var stream = _ref.stream;
 	  return {
-	    currentUser: session.user
+	    currentUser: session.user,
+	    streamKind: stream.kind,
+	    profile: profile
 	  };
 	};
 	
@@ -29057,6 +29064,10 @@
 	  return {
 	    uploadTrack: function uploadTrack(trackData, callback) {
 	      return dispatch((0, _track_actions.uploadTrack)(trackData, callback));
+	    },
+	    receiveTrack: function receiveTrack(track) {
+	      dispatch((0, _track_actions.receiveTrackForStream)(track));
+	      debugger;
 	    }
 	  };
 	};
@@ -29394,6 +29405,8 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _track_actions = __webpack_require__(263);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -29437,7 +29450,6 @@
 	    value: function _handleInput(type) {
 	      var _this2 = this;
 	
-	      console.log(this.state);
 	      return function (e) {
 	        return _this2.setState(_defineProperty({}, type, e.currentTarget.value));
 	      };
@@ -29500,6 +29512,9 @@
 	          _this4.props.returnUploadForm();
 	          _this4._fadeIn();
 	          _this4._resetForm();
+	          if (_this4.props.streamKind === 'recent' || _this4.props.streamKind === 'tracks' && _this4.props.profile.user.id === _this4.props.currentUser.id) {
+	            _this4.props.receiveTrack(res.track);
+	          }
 	        });
 	        this._fadeOut();
 	        //this.setState()
@@ -29615,6 +29630,7 @@
 	var UPLOAD_TRACK = exports.UPLOAD_TRACK = 'UPLOAD_TRACK';
 	var LOAD_TRACK = exports.LOAD_TRACK = 'LOAD_TRACK';
 	var RECEIVE_TRACK = exports.RECEIVE_TRACK = 'RECEIVE_TRACK';
+	var RECEIVE_TRACK_FOR_STREAM = exports.RECEIVE_TRACK_FOR_STREAM = 'RECEIVE_TRACK_FOR_STREAM';
 	var CLEAR_TRACK = exports.CLEAR_TRACK = 'CLEAR_TRACK';
 	var PLAY_TRACK = exports.PLAY_TRACK = 'PLAY_TRACK';
 	var PAUSE_TRACK = exports.PAUSE_TRACK = 'PAUSE_TRACK';
@@ -29645,6 +29661,13 @@
 	var receiveTrack = exports.receiveTrack = function receiveTrack(track) {
 	  return {
 	    type: RECEIVE_TRACK,
+	    track: track
+	  };
+	};
+	
+	var receiveTrackForStream = exports.receiveTrackForStream = function receiveTrackForStream(track) {
+	  return {
+	    type: RECEIVE_TRACK_FOR_STREAM,
 	    track: track
 	  };
 	};
@@ -30448,6 +30471,9 @@
 	      }
 	    }
 	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var displayName = "";
@@ -30537,6 +30563,9 @@
 	    },
 	    clearStream: function clearStream() {
 	      return dispatch((0, _stream_actions.clearStream)());
+	    },
+	    clearUser: function clearUser() {
+	      return dispatch((0, _profile_actions.clearUser)());
 	    }
 	  };
 	};
@@ -30767,6 +30796,7 @@
 	var RECEIVE_FOLLOW = exports.RECEIVE_FOLLOW = 'RECEIVE_FOLLOW';
 	var CLEAR_FOLLOW = exports.CLEAR_FOLLOW = 'CLEAR_FOLLOW';
 	var RECEIVE_USER = exports.RECEIVE_USER = 'RECEIVE_USER';
+	var CLEAR_USER = exports.CLEAR_USER = 'CLEAR_USER';
 	var UPDATE_PROFILE = exports.UPDATE_PROFILE = 'UPDATE_PROFILE';
 	
 	var loadProfile = exports.loadProfile = function loadProfile(id) {
@@ -30821,6 +30851,12 @@
 	  };
 	};
 	
+	var clearUser = exports.clearUser = function clearUser() {
+	  return {
+	    type: CLEAR_USER
+	  };
+	};
+	
 	var updateProfile = exports.updateProfile = function updateProfile(id, data) {
 	  return {
 	    type: UPDATE_PROFILE,
@@ -30842,10 +30878,11 @@
 	var RECEIVE_STREAM = exports.RECEIVE_STREAM = 'RECEIVE_STREAM';
 	var CLEAR_STREAM = exports.CLEAR_STREAM = 'CLEAR_STREAM';
 	
-	var receiveStream = exports.receiveStream = function receiveStream(tracks) {
+	var receiveStream = exports.receiveStream = function receiveStream(tracks, kind) {
 	  return {
 	    type: RECEIVE_STREAM,
-	    tracks: tracks
+	    tracks: tracks,
+	    kind: kind
 	  };
 	};
 	
@@ -54607,11 +54644,15 @@
 	
 	var _stream_actions = __webpack_require__(273);
 	
+	var _track_actions = __webpack_require__(263);
+	
 	var _merge = __webpack_require__(432);
 	
 	var _merge2 = _interopRequireDefault(_merge);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var StreamReducer = function StreamReducer() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -54622,15 +54663,17 @@
 	  switch (action.type) {
 	
 	    case _stream_actions.RECEIVE_STREAM:
-	      newState = (0, _merge2.default)({}, state, { tracks: action.tracks });
+	      newState = (0, _merge2.default)({}, state, { tracks: action.tracks, kind: action.kind });
 	      return newState;
 	
 	    case _stream_actions.CLEAR_STREAM:
 	      return { tracks: [] };
 	
+	    case _track_actions.RECEIVE_TRACK_FOR_STREAM:
+	      return (0, _merge2.default)({}, state, { tracks: [action.track].concat(_toConsumableArray(state.tracks)) });
+	
 	    default:
 	      return state;
-	
 	  }
 	};
 	
@@ -54939,7 +54982,7 @@
 	        case _profile_actions.LOAD_PROFILE:
 	          (0, _user_api_util.fetchFullUser)(action.id, function (res) {
 	            dispatch((0, _profile_actions.receiveUser)(res.user));
-	            dispatch((0, _stream_actions.receiveStream)(res.tracks));
+	            dispatch((0, _stream_actions.receiveStream)(res.tracks, "tracks"));
 	          });
 	          return;
 	
@@ -55079,6 +55122,9 @@
 	    case _profile_actions.RECEIVE_USER:
 	      return (0, _merge2.default)({}, state, { user: action.user });
 	
+	    case _profile_actions.CLEAR_USER:
+	      return (0, _merge2.default)({}, sate, { user: {} });
+	
 	    case _profile_actions.RECEIVE_FOLLOW:
 	      return (0, _merge2.default)({}, state, { following: true });
 	
@@ -55115,7 +55161,7 @@
 	
 	        case _stream_actions.LOAD_MAIN_STREAM:
 	          return (0, _stream_api_util.fetchStream)(action.tab, function (res) {
-	            dispatch((0, _stream_actions.receiveStream)(res));
+	            dispatch((0, _stream_actions.receiveStream)(res, action.tab));
 	          });
 	
 	        default:
