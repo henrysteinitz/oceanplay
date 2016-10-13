@@ -68,27 +68,6 @@
   font-weight: 200;
 }
 
-.panel-play-button{
-  float: right;
-  display: inline-block;
-  margin-left: 60px;
-  height: 34px;
-  padding: 7px;
-  padding-left: 47px;
-  padding-right: 47px;
-  border-radius: 3px;
-  border:1px solid rgba(250,250,250, .24);
-  background: rgba(0,0,0,.44);
-  text-align: center;
-  color: white;
-  font: 15px 'Raleway';
-  font-weight: 600;
-  cursor: pointer;
-}
-.panel-play-button:hover{
-  background: rgb(28,128,210);
-  border: 1px solid rgb(28,128,210);
-}
 
 .panel-follow-button{
   float: right;

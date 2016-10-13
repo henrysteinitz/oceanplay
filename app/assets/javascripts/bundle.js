@@ -55861,6 +55861,8 @@
 	
 	var _play_bar2 = _interopRequireDefault(_play_bar);
 	
+	var _reactRouter = __webpack_require__(196);
+	
 	var _track_actions = __webpack_require__(263);
 	
 	var _reactRedux = __webpack_require__(173);
@@ -56008,14 +56010,22 @@
 	          'div',
 	          { className: 'now-info-container' },
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'now-playing-title' },
-	            this.props.currentTrack.title
+	            _reactRouter.Link,
+	            { className: 'np-title-link', to: '/track/' + this.props.currentTrack.id },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'now-playing-title' },
+	              this.props.currentTrack.title
+	            )
 	          ),
 	          _react2.default.createElement(
-	            'div',
-	            { className: 'now-playing-artist' },
-	            this.props.currentTrack.artist
+	            _reactRouter.Link,
+	            { className: 'np-artist-link', to: '/profile/' + this.props.currentTrack.artist_id },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'now-playing-artist' },
+	              this.props.currentTrack.artist
+	            )
 	          ),
 	          _react2.default.createElement(_play_bar2.default, {
 	            type: 'now',
@@ -56026,7 +56036,11 @@
 	            startScrub: this._startScrub })
 	        ),
 	        _react2.default.createElement('br', null),
-	        _react2.default.createElement('img', { src: this.props.currentTrack.artUrl, className: 'now-playing-art' })
+	        _react2.default.createElement(
+	          _reactRouter.Link,
+	          { to: '/track/' + this.props.currentTrack.id },
+	          _react2.default.createElement('img', { src: this.props.currentTrack.artUrl, className: 'now-playing-art' })
+	        )
 	      );
 	    }
 	  }]);

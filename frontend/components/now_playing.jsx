@@ -1,5 +1,6 @@
 import React from 'react';
 import PlayBar from './play_bar';
+import { Link } from 'react-router';
 
 class NowPlaying extends React.Component{
   constructor(props){
@@ -110,8 +111,12 @@ class NowPlaying extends React.Component{
           ref='playButton'
           onClick={this._playpause}></div>
         <div className="now-info-container">
-          <div className='now-playing-title'>{this.props.currentTrack.title}</div>
-          <div className='now-playing-artist'>{this.props.currentTrack.artist}</div>
+          <Link className="np-title-link" to={`/track/${this.props.currentTrack.id}`}>
+            <div className='now-playing-title'>{this.props.currentTrack.title}</div>
+          </Link>
+          <Link className="np-artist-link" to={`/profile/${this.props.currentTrack.artist_id}`}>
+            <div className='now-playing-artist'>{this.props.currentTrack.artist}</div>
+          </Link>
           <PlayBar
             type="now"
             ref='playBar'
@@ -120,7 +125,9 @@ class NowPlaying extends React.Component{
             scrubbing={this.state.scrubbing}
             startScrub={this._startScrub} />
         </div><br />
-      <img src={this.props.currentTrack.artUrl} className='now-playing-art' />
+      <Link to={`/track/${this.props.currentTrack.id}`}>
+        <img src={this.props.currentTrack.artUrl} className='now-playing-art' />
+      </Link>
       </div>
     );
   }
