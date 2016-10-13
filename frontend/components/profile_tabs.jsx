@@ -51,12 +51,8 @@ class ProfileTabs extends React.Component{
           Tracks
         </span>
         <span className="tab">
-          Playlists
+          Retracks
         </span>
-        <span className="tab">
-          Reposts
-        </span>
-
 
         <button className={buttonClass}
           onClick={buttonClick}>{buttonText}</button>

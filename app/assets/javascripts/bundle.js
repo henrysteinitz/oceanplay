@@ -29138,7 +29138,11 @@
 	      });
 	      var context = this.refs.canvas.getContext('2d');
 	      context.scale(scale, scale);
-	      context.fillStyle = "#ffffff";
+	      if (this.props.type === 'signin') {
+	        context.fillStyle = "#000000";
+	      } else {
+	        context.fillStyle = "#ffffff";
+	      }
 	
 	      reqAnimFrame(this.update);
 	    }
@@ -30472,7 +30476,16 @@
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {}
+	    value: function componentWillUnmount() {
+	      this.props.clearUser();
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.params.id !== this.props.params.id) {
+	        this.props.loadProfile(nextProps.params.id);
+	      }
+	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
@@ -30735,12 +30748,7 @@
 	        _react2.default.createElement(
 	          "span",
 	          { className: "tab" },
-	          "Playlists"
-	        ),
-	        _react2.default.createElement(
-	          "span",
-	          { className: "tab" },
-	          "Reposts"
+	          "Retracks"
 	        ),
 	        _react2.default.createElement(
 	          "button",
@@ -55596,6 +55604,13 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this._addButtonIcon();
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.params.id !== this.props.params.id) {
+	        this.props.loadTrack(nextProps.params.id);
+	      }
 	    }
 	  }, {
 	    key: 'render',

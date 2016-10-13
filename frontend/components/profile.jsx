@@ -106,9 +106,14 @@ class Profile extends React.Component{
   }
 
   componentWillUnmount(){
-
+    this.props.clearUser();
   }
 
+  componentWillReceiveProps(nextProps){
+    if (nextProps.params.id !== this.props.params.id){
+      this.props.loadProfile(nextProps.params.id);
+    }
+  }
 
   render(){
     let displayName = "";

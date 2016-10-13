@@ -37,7 +37,12 @@ class Logo extends React.Component {
     });
     const context = this.refs.canvas.getContext('2d');
     context.scale(scale, scale);
-    context.fillStyle = "#ffffff";
+    if (this.props.type === 'signin'){
+      context.fillStyle = "#000000";
+    } else {
+      context.fillStyle = "#ffffff";
+    }
+
 
     reqAnimFrame(this.update);
   }

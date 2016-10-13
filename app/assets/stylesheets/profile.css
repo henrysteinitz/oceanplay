@@ -91,11 +91,11 @@
   background: rgb(19,19,19);
 }
 .following{
-  background: blue;
+  background: rgb(50,20,220);
 }
 
 .panel-follow-button:hover{
-  background:rgb(75,0,170);
+  background:rgb(50,20,220);
 }
 .button-contaier{
   float: right;

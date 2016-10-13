@@ -9,16 +9,16 @@
   margin-bottom: 24px;
   width: 270px;
   height: 30px;
-  border-radius: 0px;
+  border-radius: 3px;
   border: 1px solid rgb(218,218,218);
-  font: 17px 'Helvetica neue';
+  font: 17px 'Raleway';
   padding-left: 9px;
   padding-right: 9px;
   padding-top: 2px;
   padding-bottom: 2px;
 }
 .signup-form input:focus{
-  border-color: rgb(28,128,250);
+  border-color: rgb(50,20,220);
   outline: none;
 }
 
@@ -27,11 +27,16 @@
   display: inline-block;
   width:288px;
   height: 38px;
-  border-radius: 0px;
-  background: rgb(40,205,125);
+  border-radius: 3px;
+  background: black;
   text-align: center;
   color: white;
-  font: 17px 'Helvetica neue';
+  font: 17px 'Raleway';
+}
+
+.signin-button-container button:hover{
+  background: rgb(50,20,220);
+  cursor: pointer;
 }
 
 .signin-button-container{
@@ -44,7 +49,7 @@
 .signin-background{
   width: 100%;
   height: 100vh;
-  background: rgb(248,248,250);
+  background: white;
 
 }
 /*
@@ -66,7 +71,7 @@
   width:100%;
   text-align: center;
   margin-bottom: 28px;
-  font: 15px 'Helvetica neue';
+  font: 15px 'Raleway';
   color: rgb(100,100,100);
 }
 .formSwitcher a{
@@ -76,6 +81,6 @@
   margin-right: 12px;
 }
 .formSwitcher a:hover{
-  color:rgb(28,128,250);
+  color:rgb(50,20,220);
   cursor: pointer;
 }

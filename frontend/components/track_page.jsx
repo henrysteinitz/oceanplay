@@ -110,6 +110,12 @@ class TrackPage extends React.Component {
     this._addButtonIcon();
   }
 
+  componentWillReceiveProps(nextProps){
+    if (nextProps.params.id !== this.props.params.id){
+      this.props.loadTrack(nextProps.params.id);
+    }
+  }
+
   render(){
     let time = 0;
     if (this.props.currentTrack && this.props.currentTrack.id === this.props.track.id){
