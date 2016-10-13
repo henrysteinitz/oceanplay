@@ -24,8 +24,14 @@ class PlayBar extends React.Component{
   }
 
   render(){
+    let outerClass = ""
+    if (this.props.type === 'now'){
+      outerClass = 'np-outer-play-bar';
+    } else {
+      outerClass = 'outer-play-bar';
+    }
     return (
-      <span className="outer-play-bar"
+      <span className={outerClass}
          onMouseDown={this.props.startScrub}
          ref="outer">
         <span ref="inner" className="inner-play-bar">

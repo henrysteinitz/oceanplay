@@ -21500,6 +21500,8 @@
 	
 	var _track_page2 = _interopRequireDefault(_track_page);
 	
+	var _track_actions = __webpack_require__(263);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21517,6 +21519,9 @@
 	    var _this = _possibleConstructorReturn(this, (Root.__proto__ || Object.getPrototypeOf(Root)).call(this, props));
 	
 	    _this._checkAuth = _this._checkAuth.bind(_this);
+	    _this._hideNowPlaying = _this._hideNowPlaying.bind(_this);
+	    _this._trackEnter = _this._trackEnter.bind(_this);
+	    _this._trackLeave = _this._trackLeave.bind(_this);
 	    return _this;
 	  }
 	
@@ -21525,6 +21530,26 @@
 	    value: function _checkAuth(nextState, replace) {
 	      if (!this.props.user) {
 	        replace('/signin');
+	      }
+	    }
+	  }, {
+	    key: '_hideNowPlaying',
+	    value: function _hideNowPlaying() {
+	      this.props.hide();
+	    }
+	  }, {
+	    key: '_trackEnter',
+	    value: function _trackEnter(props) {
+	      this._checkAuth();
+	      if (parseInt(props.params.id) === this.props.currentTrackId) {
+	        this._hideNowPlaying();
+	      }
+	    }
+	  }, {
+	    key: '_trackLeave',
+	    value: function _trackLeave() {
+	      if (this.props.playing) {
+	        this.props.show();
 	      }
 	    }
 	  }, {
@@ -21541,8 +21566,11 @@
 	            { path: '/', onEnter: this._checkAuth, component: _app2.default },
 	            _react2.default.createElement(_reactRouter.Route, { path: '/stream', onEnter: this._checkAuth, component: _main_stream2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: '/library', onEnter: this._checkAuth, component: _library2.default }),
-	            _react2.default.createElement(_reactRouter.Route, { path: '/profile/:id', component: _profile2.default }),
-	            _react2.default.createElement(_reactRouter.Route, { path: '/track/:id', component: _track_page2.default })
+	            _react2.default.createElement(_reactRouter.Route, { path: '/profile/:id', onEnter: this._checkAuth, component: _profile2.default }),
+	            _react2.default.createElement(_reactRouter.Route, { path: '/track/:id',
+	              onEnter: this._trackEnter,
+	              onLeave: this._trackLeave,
+	              component: _track_page2.default })
 	          ),
 	          _react2.default.createElement(_reactRouter.Route, { path: '/signin', component: _sign_in2.default })
 	        )
@@ -21555,12 +21583,26 @@
 	
 	var mapStateToProps = function mapStateToProps(_ref) {
 	  var session = _ref.session;
+	  var nowPlaying = _ref.nowPlaying;
 	  return {
-	    user: session.user
+	    user: session.user,
+	    currentTrackId: nowPlaying.track.id,
+	    playing: nowPlaying.playing
 	  };
 	};
 	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, null)(Root);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	  return {
+	    show: function show() {
+	      return dispatch((0, _track_actions.showNowPlaying)());
+	    },
+	    hide: function hide() {
+	      return dispatch((0, _track_actions.hideNowPlaying)());
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Root);
 
 /***/ },
 /* 173 */
@@ -28699,6 +28741,10 @@
 	
 	var _stream2 = _interopRequireDefault(_stream);
 	
+	var _now_playing = __webpack_require__(574);
+	
+	var _now_playing2 = _interopRequireDefault(_now_playing);
+	
 	var _reactRedux = __webpack_require__(173);
 	
 	var _track_actions = __webpack_require__(263);
@@ -28804,7 +28850,8 @@
 	        { id: 'app' },
 	        _react2.default.createElement(_menu_bar2.default, null),
 	        this.props.children,
-	        _react2.default.createElement('audio', { id: 'audio', ref: 'audio', preload: 'none', src: source })
+	        _react2.default.createElement('audio', { id: 'audio', ref: 'audio', preload: 'none', src: source }),
+	        _react2.default.createElement(_now_playing2.default, null)
 	      );
 	    }
 	  }]);
@@ -29577,6 +29624,8 @@
 	var SET_DURATION = exports.SET_DURATION = 'SET_DURATION';
 	var RECEIVE_COMMENT_FOR_TRACK = exports.RECEIVE_COMMENT_FOR_TRACK = 'RECEIVE_COMMENT_FOR_TRACK';
 	var POST_COMMENT = exports.POST_COMMENT = 'POST_COMMENT';
+	var SHOW_NOW_PLAYING = exports.SHOW_NOW_PLAYING = 'SHOW_NOW_PLAYING';
+	var HIDE_NOW_PLAYING = exports.HIDE_NOW_PLAYING = 'HIDE_NOW_PLAYING';
 	
 	var uploadTrack = exports.uploadTrack = function uploadTrack(trackData, callback) {
 	  return {
@@ -29657,6 +29706,18 @@
 	  return {
 	    type: POST_COMMENT,
 	    comment: comment
+	  };
+	};
+	
+	var showNowPlaying = exports.showNowPlaying = function showNowPlaying() {
+	  return {
+	    type: SHOW_NOW_PLAYING
+	  };
+	};
+	
+	var hideNowPlaying = exports.hideNowPlaying = function hideNowPlaying() {
+	  return {
+	    type: HIDE_NOW_PLAYING
 	  };
 	};
 
@@ -29787,6 +29848,7 @@
 	        this.props.pauseTrack();
 	      } else {
 	        this.props.playTrack(this.props.track);
+	        this.props.show();
 	      }
 	    }
 	  }, {
@@ -29975,6 +30037,12 @@
 	    },
 	    unlike: function unlike() {
 	      return dispatch((0, _like_actions.unlike)(ownProps.track.id));
+	    },
+	    show: function show() {
+	      return dispatch((0, _track_actions.showNowPlaying)());
+	    },
+	    hide: function hide() {
+	      return dispatch((0, _track_actions.hideNowPlaying)());
 	    }
 	  };
 	};
@@ -29985,7 +30053,7 @@
 /* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -30018,33 +30086,39 @@
 	  }
 	
 	  _createClass(PlayBar, [{
-	    key: "componentDidUpdate",
+	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
 	      this._renderTime();
 	    }
 	  }, {
-	    key: "componentDidMount",
+	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this._renderTime();
 	    }
 	  }, {
-	    key: "_renderTime",
+	    key: '_renderTime',
 	    value: function _renderTime() {
 	      if (!this.props.scrubbing) {
 	        var newWidth = this.props.time / this.props.duration;
-	        $(this.refs.inner).width(newWidth * 100 + "%");
+	        $(this.refs.inner).width(newWidth * 100 + '%');
 	      }
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
+	      var outerClass = "";
+	      if (this.props.type === 'now') {
+	        outerClass = 'np-outer-play-bar';
+	      } else {
+	        outerClass = 'outer-play-bar';
+	      }
 	      return _react2.default.createElement(
-	        "span",
-	        { className: "outer-play-bar",
+	        'span',
+	        { className: outerClass,
 	          onMouseDown: this.props.startScrub,
-	          ref: "outer" },
-	        _react2.default.createElement("span", { ref: "inner", className: "inner-play-bar" }),
-	        _react2.default.createElement("span", { ref: "marker", className: "scrub-marker" })
+	          ref: 'outer' },
+	        _react2.default.createElement('span', { ref: 'inner', className: 'inner-play-bar' }),
+	        _react2.default.createElement('span', { ref: 'marker', className: 'scrub-marker' })
 	      );
 	    }
 	  }]);
@@ -54609,6 +54683,12 @@
 	    case _track_actions.SET_DURATION:
 	      return (0, _merge2.default)({}, state, { duration: action.duration });
 	
+	    case _track_actions.SHOW_NOW_PLAYING:
+	      return (0, _merge2.default)({}, state, { showPlayer: true });
+	
+	    case _track_actions.HIDE_NOW_PLAYING:
+	      return (0, _merge2.default)({}, state, { showPlayer: false });
+	
 	    default:
 	      return state;
 	  }
@@ -55760,6 +55840,230 @@
 	}(_react2.default.Component);
 	
 	exports.default = Comment;
+
+/***/ },
+/* 574 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _play_bar = __webpack_require__(266);
+	
+	var _play_bar2 = _interopRequireDefault(_play_bar);
+	
+	var _track_actions = __webpack_require__(263);
+	
+	var _reactRedux = __webpack_require__(173);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var NowPlaying = function (_React$Component) {
+	  _inherits(NowPlaying, _React$Component);
+	
+	  function NowPlaying(props) {
+	    _classCallCheck(this, NowPlaying);
+	
+	    var _this = _possibleConstructorReturn(this, (NowPlaying.__proto__ || Object.getPrototypeOf(NowPlaying)).call(this, props));
+	
+	    _this.state = {
+	      scrubbing: false,
+	      showing: false
+	    };
+	
+	    _this._playpause = _this._playpause.bind(_this);
+	    _this._addButtonIcon = _this._addButtonIcon.bind(_this);
+	    _this._startScrub = _this._startScrub.bind(_this);
+	    _this._endScrub = _this._endScrub.bind(_this);
+	    _this._updateInner = _this._updateInner.bind(_this);
+	    _this._updateUI = _this._updateUI.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(NowPlaying, [{
+	    key: '_playpause',
+	    value: function _playpause() {
+	      if (this.props.playing) {
+	        this.props.pauseTrack();
+	      } else {
+	        this.props.playTrack(this.props.track);
+	      }
+	    }
+	  }, {
+	    key: '_addButtonIcon',
+	    value: function _addButtonIcon() {
+	      if (this.props.playing) {
+	        $(this.refs.playButton).removeClass('play-image');
+	        $(this.refs.playButton).addClass('pause-image');
+	      } else {
+	        $(this.refs.playButton).addClass('play-image');
+	        $(this.refs.playButton).removeClass('pause-image');
+	      }
+	    }
+	  }, {
+	    key: '_startScrub',
+	    value: function _startScrub(e) {
+	      var _this2 = this;
+	
+	      e.preventDefault();
+	      if (this.props.currentTrack) {
+	        (function () {
+	          var pageX = e.pageX;
+	          _this2.setState({ scrubbing: true }, function () {
+	            return _this2._updateInner(null, pageX);
+	          });
+	        })();
+	      } else {
+	        this.props.playTrack(this.props.track);
+	      }
+	    }
+	  }, {
+	    key: '_endScrub',
+	    value: function _endScrub(e) {
+	      e.preventDefault();
+	      if (this.state.scrubbing) {
+	        var width = $(this.refs.playBar.refs.outer).width();
+	        this.props.setNewTime(this.state.scrubPos / width * this.props.duration);
+	        this.setState({ scrubbing: false });
+	      }
+	    }
+	  }, {
+	    key: '_updateInner',
+	    value: function _updateInner(e, pageX) {
+	      if (e) {
+	        pageX = e.pageX;
+	        e.preventDefault();
+	      }
+	      if (this.state.scrubbing) {
+	        var inner = $(this.refs.playBar.refs.inner);
+	        var offset = inner.offset();
+	        var scrubPos = pageX - offset.left;
+	        inner.width(scrubPos + 'px');
+	        this.setState({ scrubPos: scrubPos });
+	      }
+	    }
+	  }, {
+	    key: '_updateUI',
+	    value: function _updateUI() {
+	      var _this3 = this;
+	
+	      this._addButtonIcon();
+	      if (this.state.showing && !this.props.showPlayer) {
+	        this.setState({ showing: false }, function () {
+	          $(_this3.refs.nowContainer).css('display', 'none');
+	        });
+	      }
+	      if (!this.state.showing && this.props.showPlayer) {
+	        this.setState({ showing: true }, function () {
+	          $(_this3.refs.nowContainer).css('display', 'block');
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      this._updateUI();
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this._updateUI();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var time = 0;
+	      if (this.state.scrubbing) {
+	        var width = $(this.refs.playBar.refs.outer).width();
+	        time = this.state.scrubPos / width * this.props.duration;
+	      } else {
+	        time = this.props.time;
+	      }
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'now-playing-container',
+	          onMouseUp: this._endScrub,
+	          onMouseMove: this._updateInner,
+	          ref: 'nowContainer' },
+	        _react2.default.createElement('div', { className: 'now-playing-play-button',
+	          ref: 'playButton',
+	          onClick: this._playpause }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'now-info-container' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'now-playing-title' },
+	            this.props.currentTrack.title
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'now-playing-artist' },
+	            this.props.currentTrack.artist
+	          ),
+	          _react2.default.createElement(_play_bar2.default, {
+	            type: 'now',
+	            ref: 'playBar',
+	            time: time,
+	            duration: this.props.duration,
+	            scrubbing: this.state.scrubbing,
+	            startScrub: this._startScrub })
+	        ),
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement('img', { src: this.props.currentTrack.artUrl, className: 'now-playing-art' })
+	      );
+	    }
+	  }]);
+	
+	  return NowPlaying;
+	}(_react2.default.Component);
+	
+	// Redux Container
+	
+	
+	var mapStateToProps = function mapStateToProps(_ref, ownProps) {
+	  var nowPlaying = _ref.nowPlaying;
+	  var likes = _ref.likes;
+	  return {
+	    playing: nowPlaying.playing,
+	    currentTrack: nowPlaying.track,
+	    time: nowPlaying.time,
+	    duration: nowPlaying.duration,
+	    showPlayer: nowPlaying.showPlayer
+	  };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+	  return {
+	    playTrack: function playTrack(track) {
+	      return dispatch((0, _track_actions.playTrack)(track));
+	    },
+	    pauseTrack: function pauseTrack() {
+	      return dispatch((0, _track_actions.pauseTrack)());
+	    },
+	    setNewTime: function setNewTime(time) {
+	      return dispatch((0, _track_actions.setNewTime)(time));
+	    }
+	  };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(NowPlaying);
 
 /***/ }
 /******/ ]);

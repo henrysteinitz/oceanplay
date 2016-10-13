@@ -13,11 +13,31 @@ class Root extends React.Component{
   constructor(props){
     super(props);
     this._checkAuth = this._checkAuth.bind(this);
+    this._hideNowPlaying = this._hideNowPlaying.bind(this);
+    this._trackEnter = this._trackEnter.bind(this);
+    this._trackLeave = this._trackLeave.bind(this);
   }
 
   _checkAuth(nextState, replace){
     if (!this.props.user){
       replace('/signin');
+    }
+  }
+
+  _hideNowPlaying(){
+    this.props.hide();
+  }
+
+  _trackEnter(props){
+    this._checkAuth();
+    if (parseInt(props.params.id) === this.props.currentTrackId){
+      this._hideNowPlaying();
+    }
+  }
+
+  _trackLeave(){
+    if(this.props.playing){
+      this.props.show();
     }
   }
 
@@ -28,8 +48,11 @@ class Root extends React.Component{
             <Route path="/" onEnter={this._checkAuth} component={App}>
               <Route path="/stream" onEnter={this._checkAuth} component={MainStream} />
               <Route path="/library" onEnter={this._checkAuth} component={Library} />
-              <Route path="/profile/:id" component={Profile} />
-              <Route path="/track/:id" component={TrackPage} />
+              <Route path="/profile/:id" onEnter={this._checkAuth} component={Profile} />
+              <Route path="/track/:id"
+                onEnter={this._trackEnter}
+                onLeave={this._trackLeave}
+                component={TrackPage} />
             </Route>
             <Route path="/signin" component={SignIn} />
           </Router>
@@ -39,9 +62,17 @@ class Root extends React.Component{
 }
 
 import { connect } from 'react-redux';
+import { showNowPlaying, hideNowPlaying } from '../actions/track_actions'
 
-const mapStateToProps = ({ session }) => ({
-  user: session.user
+const mapStateToProps = ({ session, nowPlaying }) => ({
+  user: session.user,
+  currentTrackId: nowPlaying.track.id,
+  playing: nowPlaying.playing
 });
 
-export default connect(mapStateToProps, null)(Root);
+const mapDispatchToProps = (dispatch) => ({
+  show: () => dispatch(showNowPlaying()),
+  hide: () => dispatch(hideNowPlaying())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Root);

@@ -1,0 +1,80 @@
+
+.now-playing-container{
+  position: fixed;
+  display: none;
+  left: calc(50% - 260px);
+  width: 520px;
+  bottom: 10px;
+  height: 50px;
+  background: white;
+  overflow: hidden;
+  border-bottom: none;
+  border-radius: 3px;
+  z-index: 99;
+  text-align: left;
+  color: white;
+  box-shadow: 0 1px 5px 0px rgba(20,20,20,.18);
+}
+.now-playing-title{
+  display: inline-block;
+  font: 15px 'Raleway';
+  font-weight: 500;
+  position: relative;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+  z-index: 100;
+}
+.now-playing-artist{
+  display: inline-block;
+  font: 11px 'Raleway';
+  font-weight: 600;
+  position: relative;
+  letter-spacing: 1.0px;
+  margin-left: 10px;
+  z-index: 100;
+  color: rgb(126,126,126);
+}
+.now-playing-art{
+  position: absolute;
+  top:0px;
+  left:0px;
+  height: 100%;
+  width: auto;
+  opacity: 1.0;
+  z-index: 99;
+}
+
+.now-info-container{
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 8px;
+  margin-top: 0px;
+  color: black;
+  width: calc(100% - 106px);
+}
+
+.now-playing-play-button{
+  vertical-align: top;
+  position: relative;
+  display: inline-block;
+  margin-top: 11px;
+  margin-left: 58px;
+  width: 28px;
+  height: 28px;
+  opacity: 1.0;
+  z-index: 101;
+  border: 0;
+  background: white;
+}
+
+.np-outer-play-bar{
+  position: relative;
+  display: block;
+  border-radius: 0px;
+  margin-top: 7px;
+  margin-left: 0px;
+  width: calc(100% - 5px);
+  height:5px;
+  background: rgb(216,216,216);
+  cursor: pointer;
+}

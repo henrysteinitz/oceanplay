@@ -26,6 +26,7 @@ class Track extends React.Component{
       this.props.pauseTrack();
     } else {
       this.props.playTrack(this.props.track);
+      this.props.show();
     }
   }
 
@@ -159,7 +160,11 @@ class Track extends React.Component{
 }
 
 // Redux Container
-import { playTrack, pauseTrack, setNewTime } from '../actions/track_actions';
+import { playTrack,
+  pauseTrack,
+  setNewTime,
+  showNowPlaying,
+  hideNowPlaying } from '../actions/track_actions';
 import { like, unlike, loadLikes } from '../actions/like_actions'
 import { connect } from 'react-redux';
 
@@ -176,7 +181,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   pauseTrack: () => dispatch(pauseTrack()),
   setNewTime: (time) => dispatch(setNewTime(time)),
   like: () => dispatch(like(ownProps.track.id)),
-  unlike: () => dispatch(unlike(ownProps.track.id))
+  unlike: () => dispatch(unlike(ownProps.track.id)),
+  show: () => dispatch(showNowPlaying()),
+  hide: () => dispatch(hideNowPlaying())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Track);

@@ -73,6 +73,14 @@ class MenuBar extends React.Component{
           <nav className="right-menu">
             <AccountNav />
             <Link className="link" onClick={this._releaseUploadForm}>Upload</Link>
+            {/*
+              <Link className="link" onClick={this._releaseUploadForm}>
+                <img src="/upload.png" className='menu-icon' />
+              </Link>
+              <Link className="link">
+                <img src="/search.png" className='menu-icon' />
+              </Link>
+            */}
           </nav>
         </nav>
         <UploadForm

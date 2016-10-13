@@ -1,7 +1,7 @@
 import React from 'react';
 import MenuBar from './menu_bar';
 import Stream from './stream';
-
+import NowPlaying from './now_playing';
 
 class App extends React.Component{
 
@@ -82,6 +82,7 @@ class App extends React.Component{
         {this.props.children}
         <audio id="audio" ref="audio" preload="none" src={source}>
         </audio>
+        <NowPlaying />
       </div>
     );
   }

@@ -3,7 +3,9 @@ import { PLAY_TRACK,
   SET_TIME,
   SET_DURATION,
   SET_NEW_TIME,
-  CLEAR_NEW_TIME } from '../actions/track_actions'
+  CLEAR_NEW_TIME,
+  SHOW_NOW_PLAYING,
+  HIDE_NOW_PLAYING } from '../actions/track_actions'
 import merge from 'lodash/merge';
 
 const default_state = {
@@ -31,6 +33,12 @@ const NowPlayingReducer = (state = default_state, action) => {
 
     case SET_DURATION:
       return merge({}, state, {duration: action.duration});
+
+    case SHOW_NOW_PLAYING:
+      return merge({}, state, {showPlayer: true});
+
+    case HIDE_NOW_PLAYING:
+      return merge({}, state, {showPlayer: false});
 
     default:
       return state;
