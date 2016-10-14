@@ -31034,7 +31034,6 @@
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      if (nextProps.params.id !== this.props.params.id) {
-	        this.props.clearUser();
 	        this.props.loadProfile(nextProps.params.id);
 	      }
 	    }
@@ -31309,6 +31308,13 @@
 	        return function () {
 	          return _this2.props.loadProfileStream(tab, _this2.props.userId);
 	        };
+	      }
+	    }
+	  }, {
+	    key: "componentWillReceiveProps",
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.userId !== this.props.userId) {
+	        this.props.checkFollow(nextProps.userId);
 	      }
 	    }
 	  }, {

@@ -23,6 +23,12 @@ class ProfileTabs extends React.Component{
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if (nextProps.userId !== this.props.userId){
+      this.props.checkFollow(nextProps.userId);
+    }
+  }
+
   render(){
     let buttonClass;
     let buttonText;
