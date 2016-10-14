@@ -31033,8 +31033,8 @@
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      this.props.clearUser();
 	      if (nextProps.params.id !== this.props.params.id) {
+	        this.props.clearUser();
 	        this.props.loadProfile(nextProps.params.id);
 	      }
 	    }
