@@ -30453,12 +30453,22 @@
 	      this._addButtonIcon();
 	      if (this.state.showing && !this.props.showPlayer) {
 	        this.setState({ showing: false }, function () {
-	          $(_this3.refs.nowContainer).css('display', 'none');
+	          $(_this3.refs.nowContainer).addClass('animated fadeOutDown');
+	          setTimeout(function () {
+	            $(_this3.refs.nowContainer).css('visibility', 'hidden');
+	            $(_this3.refs.nowContainer).removeClass('animated fadeOutDown');
+	          }, 570);
+	          // $(this.refs.nowContainer).css('display', 'none');
 	        });
 	      }
 	      if (!this.state.showing && this.props.showPlayer) {
 	        this.setState({ showing: true }, function () {
-	          $(_this3.refs.nowContainer).css('display', 'block');
+	          $(_this3.refs.nowContainer).addClass('animated fadeInUp');
+	          $(_this3.refs.nowContainer).css('visibility', 'visible');
+	          setTimeout(function () {
+	            $(_this3.refs.nowContainer).removeClass('animated fadeInUp');
+	          }, 570);
+	          // $(this.refs.nowContainer).css('display', 'block');
 	        });
 	      }
 	    }

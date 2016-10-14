@@ -73,12 +73,22 @@ class NowPlaying extends React.Component{
     this._addButtonIcon();
     if (this.state.showing && !this.props.showPlayer){
       this.setState({showing: false}, () => {
-          $(this.refs.nowContainer).css('display', 'none');
+        $(this.refs.nowContainer).addClass('animated fadeOutDown');
+        setTimeout(() => {
+          $(this.refs.nowContainer).css('visibility', 'hidden');
+          $(this.refs.nowContainer).removeClass('animated fadeOutDown');
+        }, 570);
+        // $(this.refs.nowContainer).css('display', 'none');
       });
     }
     if (!this.state.showing && this.props.showPlayer){
       this.setState({showing: true}, () => {
-          $(this.refs.nowContainer).css('display', 'block');
+        $(this.refs.nowContainer).addClass('animated fadeInUp');
+        $(this.refs.nowContainer).css('visibility', 'visible');
+        setTimeout(() => {
+          $(this.refs.nowContainer).removeClass('animated fadeInUp');
+        }, 570);
+        // $(this.refs.nowContainer).css('display', 'block');
       });
     }
   }

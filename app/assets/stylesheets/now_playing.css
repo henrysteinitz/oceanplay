@@ -1,7 +1,7 @@
 
 .now-playing-container{
   position: fixed;
-  display: none;
+  visibility: hidden;
   left: calc(50% - 260px);
   width: 520px;
   bottom: 10px;
@@ -17,6 +17,7 @@
 }
 .now-playing-title{
   display: inline-block;
+  visibility: inherit;
   font: 15px 'Raleway';
   font-weight: 500;
   position: relative;
@@ -34,8 +35,10 @@
   margin-left: 10px;
   z-index: 100;
   color: rgb(126,126,126);
+  visibility: inherit;
 }
 .now-playing-art{
+  visibility: inherit;
   position: absolute;
   top:0px;
   left:0px;
@@ -46,15 +49,18 @@
 }
 
 .now-info-container{
+
   display: inline-block;
   vertical-align: top;
   margin-left: 8px;
   margin-top: 0px;
   color: black;
   width: calc(100% - 106px);
+  visibility: inherit;
 }
 
 .now-playing-play-button{
+  visibility: inherit;
   vertical-align: top;
   position: relative;
   display: inline-block;
@@ -70,6 +76,7 @@
 
 .now-playing-play-button:hover{
   cursor:pointer;
+  visibility: inherit;
 }
 
 .np-outer-play-bar{
@@ -82,4 +89,5 @@
   height:5px;
   background: rgb(216,216,216);
   cursor: pointer;
+  visibility: inherit;
 }
