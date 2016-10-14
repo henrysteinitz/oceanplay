@@ -98,6 +98,12 @@ class Track extends React.Component{
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if (nextProps.params.id !== this.props.params.id){
+      this.props.show();
+    }
+  }
+
   componentDidUpdate(){
     this._addButtonIcon();
   }
