@@ -29024,6 +29024,11 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	
+	      var uploadText = "Upload";
+	      if (!this.state.hidden) {
+	        uploadText = "Cancel";
+	      }
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'menu-bar-wrapper' },
@@ -29052,7 +29057,7 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { className: 'link', onClick: this._releaseUploadForm },
-	              'Upload'
+	              uploadText
 	            )
 	          )
 	        ),
@@ -29092,9 +29097,6 @@
 	    },
 	    receiveTrack: function receiveTrack(track) {
 	      dispatch((0, _track_actions.receiveTrackForStream)(track));
-	    },
-	    clearNowPlaying: function clearNowPlaying() {
-	      return dispatch((0, _track_actions.clearNowPlaying)());
 	    }
 	  };
 	};
@@ -29279,6 +29281,7 @@
 	    _this.state = { locked: false };
 	
 	    _this._signout = _this._signout.bind(_this);
+	    _this._autoResize = _this._autoResize.bind(_this);
 	    return _this;
 	  }
 	
@@ -29291,6 +29294,17 @@
 	        _reactRouter.hashHistory.push('/signin');
 	        _this2.props.clearNowPlaying();
 	      });
+	    }
+	  }, {
+	    key: '_autoResize',
+	    value: function _autoResize() {
+	      if (this.refs.profpic.naturalWidth > this.refs.profpic.naturalHeight) {
+	        $(this.refs.profpic).height('100%');
+	        $(this.refs.profpic).width('auto');
+	      } else {
+	        $(this.refs.profpic).height('auto');
+	        $(this.refs.profpic).width('100%');
+	      }
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -29325,7 +29339,7 @@
 	        _react2.default.createElement(
 	          'nav',
 	          { className: 'account-nav' },
-	          _react2.default.createElement('img', { src: 'test_prof.jpg' })
+	          _react2.default.createElement('img', { ref: 'profpic', src: this.props.user.profUrl, onLoad: this._autoResize })
 	        ),
 	        _react2.default.createElement(
 	          'div',
@@ -30114,7 +30128,6 @@
 	              _react2.default.createElement(
 	                'div',
 	                { className: 'right-controls-container' },
-	                _react2.default.createElement('button', { className: 'comment-button right-control' }),
 	                _react2.default.createElement('button', { className: 'retrack-button right-control ' + retrackedClass,
 	                  onClick: this._retrack }),
 	                _react2.default.createElement('button', { onClick: this._like,
@@ -30911,6 +30924,7 @@
 	    _this._handleClick = _this._handleClick.bind(_this);
 	    _this._edit = _this._edit.bind(_this);
 	    _this._save = _this._save.bind(_this);
+	    _this._autoResize = _this._autoResize.bind(_this);
 	    return _this;
 	  }
 	
@@ -31001,8 +31015,8 @@
 	      });
 	    }
 	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
+	    key: '_autoResize',
+	    value: function _autoResize() {
 	      if (this.refs.profpic.naturalWidth > this.refs.profpic.naturalHeight) {
 	        $(this.refs.profpic).height('100%');
 	        $(this.refs.profpic).width('auto');
@@ -31049,6 +31063,16 @@
 	        }
 	      }
 	
+	      var followers = [];
+	      if (this.props.profile.user) {
+	        followers = this.props.profile.user.followers;
+	      }
+	
+	      var following = [];
+	      if (this.props.profile.user) {
+	        following = this.props.profile.user.following;
+	      }
+	
 	      return _react2.default.createElement(
 	        'main',
 	        null,
@@ -31075,12 +31099,40 @@
 	            _react2.default.createElement(
 	              'label',
 	              null,
-	              _react2.default.createElement('img', { ref: 'profpic', src: profUrl, className: 'artist-profpic' }),
+	              _react2.default.createElement('img', { ref: 'profpic',
+	                src: profUrl,
+	                className: 'artist-profpic',
+	                onLoad: this._autoResize }),
 	              _react2.default.createElement('input', { type: 'file',
 	                className: 'none',
 	                ref: 'profpicInput',
 	                onChange: this._handleProf,
 	                disabled: true })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'artist-info-right' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'artist-name-small' },
+	              displayName
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'following-info' },
+	              'followers:',
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'follow-bold' },
+	                followers.length
+	              ),
+	              'following:',
+	              _react2.default.createElement(
+	                'span',
+	                { className: 'follow-bold' },
+	                following.length
+	              )
 	            )
 	          )
 	        )
@@ -55455,7 +55507,7 @@
 /* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -55481,19 +55533,39 @@
 	  function Comment(props) {
 	    _classCallCheck(this, Comment);
 	
-	    return _possibleConstructorReturn(this, (Comment.__proto__ || Object.getPrototypeOf(Comment)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Comment.__proto__ || Object.getPrototypeOf(Comment)).call(this, props));
+	
+	    _this._autoResize = _this._autoResize.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(Comment, [{
-	    key: "render",
+	    key: '_autoResize',
+	    value: function _autoResize() {
+	      if (this.refs.profpic.naturalWidth > this.refs.profpic.naturalHeight) {
+	        $(this.refs.profpic).height('100%');
+	        $(this.refs.profpic).width('auto');
+	      } else {
+	        $(this.refs.profpic).height('auto');
+	        $(this.refs.profpic).width('100%');
+	      }
+	    }
+	  }, {
+	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
-	        "div",
-	        { className: "comment" },
-	        _react2.default.createElement("img", { src: this.props.comment.profpic_url, className: "comment-icon" }),
+	        'div',
+	        { className: 'comment' },
 	        _react2.default.createElement(
-	          "p",
-	          { className: "" },
+	          'div',
+	          { className: 'comment-icon' },
+	          _react2.default.createElement('img', { src: this.props.comment.profpic_url,
+	            ref: 'profpic',
+	            onLoad: this._autoResize })
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          { className: '' },
 	          this.props.comment.body
 	        )
 	      );
@@ -55702,7 +55774,9 @@
 	  switch (action.type) {
 	
 	    case _profile_actions.RECEIVE_USER:
-	      return (0, _merge2.default)({}, state, { user: action.user });
+	      var newState = (0, _merge2.default)({}, state);
+	      newState.user = action.user;
+	      return newState;
 	
 	    case _profile_actions.CLEAR_USER:
 	      return (0, _merge2.default)({}, state, { user: {} });

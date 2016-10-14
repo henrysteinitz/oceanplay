@@ -62,6 +62,11 @@ class MenuBar extends React.Component{
   }
 
   render(){
+
+    let uploadText = "Upload";
+    if (!this.state.hidden){
+      uploadText = "Cancel";
+    }
     return (
       <div className='menu-bar-wrapper'>
         <nav className="menu-bar" onClick={this._returnUploadForm}>
@@ -72,7 +77,7 @@ class MenuBar extends React.Component{
           </nav>
           <nav className="right-menu">
             <AccountNav />
-            <Link className="link" onClick={this._releaseUploadForm}>Upload</Link>
+            <Link className="link" onClick={this._releaseUploadForm}>{uploadText}</Link>
             {/*
               <Link className="link" onClick={this._releaseUploadForm}>
                 <img src="/upload.png" className='menu-icon' />
@@ -114,8 +119,7 @@ const mapDispatchToProps = (dispatch) => ({
   ),
   receiveTrack: (track) => {
     dispatch(receiveTrackForStream(track));
-  },
-  clearNowPlaying: () => dispatch(clearNowPlaying())
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuBar);

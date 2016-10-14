@@ -146,7 +146,7 @@ class Track extends React.Component{
               onClick={this._playpause}></button>
 
             <div className='right-controls-container'>
-              <button className="comment-button right-control"></button>
+              { /* <button className="comment-button right-control"></button> */ }
               <button className={`retrack-button right-control ${retrackedClass}`}
                 onClick={this._retrack}></button>
               <button onClick={this._like}

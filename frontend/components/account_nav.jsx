@@ -7,6 +7,7 @@ class AccountNav extends React.Component{
       this.state = {locked: false}
 
       this._signout = this._signout.bind(this);
+      this._autoResize = this._autoResize.bind(this);
     }
 
     _signout(){
@@ -14,6 +15,16 @@ class AccountNav extends React.Component{
         hashHistory.push('/signin');
         this.props.clearNowPlaying();
       });
+    }
+
+    _autoResize(){
+      if (this.refs.profpic.naturalWidth > this.refs.profpic.naturalHeight){
+        $(this.refs.profpic).height('100%');
+        $(this.refs.profpic).width('auto');
+      } else {
+        $(this.refs.profpic).height('auto');
+        $(this.refs.profpic).width('100%');
+      }
     }
 
     componentDidMount(){
@@ -40,7 +51,7 @@ class AccountNav extends React.Component{
       return (
         <div className="account-nav-container" ref="container">
           <nav className="account-nav">
-            <img src='test_prof.jpg'></img>
+            <img ref='profpic' src={this.props.user.profUrl} onLoad={this._autoResize}></img>
           </nav>
           <div className="account-dropdown" ref="dropdown">
             <Link to={profileLink} className='dropdown-link link'>Profile</Link>

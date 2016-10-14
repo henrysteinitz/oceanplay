@@ -23,6 +23,7 @@ class Profile extends React.Component{
     this._handleClick = this._handleClick.bind(this);
     this._edit = this._edit.bind(this);
     this._save = this._save.bind(this);
+    this._autoResize = this._autoResize.bind(this);
   }
 
   _handleProf(e){
@@ -95,7 +96,7 @@ class Profile extends React.Component{
     });
   }
 
-  componentDidUpdate(){
+  _autoResize(){
     if (this.refs.profpic.naturalWidth > this.refs.profpic.naturalHeight){
       $(this.refs.profpic).height('100%');
       $(this.refs.profpic).width('auto');
@@ -139,6 +140,16 @@ class Profile extends React.Component{
       }
     }
 
+    let followers = [];
+    if (this.props.profile.user){
+      followers = this.props.profile.user.followers;
+    }
+
+    let following = [];
+    if (this.props.profile.user){
+      following = this.props.profile.user.following;
+    }
+
     return (
       <main>
         <ProfilePanel
@@ -156,7 +167,10 @@ class Profile extends React.Component{
         <div className="artist-info">
           <div className="artist-profpic-container">
             <label>
-              <img ref='profpic' src={profUrl} className="artist-profpic" />
+              <img ref='profpic'
+                src={profUrl}
+                className="artist-profpic"
+                onLoad={this._autoResize} />
               <input type="file"
                 className="none"
                 ref="profpicInput"
@@ -164,7 +178,21 @@ class Profile extends React.Component{
                 disabled />
             </label>
           </div>
-
+          <div className="artist-info-right">
+            <div className="artist-name-small">
+              {displayName}
+            </div>
+            <div className="following-info">
+              followers:
+              <span className="follow-bold">
+              {followers.length}
+              </span>
+              following:
+              <span className="follow-bold">
+              {following.length}
+              </span>
+            </div>
+          </div>
         </div>
       </main>
     );
