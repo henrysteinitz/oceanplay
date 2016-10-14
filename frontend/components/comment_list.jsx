@@ -17,7 +17,7 @@ class CommentList extends React.Component{
 
 
     return (
-      <div className="comments-container">
+      <div className="comments-container bottom-padding">
         {comments}
       </div>
     );

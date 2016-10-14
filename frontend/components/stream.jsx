@@ -14,7 +14,7 @@ class Stream extends React.Component{
     ));
 
     return (
-      <div className="stream">
+      <div className="stream bottom-padding">
         {tracks}
       </div>
     );

@@ -29897,7 +29897,7 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'stream' },
+	        { className: 'stream bottom-padding' },
 	        tracks
 	      );
 	    }
@@ -55492,7 +55492,7 @@
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'comments-container' },
+	        { className: 'comments-container bottom-padding' },
 	        comments
 	      );
 	    }
