@@ -92,6 +92,8 @@
   margin-top: 7px;
 }
 
+
+
 .right-control{
   float: right;
   background-size: contain;
@@ -115,6 +117,17 @@
   width: 19px;
   height: 19px;
   background: url('/like_filled_red.png');
+  background-size: contain;
+  filter: opacity(100%);
+}
+.retrack-button:hover{
+  background: url('/retrack_blue.png');
+  background-size: contain;
+  filter: opacity(100%);
+}
+
+.retracked{
+  background: url('/retrack_blue.png');
   background-size: contain;
   filter: opacity(100%);
 }
@@ -267,6 +280,10 @@
   margin-bottom: 20px;
 }
 
+.new-comment:focus{
+  border: 1px solid rgb(50,20,220);
+}
+
 .comment-icon{
   width: 36px;
   height: 36px;
@@ -278,6 +295,7 @@
   margin-bottom: 20px;
 }
 .comment p{
+  overflow: hidden;
   width: calc(100% - 56px);
   display: inline-block;
   vertical-align: top;

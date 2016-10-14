@@ -18,6 +18,7 @@ class Track extends React.Component{
     this._like = this._like.bind(this);
     this._toTrack = this._toTrack.bind(this);
     this._toProfile = this._toProfile.bind(this);
+    this._retrack = this._retrack.bind(this);
   }
 
 
@@ -89,6 +90,14 @@ class Track extends React.Component{
     hashHistory.push(`/profile/${this.props.track.artist_id}`);
   }
 
+  _retrack(){
+    if (this.props.retracked){
+      this.props.deleteRetrack(this.props.track.id);
+    } else {
+      this.props.postRetrack(this.props.track.id);
+    }
+  }
+
   componentDidUpdate(){
     this._addButtonIcon();
   }
@@ -113,6 +122,11 @@ class Track extends React.Component{
       likedClass = "liked";
     }
 
+    let retrackedClass ="";
+    if (this.props.retracked){
+      retrackedClass = "retracked";
+    }
+
     return (
     <div className="track"
       onMouseUp={this._endScrub}
@@ -133,7 +147,8 @@ class Track extends React.Component{
 
             <div className='right-controls-container'>
               <button className="comment-button right-control"></button>
-              <button className="retrack-button right-control"></button>
+              <button className={`retrack-button right-control ${retrackedClass}`}
+                onClick={this._retrack}></button>
               <button onClick={this._like}
                 className={`like-button right-control ${likedClass}`}></button>
             </div>
@@ -164,16 +179,19 @@ import { playTrack,
   pauseTrack,
   setNewTime,
   showNowPlaying,
-  hideNowPlaying } from '../actions/track_actions';
+  hideNowPlaying,
+  postRetrack,
+  deleteRetrack } from '../actions/track_actions';
 import { like, unlike, loadLikes } from '../actions/like_actions'
 import { connect } from 'react-redux';
 
-const mapStateToProps = ({ nowPlaying, likes }, ownProps) => ({
+const mapStateToProps = ({ nowPlaying, likes, retracks }, ownProps) => ({
   playing: nowPlaying.playing,
   currentTrack: nowPlaying.track,
   time: nowPlaying.time,
   duration: nowPlaying.duration,
-  liked: likes[ownProps.track.id]
+  liked: likes[ownProps.track.id],
+  retracked: retracks[ownProps.track.id]
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -183,7 +201,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   like: () => dispatch(like(ownProps.track.id)),
   unlike: () => dispatch(unlike(ownProps.track.id)),
   show: () => dispatch(showNowPlaying()),
-  hide: () => dispatch(hideNowPlaying())
+  hide: () => dispatch(hideNowPlaying()),
+  postRetrack: (id, callback) => dispatch(postRetrack(id, callback)),
+  deleteRetrack: (id) => dispatch(deleteRetrack(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Track);

@@ -4,7 +4,8 @@ import StreamReducer from './stream_reducer';
 import ProfileReducer from './profile_reducer';
 import LikesReducer from './likes_reducer';
 import NowPlayingReducer from './now_playing_reducer';
-import TrackReducer from './track_reducer'
+import TrackReducer from './track_reducer';
+import RetrackReducer from './retrack_reducer';
 
 export default combineReducers({
   session: SessionReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
   profile: ProfileReducer,
   likes: LikesReducer,
   nowPlaying: NowPlayingReducer,
-  track: TrackReducer
+  track: TrackReducer,
+  retracks: RetrackReducer
 });

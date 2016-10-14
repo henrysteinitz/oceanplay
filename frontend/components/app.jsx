@@ -11,16 +11,22 @@ class App extends React.Component{
     this.state = {};
     this.setState({newTrack: false});
     props.loadLikes();
+    props.loadRetracks();
 
     this._checkPlayPause = this._checkPlayPause.bind(this);
     this._analyseAudio = this._analyseAudio.bind(this);
+    this._stopTrack = this._stopTrack.bind(this);
   }
 
   _checkPlayPause(){
     if (this.props.nowPlaying.playing){
-      this.refs.audio.play()
+      if (this.refs.audio.paused){
+        this.refs.audio.play()
+      }
     } else {
-      this.refs.audio.pause()
+      if (!this.refs.audio.paused){
+        this.refs.audio.pause()
+      }
     }
   }
 
@@ -52,6 +58,15 @@ class App extends React.Component{
     if (this.state.newTrack){
       this.setState({newTrack: false}, this._analyseAudio);
     }
+    if (this.state.newTrack){
+
+    }
+  }
+
+  _stopTrack(){
+    this.refs.audio.pause();
+    this.refs.audio.currentTime = 0;
+    this.props.pause();
   }
 
   componentWillReceiveProps(nextProps){
@@ -70,7 +85,7 @@ class App extends React.Component{
         if (this.refs.audio){
           this.props.setTime(this.refs.audio.currentTime);
           this.props.setDuration(this.refs.audio.duration);
-        }  
+        }
       }
     }, 1.0);
   }
@@ -82,7 +97,8 @@ class App extends React.Component{
       <div id='app'>
         <MenuBar />
         {this.props.children}
-        <audio id="audio" ref="audio" preload="none" src={source}>
+        <audio onEnded={this._stopTrack}
+          id="audio" ref="audio" preload="none" src={source}>
         </audio>
         <NowPlaying />
       </div>
@@ -91,7 +107,11 @@ class App extends React.Component{
 }
 
 import { connect } from 'react-redux';
-import { setTime, setDuration, clearNewTime} from '../actions/track_actions';
+import { setTime,
+  setDuration,
+  clearNewTime,
+  pauseTrack,
+  loadRetracks } from '../actions/track_actions';
 import { loadLikes } from '../actions/like_actions';
 
 const mapStateToProps = ({ nowPlaying }) => ({
@@ -102,7 +122,9 @@ const mapDispatchToProps = (dispatch) => ({
   setTime: (time) => dispatch(setTime(time)),
   setDuration: (duration) => dispatch(setDuration(duration)),
   clearNewTime: () => dispatch(clearNewTime()),
-  loadLikes: () => dispatch(loadLikes())
+  loadLikes: () => dispatch(loadLikes()),
+  loadRetracks: () => dispatch(loadRetracks()),
+  pause: () => dispatch(pauseTrack())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

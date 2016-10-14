@@ -6,6 +6,7 @@ class ProfileTabs extends React.Component{
 
     props.checkFollow(props.userId);
     this._follow = this._follow.bind(this);
+    this._loadNewStream = this._loadNewStream.bind(this);
   }
 
   _follow(){
@@ -13,6 +14,12 @@ class ProfileTabs extends React.Component{
       this.props.unfollow(this.props.userId, (r) => console.log(r));
     } else {
       this.props.follow(this.props.userId, (r) => console.log(r));
+    }
+  }
+
+  _loadNewStream(tab){
+    if (this.props.tab !== tab){
+      return () => this.props.loadProfileStream(tab, this.props.userId);
     }
   }
 
@@ -40,17 +47,31 @@ class ProfileTabs extends React.Component{
       }
     }
 
+    let allClass = "";
+    if (this.props.tab === 'all'){
+      allClass = 'selected-tab';
+    }
 
+    let tracksClass = "";
+    if (this.props.tab === 'tracks'){
+      tracksClass = 'selected-tab';
+    }
+
+    let retracksClass = "";
+    if (this.props.tab === 'retracks'){
+      retracksClass = 'selected-tab';
+    }
 
     return (
+
       <div className="tabs">
-        <span className="tab selected-tab">
+        <span className={`tab ${allClass}`} onClick={this._loadNewStream('all')} >
           All
         </span>
-        <span className="tab">
+        <span className={`tab ${tracksClass}`} onClick={this._loadNewStream('tracks')}>
           Tracks
         </span>
-        <span className="tab">
+        <span className={`tab ${retracksClass}`} onClick={this._loadNewStream('retracks')}>
           Retracks
         </span>
 
@@ -63,16 +84,19 @@ class ProfileTabs extends React.Component{
 
 import { connect } from 'react-redux';
 import { followUser, unfollowUser, checkFollow } from '../actions/profile_actions';
+import { loadProfileStream } from '../actions/stream_actions';
 
-const mapStateToProps = ({ profile, session }) => ({
+const mapStateToProps = ({ profile, session, stream }) => ({
   following: profile.following,
+  tab: stream.kind,
   session
 })
 
 const mapDispatchToProps = (dispatch) => ({
   follow: (id, callback) => dispatch(followUser(id, callback)),
   unfollow: (id, callback) => dispatch(unfollowUser(id, callback)),
-  checkFollow: (id, callback) => dispatch(checkFollow(id, callback))
+  checkFollow: (id, callback) => dispatch(checkFollow(id, callback)),
+  loadProfileStream: (tab, id) => dispatch(loadProfileStream(tab, id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileTabs);

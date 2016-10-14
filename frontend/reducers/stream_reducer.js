@@ -8,7 +8,9 @@ const StreamReducer = (state = {}, action) => {
   switch (action.type){
 
     case RECEIVE_STREAM:
-      newState = merge({}, state, {tracks: action.tracks, kind: action.kind})
+      newState = merge({}, state)
+      newState.tracks = action.tracks;
+      newState.kind = action.kind;
       return newState;
 
     case CLEAR_STREAM:

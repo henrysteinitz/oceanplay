@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resource  :stream,   only: [:show]
     resource  :likes,    only: [:show, :create, :destroy]
     resources :comments, only: [:show, :create, :destroy]
+    resources :retracks, only: [:create, :destroy, :index]
   end
 
   get 'api/users/:id/full', to:  'api/users#show_full'

@@ -9,12 +9,12 @@ import { PLAY_TRACK,
   CLEAR_NOW_PLAYING } from '../actions/track_actions'
 import merge from 'lodash/merge';
 
-const default_state = {
+const defaultState = {
   playing: false,
   track: {}
 }
 
-const NowPlayingReducer = (state = default_state, action) => {
+const NowPlayingReducer = (state = defaultState, action) => {
   switch(action.type){
 
     case PLAY_TRACK:
@@ -42,7 +42,7 @@ const NowPlayingReducer = (state = default_state, action) => {
       return merge({}, state, {showPlayer: false});
 
     case CLEAR_NOW_PLAYING:
-      return {};
+      return defaultState;
 
     default:
       return state;

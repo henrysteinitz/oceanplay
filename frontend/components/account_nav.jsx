@@ -12,6 +12,7 @@ class AccountNav extends React.Component{
     _signout(){
       this.props.signout(() => {
         hashHistory.push('/signin');
+        this.props.clearNowPlaying();
       });
     }
 
@@ -55,7 +56,8 @@ import { signout } from '../actions/session_actions';
 import { clearNowPlaying } from '../actions/track_actions';
 
 const mapStateToProps = ({ session }) => ({
-  user: session.user
+  user: session.user,
+  clearNowPlaying: () => dispatch(clearNowPlaying())
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -11,6 +11,11 @@ export const CLEAR_NEW_TIME = 'CLEAR_NEW_TIME';
 export const SET_DURATION = 'SET_DURATION';
 export const RECEIVE_COMMENT_FOR_TRACK = 'RECEIVE_COMMENT_FOR_TRACK';
 export const POST_COMMENT = 'POST_COMMENT';
+export const POST_RETRACK = 'POST_RETRACK';
+export const DELETE_RETRACK = 'DELETE_RETRACK';
+export const LOAD_RETRACKS = 'LOAD_RETRACKS';
+export const RECEIVE_RETRACKS = 'RECEIVE_RETRACKS';
+export const RECEIVE_SINGLE_RETRACK = 'RECEIVE_SINGLE_RETRACK';
 export const SHOW_NOW_PLAYING = 'SHOW_NOW_PLAYING';
 export const HIDE_NOW_PLAYING = 'HIDE_NOW_PLAYING';
 export const CLEAR_NOW_PLAYING = 'CLEAR_NOW_PLAYING';
@@ -73,9 +78,35 @@ export const receiveCommentForTrack = (comment) => ({
   comment
 });
 
-export const postComment = (comment) => ({
+export const postComment = (comment, callback) => ({
   type: POST_COMMENT,
-  comment
+  comment,
+  callback
+});
+
+export const postRetrack = (id, callback) => ({
+  type: POST_RETRACK,
+  id,
+  callback
+});
+
+export const deleteRetrack = (id) => ({
+  type: DELETE_RETRACK,
+  id
+})
+
+export const loadRetracks = () => ({
+  type: LOAD_RETRACKS
+});
+
+export const receiveRetracks = (retracks) => ({
+  type: RECEIVE_RETRACKS,
+  retracks
+});
+
+export const receiveSingleRetrack = (retrack) => ({
+  type: RECEIVE_SINGLE_RETRACK,
+  retrack
 });
 
 export const showNowPlaying = () => ({

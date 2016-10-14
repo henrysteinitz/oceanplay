@@ -1,8 +1,9 @@
 import { UPLOAD_TRACK,
   LOAD_TRACK,
   POST_COMMENT,
-  receiveTrack,
-  receiveCommentForTrack } from '../actions/track_actions';
+  POST_RETRACK,
+  receiveCommentForTrack,
+  receiveTrack } from '../actions/track_actions';
 import { uploadTrack, fetchTrack, postComment } from '../util/track_api_util';
 
 const TrackMiddleware = ({getState, dispatch}) => next => action => {
@@ -16,7 +17,10 @@ const TrackMiddleware = ({getState, dispatch}) => next => action => {
 
     case POST_COMMENT:
       return postComment(action.comment, (res) => {
-        dispatch(receiveCommentForTrack(res));
+        if (res.status === 200){
+          dispatch(receiveCommentForTrack(res));
+          action.callback();
+        }
       });
 
     default:

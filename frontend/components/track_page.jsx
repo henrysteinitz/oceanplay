@@ -18,6 +18,7 @@ class TrackPage extends React.Component {
     this._like = this._like.bind(this);
     this._toProfile = this._toProfile.bind(this);
     this._postComment = this._postComment.bind(this);
+    this._retrack = this._retrack.bind(this);
   }
 
 
@@ -98,7 +99,15 @@ class TrackPage extends React.Component {
         track_id: this.props.params.id,
         body: e.currentTarget.value,
         time
-      });
+      }, () => this.refs.newComment.value = "");
+    }
+  }
+
+  _retrack(){
+    if (this.props.retracked){
+      this.props.deleteRetrack(this.props.track.id);
+    } else {
+      this.props.postRetrack(this.props.track.id);
     }
   }
 
@@ -127,9 +136,14 @@ class TrackPage extends React.Component {
       }
     }
 
-    let likedClass = ""
+    let likedClass = "";
     if (this.props.liked){
       likedClass = "liked";
+    }
+
+    let retrackedClass ="";
+    if (this.props.retracked){
+      retrackedClass = "retracked";
     }
 
     return (
@@ -151,7 +165,8 @@ class TrackPage extends React.Component {
               onClick={this._playpause}></button>
 
             <div className='panel-right-controls-container'>
-              <button className="retrack-button right-control"></button>
+              <button className={`retrack-button right-control ${retrackedClass}`}
+                onClick={this._retrack}></button>
               <button onClick={this._like}
                 className={`like-button right-control ${likedClass}`}></button>
             </div>
@@ -167,6 +182,7 @@ class TrackPage extends React.Component {
         <div className="comments-page">
           <input type="text"
             className="new-comment"
+            ref="newComment"
             placeholder="Write a comment."
             onKeyPress={this._postComment}>
           </input>
@@ -184,15 +200,18 @@ import { loadTrack,
   playTrack,
   pauseTrack,
   setNewTime,
-  postComment } from '../actions/track_actions';
+  postComment,
+  postRetrack,
+  deleteRetrack } from '../actions/track_actions';
 import { like, unlike } from '../actions/like_actions';
 
-const mapStateToProps = ({ track, nowPlaying, likes }, ownProps) => ({
+const mapStateToProps = ({ track, nowPlaying, likes, retracks }, ownProps) => ({
   playing: nowPlaying.playing,
   currentTrack: nowPlaying.track,
   time: nowPlaying.time,
   duration: nowPlaying.duration,
   liked: likes[track.id],
+  retracked: retracks[track.id],
   track
 });
 
@@ -203,7 +222,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   loadTrack: (id) => dispatch(loadTrack(id)),
   like: (track) => dispatch(like(track.id)),
   unlike: (track) => dispatch(unlike(track.id)),
-  postComment: (comment) => dispatch(postComment(comment))
+  postComment: (comment, callback) => dispatch(postComment(comment, callback)),
+  postRetrack: (id, callback) => dispatch(postRetrack(id, callback)),
+  deleteRetrack: (id) => dispatch(deleteRetrack(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrackPage);

@@ -1,7 +1,8 @@
 
 export const LOAD_MAIN_STREAM = 'LOAD_MAIN_STREAM';
 export const RECEIVE_STREAM = 'RECEIVE_STREAM';
-export const CLEAR_STREAM = 'CLEAR_STREAM'
+export const CLEAR_STREAM = 'CLEAR_STREAM';
+export const LOAD_PROFILE_STREAM = 'LOAD_PROFILE_STREAM';
 
 export const receiveStream = (tracks, kind) => ({
   type: RECEIVE_STREAM,
@@ -17,4 +18,10 @@ export const clearStream = () => ({
 export const loadMainStream = (tab) => ({
   type: LOAD_MAIN_STREAM,
   tab
+})
+
+export const loadProfileStream = (tab, id) => ({
+  type: LOAD_PROFILE_STREAM,
+  tab,
+  id
 })

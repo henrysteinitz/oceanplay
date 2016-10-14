@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
     following: false
   };
 
+  preloadedState.retracks = {};
+
   const store = configureStore(preloadedState);
   window.store = store;
   const root = document.getElementById('root');

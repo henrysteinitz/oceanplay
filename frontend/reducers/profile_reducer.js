@@ -11,7 +11,7 @@ const ProfileReducer = (state = {following: false}, action) => {
       return merge({}, state, {user: action.user})
 
     case CLEAR_USER:
-      return merge({}, sate, {user: {}});
+      return merge({}, state, {user: {}});
 
     case RECEIVE_FOLLOW:
       return merge({}, state, {following: true});

@@ -5,3 +5,4 @@ json.track_id comment.track_id
 json.time comment.time
 json.profpic_url comment.user.profpic.url
 json.username comment.user.username
+json.status 200
