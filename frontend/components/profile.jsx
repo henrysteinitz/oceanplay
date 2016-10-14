@@ -111,6 +111,7 @@ class Profile extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
+    this.props.clearUser();
     if (nextProps.params.id !== this.props.params.id){
       this.props.loadProfile(nextProps.params.id);
     }
