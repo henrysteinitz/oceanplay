@@ -99,6 +99,7 @@ class App extends React.Component{
         {this.props.children}
         <audio onEnded={this._stopTrack}
           id="audio" ref="audio" preload="none" src={source}>
+          <source src={source}></source>
         </audio>
         <NowPlaying />
       </div>

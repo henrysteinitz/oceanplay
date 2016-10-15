@@ -28868,8 +28868,12 @@
 	        { id: 'app' },
 	        _react2.default.createElement(_menu_bar2.default, null),
 	        this.props.children,
-	        _react2.default.createElement('audio', { onEnded: this._stopTrack,
-	          id: 'audio', ref: 'audio', preload: 'none', src: source }),
+	        _react2.default.createElement(
+	          'audio',
+	          { onEnded: this._stopTrack,
+	            id: 'audio', ref: 'audio', preload: 'none', src: source },
+	          _react2.default.createElement('source', { src: source })
+	        ),
 	        _react2.default.createElement(_now_playing2.default, null)
 	      );
 	    }

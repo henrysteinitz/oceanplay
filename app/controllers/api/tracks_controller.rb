@@ -11,6 +11,7 @@ class Api::TracksController < ApplicationController
 
   def create
     @track = Track.new(track_params)
+    @track.artist_id = current_user.id
     if @track.save
       render :show
     else
@@ -20,7 +21,7 @@ class Api::TracksController < ApplicationController
 
   private
   def track_params
-    params.require(:track).permit(:title, :description, :artist_id, :audio, :art)
+    params.require(:track).permit(:title, :description, :audio, :art)
   end
 
 end
