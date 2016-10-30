@@ -4,6 +4,7 @@ export const SIGNOUT = 'SIGNOUT';
 export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 export const RECEIVE_ERRORS = 'RECEIVE_ERRORS';
 export const ERASE_CURRENT_USER = 'ERASE_CURRENT_USER';
+export const CHECK_SESSION = 'CHECK_SESSION';
 
 export const signup = (user, callback) => ({
   type: SIGNUP,
@@ -36,3 +37,7 @@ export const receiveErrors = (errors) => ({
   type: RECEIVE_ERRORS,
   errors
 });
+
+export const checkSession = () => ({
+  type: CHECK_SESSION
+})

@@ -4,6 +4,7 @@
   "description": "This README would normally document whatever steps are necessary to get the application up and running.",
   "main": "index.js",
   "directories": {
+    "doc": "docs",
     "test": "test"
   },
   "scripts": {
@@ -26,5 +27,14 @@
     "redux": "^3.6.0",
     "web-audio-analyser": "^2.0.1",
     "webpack": "^1.13.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henrysteinitz/oceanplay.git"
+  },
+  "bugs": {
+    "url": "https://github.com/henrysteinitz/oceanplay/issues"
+  },
+  "homepage": "https://github.com/henrysteinitz/oceanplay#readme"
 }

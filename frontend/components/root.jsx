@@ -16,11 +16,22 @@ class Root extends React.Component{
     this._hideNowPlaying = this._hideNowPlaying.bind(this);
     this._trackEnter = this._trackEnter.bind(this);
     this._trackLeave = this._trackLeave.bind(this);
+    this._redirectToStream = this._redirectToStream.bind(this);
   }
 
   _checkAuth(nextState, replace){
     if (!this.props.user){
       replace('/signin');
+      return false;
+    }
+    return true;
+  }
+
+  _redirectToStream(nextState, replace){
+    if (this._checkAuth(nextState, replace)){
+      if(nextState.routes[nextState.routes.length - 1].path === "/"){
+        replace('/stream');
+      }
     }
   }
 
@@ -45,7 +56,7 @@ class Root extends React.Component{
     return (
         <Provider store={this.props.store}>
           <Router history={hashHistory}>
-            <Route path="/" onEnter={this._checkAuth} component={App}>
+            <Route path="/" onEnter={this._redirectToStream} component={App}>
               <Route path="/stream" onEnter={this._checkAuth} component={MainStream} />
               <Route path="/library" onEnter={this._checkAuth} component={Library} />
               <Route path="/profile/:id" onEnter={this._checkAuth} component={Profile} />

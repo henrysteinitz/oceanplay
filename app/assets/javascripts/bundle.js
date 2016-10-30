@@ -21524,6 +21524,7 @@
 	    _this._hideNowPlaying = _this._hideNowPlaying.bind(_this);
 	    _this._trackEnter = _this._trackEnter.bind(_this);
 	    _this._trackLeave = _this._trackLeave.bind(_this);
+	    _this._redirectToStream = _this._redirectToStream.bind(_this);
 	    return _this;
 	  }
 	
@@ -21532,6 +21533,17 @@
 	    value: function _checkAuth(nextState, replace) {
 	      if (!this.props.user) {
 	        replace('/signin');
+	        return false;
+	      }
+	      return true;
+	    }
+	  }, {
+	    key: '_redirectToStream',
+	    value: function _redirectToStream(nextState, replace) {
+	      if (this._checkAuth(nextState, replace)) {
+	        if (nextState.routes[nextState.routes.length - 1].path === "/") {
+	          replace('/stream');
+	        }
 	      }
 	    }
 	  }, {
@@ -21565,7 +21577,7 @@
 	          { history: _reactRouter.hashHistory },
 	          _react2.default.createElement(
 	            _reactRouter.Route,
-	            { path: '/', onEnter: this._checkAuth, component: _app2.default },
+	            { path: '/', onEnter: this._redirectToStream, component: _app2.default },
 	            _react2.default.createElement(_reactRouter.Route, { path: '/stream', onEnter: this._checkAuth, component: _main_stream2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: '/library', onEnter: this._checkAuth, component: _library2.default }),
 	            _react2.default.createElement(_reactRouter.Route, { path: '/profile/:id', onEnter: this._checkAuth, component: _profile2.default }),
@@ -29404,6 +29416,7 @@
 	var RECEIVE_CURRENT_USER = exports.RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 	var RECEIVE_ERRORS = exports.RECEIVE_ERRORS = 'RECEIVE_ERRORS';
 	var ERASE_CURRENT_USER = exports.ERASE_CURRENT_USER = 'ERASE_CURRENT_USER';
+	var CHECK_SESSION = exports.CHECK_SESSION = 'CHECK_SESSION';
 	
 	var signup = exports.signup = function signup(user, callback) {
 	  return {
@@ -29446,6 +29459,12 @@
 	  return {
 	    type: RECEIVE_ERRORS,
 	    errors: errors
+	  };
+	};
+	
+	var checkSession = exports.checkSession = function checkSession() {
+	  return {
+	    type: CHECK_SESSION
 	  };
 	};
 
@@ -56023,23 +56042,23 @@
 	
 	var _session_middleware2 = _interopRequireDefault(_session_middleware);
 	
-	var _track_middleware = __webpack_require__(566);
+	var _track_middleware = __webpack_require__(565);
 	
 	var _track_middleware2 = _interopRequireDefault(_track_middleware);
 	
-	var _likes_middleware = __webpack_require__(568);
+	var _likes_middleware = __webpack_require__(567);
 	
 	var _likes_middleware2 = _interopRequireDefault(_likes_middleware);
 	
-	var _profile_middleware = __webpack_require__(570);
+	var _profile_middleware = __webpack_require__(569);
 	
 	var _profile_middleware2 = _interopRequireDefault(_profile_middleware);
 	
-	var _stream_middleware = __webpack_require__(572);
+	var _stream_middleware = __webpack_require__(571);
 	
 	var _stream_middleware2 = _interopRequireDefault(_stream_middleware);
 	
-	var _retrack_middleware = __webpack_require__(574);
+	var _retrack_middleware = __webpack_require__(573);
 	
 	var _retrack_middleware2 = _interopRequireDefault(_retrack_middleware);
 	
@@ -56061,7 +56080,7 @@
 	
 	var _session_actions = __webpack_require__(261);
 	
-	var _session_api_util = __webpack_require__(565);
+	var _session_api_util = __webpack_require__(575);
 	
 	var SessionMiddleware = function SessionMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -56100,6 +56119,13 @@
 	          action.callback();
 	          return next(action);
 	
+	        case _session_actions.CHECK_SESSION:
+	          checkSession(function (res) {
+	            if (res.status === 401) {
+	              dispatch((0, _session_actions.eraseCurrentUser)());
+	            }
+	          });
+	
 	        default:
 	          return next(action);
 	      }
@@ -56111,43 +56137,6 @@
 
 /***/ },
 /* 565 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var signup = exports.signup = function signup(user, callback) {
-	  $.ajax({
-	    url: '/api/users',
-	    method: 'POST',
-	    dataType: 'json',
-	    data: { user: user },
-	    success: callback
-	  });
-	};
-	
-	var signin = exports.signin = function signin(user, callback) {
-	  $.ajax({
-	    url: '/api/session',
-	    method: 'POST',
-	    dataType: 'json',
-	    data: { user: user },
-	    success: callback
-	  });
-	};
-	
-	var signout = exports.signout = function signout(callback) {
-	  $.ajax({
-	    url: 'api/session',
-	    method: 'DELETE',
-	    success: callback
-	  });
-	};
-
-/***/ },
-/* 566 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56158,7 +56147,7 @@
 	
 	var _track_actions = __webpack_require__(262);
 	
-	var _track_api_util = __webpack_require__(567);
+	var _track_api_util = __webpack_require__(566);
 	
 	var TrackMiddleware = function TrackMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -56194,7 +56183,7 @@
 	exports.default = TrackMiddleware;
 
 /***/ },
-/* 567 */
+/* 566 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56232,7 +56221,7 @@
 	};
 
 /***/ },
-/* 568 */
+/* 567 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56243,7 +56232,7 @@
 	
 	var _like_actions = __webpack_require__(267);
 	
-	var _likes_api_util = __webpack_require__(569);
+	var _likes_api_util = __webpack_require__(568);
 	
 	var LikesMiddleware = function LikesMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -56277,7 +56266,7 @@
 	exports.default = LikesMiddleware;
 
 /***/ },
-/* 569 */
+/* 568 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56314,7 +56303,7 @@
 	};
 
 /***/ },
-/* 570 */
+/* 569 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56327,7 +56316,7 @@
 	
 	var _stream_actions = __webpack_require__(271);
 	
-	var _user_api_util = __webpack_require__(571);
+	var _user_api_util = __webpack_require__(570);
 	
 	var ProfileMiddleware = function ProfileMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -56387,7 +56376,7 @@
 	exports.default = ProfileMiddleware;
 
 /***/ },
-/* 571 */
+/* 570 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56453,7 +56442,7 @@
 	};
 
 /***/ },
-/* 572 */
+/* 571 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56464,7 +56453,7 @@
 	
 	var _stream_actions = __webpack_require__(271);
 	
-	var _stream_api_util = __webpack_require__(573);
+	var _stream_api_util = __webpack_require__(572);
 	
 	var StreamMiddleware = function StreamMiddleware(_ref) {
 	  var getState = _ref.getState;
@@ -56493,7 +56482,7 @@
 	exports.default = StreamMiddleware;
 
 /***/ },
-/* 573 */
+/* 572 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56512,7 +56501,7 @@
 	};
 
 /***/ },
-/* 574 */
+/* 573 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -56523,7 +56512,7 @@
 	
 	var _track_actions = __webpack_require__(262);
 	
-	var _retrack_api_util = __webpack_require__(575);
+	var _retrack_api_util = __webpack_require__(574);
 	
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
@@ -56566,7 +56555,7 @@
 	exports.default = RetrackMiddleware;
 
 /***/ },
-/* 575 */
+/* 574 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56596,6 +56585,51 @@
 	  $.ajax({
 	    url: '/api/retracks/' + id,
 	    method: 'DELETE',
+	    success: callback
+	  });
+	};
+
+/***/ },
+/* 575 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var signup = exports.signup = function signup(user, callback) {
+	  $.ajax({
+	    url: '/api/users',
+	    method: 'POST',
+	    dataType: 'json',
+	    data: { user: user },
+	    success: callback
+	  });
+	};
+	
+	var signin = exports.signin = function signin(user, callback) {
+	  $.ajax({
+	    url: '/api/session',
+	    method: 'POST',
+	    dataType: 'json',
+	    data: { user: user },
+	    success: callback
+	  });
+	};
+	
+	var signout = exports.signout = function signout(callback) {
+	  $.ajax({
+	    url: 'api/session',
+	    method: 'DELETE',
+	    success: callback
+	  });
+	};
+	
+	var checkSession = exports.checkSession = function checkSession(callback) {
+	  $.ajax({
+	    url: 'api/session',
+	    method: 'GET',
 	    success: callback
 	  });
 	};

@@ -4,6 +4,7 @@ import {
   SIGNOUT,
   RECEIVE_CURRENT_USER,
   ERASE_CURRENT_USER,
+  CHECK_SESSION,
   receiveCurrentUser,
   eraseCurrentUser,
   receiveErrors } from '../actions/session_actions';
@@ -40,6 +41,13 @@ const SessionMiddleware = ({getState, dispatch}) => next => action => {
     case ERASE_CURRENT_USER:
       action.callback();
       return next(action);
+
+    case CHECK_SESSION:
+      checkSession((res) => {
+        if (res.status === 401){
+          dispatch(eraseCurrentUser());
+        }
+      });
 
     default:
       return next(action);

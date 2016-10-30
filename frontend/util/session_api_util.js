@@ -26,3 +26,11 @@ export const signout = (callback) => {
     success: callback
   });
 }
+
+export const checkSession = (callback) => {
+  $.ajax({
+    url: 'api/session',
+    method: 'GET',
+    success: callback
+  })
+}
