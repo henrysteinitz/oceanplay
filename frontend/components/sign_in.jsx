@@ -18,6 +18,7 @@ class SignIn extends React.Component{
     //bind methods
     this._updateInput = this._updateInput.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleGuest = this._handleGuest.bind(this);
   }
 
   _updateInput(field){
@@ -57,8 +58,22 @@ class SignIn extends React.Component{
     }
   }
 
+  _handleGuest(e){
+    e.preventDefault();
+    const success = (response) => hashHistory.push('/stream');
+    this.props.signin(
+      {
+        username: "guest",
+        password: "password"
+      }, success
+    );
+
+  }
+
   render(){
     let retype = "";
+    let signinClass = "";
+    let signupClass = "";
     let buttonText = 'Sign In';
     if (this.state.type === 'signup'){
       retype = <input type="password"
@@ -66,7 +81,12 @@ class SignIn extends React.Component{
                   className="standard-input"
                   onChange={this._updateInput('retypedPass')}/>
       buttonText = 'Sign Up';
+      signupClass = "selected";
+    } else {
+      signinClass = "selected";
     }
+
+
 
     return (
       <div className='signin-background'>
@@ -77,9 +97,9 @@ class SignIn extends React.Component{
             <div className="logo-text">play</div>
           </div>
           <div className="formSwitcher">
-            <a onClick={this._handleSwitch.bind(this, 'signin')}>Sign In</a>
+            <a className={signinClass} onClick={this._handleSwitch.bind(this, 'signin')}>Sign In</a>
               or
-            <a onClick={this._handleSwitch.bind(this, 'signup')}>Sign Up</a>
+            <a className={signupClass} onClick={this._handleSwitch.bind(this, 'signup')}>Sign Up</a>
           </div>
           <form className='signup-form' onSubmit={this._handleSubmit}>
             <span>
@@ -97,6 +117,7 @@ class SignIn extends React.Component{
               <button> {buttonText} </button>
             </span>
           </form>
+          <div className="guest-message" onClick={this._handleGuest}>or continue as guest</div>
         </div>
       </div>
     );

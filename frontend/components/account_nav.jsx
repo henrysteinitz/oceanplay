@@ -50,6 +50,9 @@ class AccountNav extends React.Component{
       }
       return (
         <div className="account-nav-container" ref="container">
+          <div className="menu-username">
+            {this.props.user.username}
+          </div>
           <nav className="account-nav">
             <img ref='profpic' src={this.props.user.profUrl} onLoad={this._autoResize}></img>
           </nav>

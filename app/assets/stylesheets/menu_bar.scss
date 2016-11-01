@@ -44,18 +44,19 @@
   display: inline-block;
   float: left;
   margin-top: 17px;
-  margin-right: 18px;
+  margin-right: 0px;
   letter-spacing: 2px;
 }
 
 .account-nav-container{
   float: right;
+  display: inline-block;
+  cursor: pointer;
   text-align: center;
-  width: 45px;
   height: 45px;
-  padding-left: 3px;
   padding-right: 0px;
-  padding-left: 20px;
+  margin-left: 30px;
+  margin-right: 9px;
 }
 
 .account-nav-container:hover{
@@ -63,13 +64,13 @@
 
 .account-nav{
   display: inline-block;
-  margin-top: 7px;
+  margin-top: 10px;
   margin-right: -10px;
-  width: 32px;
-  height: 32px;
+  width: 25px;
+  height: 25px;
   overflow: hidden;
   cursor: pointer;
-  border-radius: 16px;
+  border-radius: 12px;
 }
 .account-nav img{
   width: 100%;
@@ -100,6 +101,49 @@
 .link{
   color: white;
   text-decoration: none;
+}
+.menu-icon{
+
+  margin-left: 35px;
+}
+
+.search-icon{
+  margin-top: -5px;
+  width:23px;
+}
+
+.search-box{
+  float: left;
+  margin-top: 10px;
+  height:23px;
+  font-size: 12px;
+  width:220px;
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  padding-left: 8px;
+}
+
+.upload-icon{
+  margin-top: -10px;
+  width:31px;
+}
+.search-icon{
+  display: inline-block;
+  vertical-align: top;
+  float:left;
+  margin-top: 12px;
+  margin-left: -26px;
+  width:21px;
+}
+
+.menu-username{
+  display: inline-block;
+  font: 13px "Raleway";
+  vertical-align: top;
+  margin-top: 15px;
+  margin-right: 12px;
+  letter-spacing: .5px;
 }
 
 /*

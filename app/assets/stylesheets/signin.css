@@ -84,3 +84,19 @@
   color:rgb(50,20,220);
   cursor: pointer;
 }
+
+.guest-message{
+  margin-top: 16px;
+  width: 100%;
+  text-align: center;
+  font: 14px 'Raleway';
+  cursor: pointer;
+}
+
+.guest-message:hover{
+  color: rgb(50,20,220);
+}
+
+.selected{
+  color: black;
+}

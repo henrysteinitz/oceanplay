@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 class MenuBar extends React.Component{
   constructor(props){
     super(props);
-    this.state = {hidden: true, locked: false};
+    this.state = {hidden: true, locked: false, uploadX: false};
 
     this._releaseUploadForm = this._releaseUploadForm.bind(this);
     this._returnUploadForm = this._returnUploadForm.bind(this);
@@ -25,8 +25,8 @@ class MenuBar extends React.Component{
   }
 
   _releaseUploadForm(){
-
     if (!this.state.locked && this.state.hidden){
+      this.state.uploadX = true;
       console.log('asdfasd');
       this.setState({locked: true});
       $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
@@ -44,6 +44,7 @@ class MenuBar extends React.Component{
 
   _returnUploadForm(){
     if (!this.state.locked && !this.state.hidden){
+      this.state.uploadX = false;
       this.setState({locked: true});
       $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeOutUp');
       $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeOut');
@@ -63,21 +64,29 @@ class MenuBar extends React.Component{
 
   render(){
 
-    let uploadText = "Upload";
-    if (!this.state.hidden){
-      uploadText = "Cancel";
+    let uploadSrc = "upload.png";
+    if (this.state.uploadX){
+      uploadSrc = "delete.png";
     }
     return (
       <div className='menu-bar-wrapper'>
         <nav className="menu-bar" onClick={this._returnUploadForm}>
-          <Logo type="menu"/>
+          <Link to="/stream"><Logo type="menu"/></Link>
           <nav className="left-menu">
             <Link to={"/stream"} className="link">Stream</Link>
             <Link to={"/library"} className="link">Library</Link>
           </nav>
           <nav className="right-menu">
             <AccountNav />
-            <Link className="link" onClick={this._releaseUploadForm}>{uploadText}</Link>
+            {/*
+            <input className="search-box" type="text" >
+            </input>
+            <img className="search-icon" src="search.png" />
+            */}
+            <Link className="link" onClick={this._releaseUploadForm}>
+                <img className="menu-icon upload-icon" src={uploadSrc}></img>
+            </Link>
+
             {/*
               <Link className="link" onClick={this._releaseUploadForm}>
                 <img src="/upload.png" className='menu-icon' />

@@ -28976,7 +28976,7 @@
 	
 	    var _this = _possibleConstructorReturn(this, (MenuBar.__proto__ || Object.getPrototypeOf(MenuBar)).call(this, props));
 	
-	    _this.state = { hidden: true, locked: false };
+	    _this.state = { hidden: true, locked: false, uploadX: false };
 	
 	    _this._releaseUploadForm = _this._releaseUploadForm.bind(_this);
 	    _this._returnUploadForm = _this._returnUploadForm.bind(_this);
@@ -29001,6 +29001,7 @@
 	      var _this2 = this;
 	
 	      if (!this.state.locked && this.state.hidden) {
+	        this.state.uploadX = true;
 	        console.log('asdfasd');
 	        this.setState({ locked: true });
 	        $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
@@ -29021,6 +29022,7 @@
 	      var _this3 = this;
 	
 	      if (!this.state.locked && !this.state.hidden) {
+	        this.state.uploadX = false;
 	        this.setState({ locked: true });
 	        $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeOutUp');
 	        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeOut');
@@ -29041,9 +29043,9 @@
 	    key: 'render',
 	    value: function render() {
 	
-	      var uploadText = "Upload";
-	      if (!this.state.hidden) {
-	        uploadText = "Cancel";
+	      var uploadSrc = "upload.png";
+	      if (this.state.uploadX) {
+	        uploadSrc = "delete.png";
 	      }
 	      return _react2.default.createElement(
 	        'div',
@@ -29051,7 +29053,11 @@
 	        _react2.default.createElement(
 	          'nav',
 	          { className: 'menu-bar', onClick: this._returnUploadForm },
-	          _react2.default.createElement(_logo2.default, { type: 'menu' }),
+	          _react2.default.createElement(
+	            _reactRouter.Link,
+	            { to: '/stream' },
+	            _react2.default.createElement(_logo2.default, { type: 'menu' })
+	          ),
 	          _react2.default.createElement(
 	            'nav',
 	            { className: 'left-menu' },
@@ -29073,7 +29079,7 @@
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { className: 'link', onClick: this._releaseUploadForm },
-	              uploadText
+	              _react2.default.createElement('img', { className: 'menu-icon upload-icon', src: uploadSrc })
 	            )
 	          )
 	        ),
@@ -29352,6 +29358,11 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'account-nav-container', ref: 'container' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'menu-username' },
+	          this.props.user.username
+	        ),
 	        _react2.default.createElement(
 	          'nav',
 	          { className: 'account-nav' },
@@ -35201,6 +35212,7 @@
 	    //bind methods
 	    _this._updateInput = _this._updateInput.bind(_this);
 	    _this._handleSubmit = _this._handleSubmit.bind(_this);
+	    _this._handleGuest = _this._handleGuest.bind(_this);
 	    return _this;
 	  }
 	
@@ -35241,9 +35253,23 @@
 	      }
 	    }
 	  }, {
+	    key: '_handleGuest',
+	    value: function _handleGuest(e) {
+	      e.preventDefault();
+	      var success = function success(response) {
+	        return _reactRouter.hashHistory.push('/stream');
+	      };
+	      this.props.signin({
+	        username: "guest",
+	        password: "password"
+	      }, success);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var retype = "";
+	      var signinClass = "";
+	      var signupClass = "";
 	      var buttonText = 'Sign In';
 	      if (this.state.type === 'signup') {
 	        retype = _react2.default.createElement('input', { type: 'password',
@@ -35251,6 +35277,9 @@
 	          className: 'standard-input',
 	          onChange: this._updateInput('retypedPass') });
 	        buttonText = 'Sign Up';
+	        signupClass = "selected";
+	      } else {
+	        signinClass = "selected";
 	      }
 	
 	      return _react2.default.createElement(
@@ -35279,13 +35308,13 @@
 	            { className: 'formSwitcher' },
 	            _react2.default.createElement(
 	              'a',
-	              { onClick: this._handleSwitch.bind(this, 'signin') },
+	              { className: signinClass, onClick: this._handleSwitch.bind(this, 'signin') },
 	              'Sign In'
 	            ),
 	            'or',
 	            _react2.default.createElement(
 	              'a',
-	              { onClick: this._handleSwitch.bind(this, 'signup') },
+	              { className: signupClass, onClick: this._handleSwitch.bind(this, 'signup') },
 	              'Sign Up'
 	            )
 	          ),
@@ -35318,6 +35347,11 @@
 	                ' '
 	              )
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'guest-message', onClick: this._handleGuest },
+	            'or continue as guest'
 	          )
 	        )
 	      );
