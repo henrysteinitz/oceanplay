@@ -29,21 +29,22 @@
 }
 .logo-text{
   color: rgb(26,26,26);
-  font: 90px 'Raleway';
-  font-weight: 100;
+  font: 110px 'Josefin Sans';
+  font-weight: 200;
   display: inline-block;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   margin-left: 13px;
   vertical-align: bottom;
-  letter-spacing: 1.0px;
+  letter-spacing: .5px;
 }
 .bold{
-  font-weight: 400;
+  font-weight: 300;
+  margin-right: -12.0px;
 }
 .logo-container{
   width: 100%;
   text-align: center;
-  margin-bottom: 34px;
+  margin-bottom: 18px;
 }
 .inner-logo-container{
   position: relative;

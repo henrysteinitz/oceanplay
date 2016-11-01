@@ -30780,6 +30780,15 @@
 	              return _this2.props.loadStream('popular');
 	            } },
 	          "Popular"
+	        ),
+	        _react2.default.createElement(
+	          "span",
+	          { className: "tab",
+	            ref: "discover",
+	            onClick: function onClick() {
+	              return _this2.props.loadStream('discover');
+	            } },
+	          "Discover"
 	        )
 	      );
 	    }

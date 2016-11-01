@@ -19,6 +19,11 @@ class MainStreamTabs extends React.Component{
           onClick={() => this.props.loadStream('popular')}>
             Popular
         </span>
+        <span className="tab"
+          ref='discover'
+          onClick={() => this.props.loadStream('discover')}>
+            Discover
+        </span>
       </div>
     );
   }
