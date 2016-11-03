@@ -79,15 +79,10 @@ class MenuBar extends React.Component{
     const searchString = e.currentTarget.value;
     if (searchString === "") {
       this._returnSearch()
-      //clearTimeout(this.state.lastSearch);
       this.props.clearResults();
     } else {
       this._releaseSearch();
-      //clearTimeout(this.state.lastSearch);
       this.props.search(searchString, () => {});
-      //this.state.lastSearch = setTimeout(() => {
-      //  this.props.search(searchString, () => {});
-      //}, 1000);
     }
   }
 
@@ -175,14 +170,6 @@ class MenuBar extends React.Component{
                 <img className="menu-icon upload-icon" src={uploadSrc}></img>
             </Link>
 
-            {/*
-              <Link className="link" onClick={this._releaseUploadForm}>
-                <img src="/upload.png" className='menu-icon' />
-              </Link>
-              <Link className="link">
-                <img src="/search.png" className='menu-icon' />
-              </Link>
-            */}
           </nav>
         </nav>
 

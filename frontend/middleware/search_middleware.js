@@ -5,10 +5,8 @@ const SearchMiddleware = ({getState, dispatch}) => next => action => {
   switch (action.type) {
     case SEARCH:
       return search(action.string, (res) => {
-        console.log(res.artists.length);
         dispatch(receiveResults(res))
-        //action.callback()
-
+        action.callback();
       });
     default:
       return next(action);

@@ -29063,15 +29063,10 @@
 	      var searchString = e.currentTarget.value;
 	      if (searchString === "") {
 	        this._returnSearch();
-	        //clearTimeout(this.state.lastSearch);
 	        this.props.clearResults();
 	      } else {
 	        this._releaseSearch();
-	        //clearTimeout(this.state.lastSearch);
 	        this.props.search(searchString, function () {});
-	        //this.state.lastSearch = setTimeout(() => {
-	        //  this.props.search(searchString, () => {});
-	        //}, 1000);
 	      }
 	    }
 	  }, {
@@ -30049,11 +30044,9 @@
 	    key: '_autoResize',
 	    value: function _autoResize(e) {
 	      if (e.currentTarget.naturalWidth > e.currentTarget.naturalHeight) {
-	        console.log('sasd');
 	        $(e.currentTarget).height('100%');
 	        $(e.currentTarget).width('auto');
 	      } else {
-	        console.log('sasd');
 	        $(e.currentTarget).height('auto');
 	        $(e.currentTarget).width('100%');
 	      }
@@ -57035,9 +57028,8 @@
 	      switch (action.type) {
 	        case _search_actions.SEARCH:
 	          return (0, _search_api_util.search)(action.string, function (res) {
-	            console.log(res.artists.length);
 	            dispatch((0, _search_actions.receiveResults)(res));
-	            //action.callback()
+	            action.callback();
 	          });
 	        default:
 	          return next(action);

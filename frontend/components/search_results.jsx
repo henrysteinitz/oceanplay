@@ -11,11 +11,9 @@ class SearchResults extends React.Component {
 
   _autoResize(e){
     if (e.currentTarget.naturalWidth > e.currentTarget.naturalHeight){
-      console.log('sasd')
       $(e.currentTarget).height('100%');
       $(e.currentTarget).width('auto');
     } else {
-      console.log('sasd')
       $(e.currentTarget).height('auto');
       $(e.currentTarget).width('100%');
     }
