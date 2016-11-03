@@ -5,6 +5,7 @@ import LikesMiddleware from './likes_middleware';
 import ProfileMiddleware from './profile_middleware';
 import StreamMiddleware from './stream_middleware';
 import RetrackMiddleware from './retrack_middleware';
+import SearchMiddleware from './search_middleware';
 
 const RootMiddleware = applyMiddleware(
   SessionMiddleware,
@@ -12,7 +13,8 @@ const RootMiddleware = applyMiddleware(
   LikesMiddleware,
   ProfileMiddleware,
   StreamMiddleware,
-  RetrackMiddleware
+  RetrackMiddleware,
+  SearchMiddleware
 );
 
 export default RootMiddleware;

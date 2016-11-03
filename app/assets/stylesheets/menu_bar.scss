@@ -121,7 +121,8 @@
   border: none;
   outline: none;
   border-radius: 12px;
-  padding-left: 8px;
+  padding-left: 10px;
+  padding-right: 30px;
 }
 
 .upload-icon{
@@ -144,6 +145,65 @@
   margin-top: 15px;
   margin-right: 12px;
   letter-spacing: .5px;
+}
+
+.search-results{
+  position: fixed;
+  top:45px;
+  right: 218px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 500px;
+  overflow: scroll;
+  color: white;
+  font: 16px "Raleway";
+  margin: auto;
+  background: rgb(19,19,19);
+  z-index: 99;
+  padding: 20px;
+  visibility: hidden;
+}
+
+.search-header{
+  font-size: 30px;
+}
+
+.result{
+  margin-top: 10px;
+  padding-top: 4px;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+.result:hover{
+  background: white;
+  color:black;
+}
+
+.result-img img{
+  position: relative;
+  width: 100%;
+}
+
+.result-img{
+  display: inline-block;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+}
+
+.result-link{
+  color: white;
+  text-decoration: none;
+}
+.result-text{
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
+  margin-top: 8px;
+}
+.artist-img{
+  border-radius: 18px;
 }
 
 /*

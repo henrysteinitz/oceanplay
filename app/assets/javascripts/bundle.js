@@ -28954,11 +28954,17 @@
 	
 	var _upload_form2 = _interopRequireDefault(_upload_form);
 	
+	var _search_results = __webpack_require__(576);
+	
+	var _search_results2 = _interopRequireDefault(_search_results);
+	
 	var _reactRouter = __webpack_require__(196);
 	
 	var _reactRedux = __webpack_require__(173);
 	
 	var _track_actions = __webpack_require__(262);
+	
+	var _search_actions = __webpack_require__(579);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28976,11 +28982,20 @@
 	
 	    var _this = _possibleConstructorReturn(this, (MenuBar.__proto__ || Object.getPrototypeOf(MenuBar)).call(this, props));
 	
-	    _this.state = { hidden: true, locked: false, uploadX: false };
+	    _this.state = {
+	      hidden: true,
+	      searchHidden: true,
+	      locked: false,
+	      uploadX: false,
+	      lastSearch: null
+	    };
 	
 	    _this._releaseUploadForm = _this._releaseUploadForm.bind(_this);
 	    _this._returnUploadForm = _this._returnUploadForm.bind(_this);
 	    _this._toggleUploadForm = _this._toggleUploadForm.bind(_this);
+	    _this._handleSearch = _this._handleSearch.bind(_this);
+	    _this._releaseSearch = _this._releaseSearch.bind(_this);
+	    _this._returnSearch = _this._returnSearch.bind(_this);
 	    return _this;
 	  }
 	
@@ -29037,6 +29052,60 @@
 	      }
 	    }
 	  }, {
+	    key: '_handleSearch',
+	    value: function _handleSearch(e) {
+	
+	      var searchString = e.currentTarget.value;
+	      if (searchString === "") {
+	        this._returnSearch();
+	        //clearTimeout(this.state.lastSearch);
+	        this.props.clearResults();
+	      } else {
+	        this._releaseSearch();
+	        //clearTimeout(this.state.lastSearch);
+	        this.props.search(searchString, function () {});
+	        //this.state.lastSearch = setTimeout(() => {
+	        //  this.props.search(searchString, () => {});
+	        //}, 1000);
+	      }
+	    }
+	  }, {
+	    key: '_releaseSearch',
+	    value: function _releaseSearch() {
+	      var _this4 = this;
+	
+	      if (this.state.searchHidden && !this.state.locked) {
+	        this.state.locked = true;
+	        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
+	        $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
+	        $(this.refs.searchResults.refs.searchResults).addClass('animated fadeInDown');
+	        $(this.refs.searchResults.refs.searchResults).css('visibility', 'visible');
+	        setTimeout(function () {
+	          $(_this4.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
+	          $(_this4.refs.uploadForm.refs.searchResults).removeClass('animated fadeInDown');
+	          _this4.setState({ searchHidden: false, locked: false });
+	        }, 570);
+	      }
+	    }
+	  }, {
+	    key: '_returnSearch',
+	    value: function _returnSearch() {
+	      var _this5 = this;
+	
+	      if (!this.state.searchHidden) {
+	        this.state.locked = true;
+	        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeOut');
+	        $(this.refs.searchResults.refs.searchResults).addClass('animated fadeOutUp');
+	        setTimeout(function () {
+	          $(_this5.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeOut');
+	          $(_this5.refs.uploadForm.refs.uploadBackground).css('visibility', 'hidden');
+	          $(_this5.refs.searchResults.refs.searchResults).removeClass('animated fadeOutUp');
+	          $(_this5.refs.searchResults.refs.searchResults).css('visibility', 'hidden');
+	          _this5.setState({ searchHidden: true, locked: false });
+	        }, 570);
+	      }
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {}
 	  }, {
@@ -29047,6 +29116,17 @@
 	      if (this.state.uploadX) {
 	        uploadSrc = "delete.png";
 	      }
+	
+	      var searchArtists = [];
+	      if (this.props.searchResults.artists) {
+	        searchArtists = this.props.searchResults.artists;
+	      }
+	
+	      var searchTracks = [];
+	      if (this.props.searchResults.tracks) {
+	        searchTracks = this.props.searchResults.tracks;
+	      }
+	
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'menu-bar-wrapper' },
@@ -29076,6 +29156,12 @@
 	            'nav',
 	            { className: 'right-menu' },
 	            _react2.default.createElement(_account_nav2.default, null),
+	            _react2.default.createElement('input', {
+	              className: 'search-box',
+	              type: 'text',
+	              onChange: this._handleSearch,
+	              onFocus: this._handleSearch }),
+	            _react2.default.createElement('img', { className: 'search-icon', src: 'search.png' }),
 	            _react2.default.createElement(
 	              _reactRouter.Link,
 	              { className: 'link', onClick: this._releaseUploadForm },
@@ -29083,9 +29169,16 @@
 	            )
 	          )
 	        ),
+	        _react2.default.createElement(_search_results2.default, {
+	          ref: 'searchResults',
+	          artists: searchArtists,
+	          tracks: searchTracks,
+	          returnSearch: this._returnSearch,
+	          releaseSearch: this._releaseSearch }),
 	        _react2.default.createElement(_upload_form2.default, {
 	          ref: 'uploadForm',
 	          returnUploadForm: this._returnUploadForm,
+	          returnSearch: this._returnSearch,
 	          uploadTrack: this.props.uploadTrack,
 	          currentUser: this.props.currentUser,
 	          receiveTrack: this.props.receiveTrack,
@@ -29105,9 +29198,11 @@
 	  var session = _ref.session;
 	  var profile = _ref.profile;
 	  var stream = _ref.stream;
+	  var search = _ref.search;
 	  return {
 	    currentUser: session.user,
 	    streamKind: stream.kind,
+	    searchResults: search.results,
 	    profile: profile
 	  };
 	};
@@ -29119,6 +29214,12 @@
 	    },
 	    receiveTrack: function receiveTrack(track) {
 	      dispatch((0, _track_actions.receiveTrackForStream)(track));
+	    },
+	    search: function search(string, callback) {
+	      return dispatch((0, _search_actions.search)(string, callback));
+	    },
+	    clearResults: function clearResults() {
+	      return dispatch((0, _search_actions.clearResults)());
 	    }
 	  };
 	};
@@ -29706,6 +29807,7 @@
 	    _this._showTrackInfo = _this._showTrackInfo.bind(_this);
 	    _this._fadeOut = _this._fadeOut.bind(_this);
 	    _this._fadeIn = _this._fadeIn.bind(_this);
+	    _this._returnAll = _this._returnAll.bind(_this);
 	    return _this;
 	  }
 	
@@ -29813,6 +29915,12 @@
 	      $(this.refs.uploadButton).prop('disabled', false);
 	    }
 	  }, {
+	    key: '_returnAll',
+	    value: function _returnAll() {
+	      this.props.returnUploadForm();
+	      this.props.returnSearch();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -29820,7 +29928,7 @@
 	        { className: 'upload-container' },
 	        _react2.default.createElement('div', { className: 'upload-background',
 	          ref: 'uploadBackground',
-	          onClick: this.props.returnUploadForm }),
+	          onClick: this._returnAll }),
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'upload-sheet', ref: 'uploadSheet' },
@@ -55736,6 +55844,10 @@
 	
 	var _retrack_reducer2 = _interopRequireDefault(_retrack_reducer);
 	
+	var _search_reducer = __webpack_require__(577);
+	
+	var _search_reducer2 = _interopRequireDefault(_search_reducer);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.combineReducers)({
@@ -55745,7 +55857,8 @@
 	  likes: _likes_reducer2.default,
 	  nowPlaying: _now_playing_reducer2.default,
 	  track: _track_reducer2.default,
-	  retracks: _retrack_reducer2.default
+	  retracks: _retrack_reducer2.default,
+	  search: _search_reducer2.default
 	});
 
 /***/ },
@@ -56105,9 +56218,13 @@
 	
 	var _retrack_middleware2 = _interopRequireDefault(_retrack_middleware);
 	
+	var _search_middleware = __webpack_require__(578);
+	
+	var _search_middleware2 = _interopRequireDefault(_search_middleware);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var RootMiddleware = (0, _redux.applyMiddleware)(_session_middleware2.default, _track_middleware2.default, _likes_middleware2.default, _profile_middleware2.default, _stream_middleware2.default, _retrack_middleware2.default);
+	var RootMiddleware = (0, _redux.applyMiddleware)(_session_middleware2.default, _track_middleware2.default, _likes_middleware2.default, _profile_middleware2.default, _stream_middleware2.default, _retrack_middleware2.default, _search_middleware2.default);
 	
 	exports.default = RootMiddleware;
 
@@ -56674,6 +56791,262 @@
 	    url: 'api/session',
 	    method: 'GET',
 	    success: callback
+	  });
+	};
+
+/***/ },
+/* 576 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(196);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var SearchResults = function (_React$Component) {
+	  _inherits(SearchResults, _React$Component);
+	
+	  function SearchResults(props) {
+	    _classCallCheck(this, SearchResults);
+	
+	    var _this = _possibleConstructorReturn(this, (SearchResults.__proto__ || Object.getPrototypeOf(SearchResults)).call(this, props));
+	
+	    _this._autoResize.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(SearchResults, [{
+	    key: '_autoResize',
+	    value: function _autoResize(e) {
+	      if (e.currentTarget.naturalWidth > e.currentTarget.naturalHeight) {
+	        console.log('sasd');
+	        $(e.currentTarget).height('100%');
+	        $(e.currentTarget).width('auto');
+	      } else {
+	        console.log('sasd');
+	        $(e.currentTarget).height('auto');
+	        $(e.currentTarget).width('100%');
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      var artistTags = this.props.artists.map(function (artist) {
+	        return _react2.default.createElement(
+	          _reactRouter.Link,
+	          { className: 'result-link', to: 'profile/' + artist.id, onClick: _this2.props.returnSearch },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'result' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'result-img artist-img' },
+	              _react2.default.createElement('img', { onLoad: _this2._autoResize, src: artist.profUrl })
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'result-text' },
+	              artist.username
+	            )
+	          )
+	        );
+	      });
+	
+	      var trackTags = this.props.tracks.map(function (track) {
+	        return _react2.default.createElement(
+	          _reactRouter.Link,
+	          { className: 'result-link', to: 'track/' + track.id, onClick: _this2.props.returnSearch },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'result' },
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'result-img' },
+	              _react2.default.createElement('img', { onLoad: _this2._autoResize, src: track.artUrl })
+	            ),
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'result-text' },
+	              track.title
+	            )
+	          )
+	        );
+	      });
+	
+	      var artistsHeader = "";
+	      if (artistTags.length > 0) {
+	        artistsHeader = _react2.default.createElement(
+	          'div',
+	          { className: 'search-header' },
+	          ' Artists '
+	        );
+	      }
+	
+	      var tracksHeader = "";
+	      if (trackTags.length > 0) {
+	        tracksHeader = _react2.default.createElement(
+	          'div',
+	          { className: 'search-header' },
+	          ' Tracks '
+	        );
+	      }
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'search-results', ref: 'searchResults' },
+	        artistsHeader,
+	        artistTags,
+	        tracksHeader,
+	        trackTags
+	      );
+	    }
+	  }]);
+	
+	  return SearchResults;
+	}(_react2.default.Component);
+	
+	exports.default = SearchResults;
+
+/***/ },
+/* 577 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _search_actions = __webpack_require__(579);
+	
+	var _merge = __webpack_require__(277);
+	
+	var _merge2 = _interopRequireDefault(_merge);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var SessionReducer = function SessionReducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { results: {} };
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case _search_actions.RECEIVE_RESULTS:
+	      return { results: action.results };
+	
+	    case _search_actions.CLEAR_RESULTS:
+	      return { results: {} };
+	
+	    default:
+	      return state;
+	  }
+	};
+	
+	exports.default = SessionReducer;
+
+/***/ },
+/* 578 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _search_actions = __webpack_require__(579);
+	
+	var _search_api_util = __webpack_require__(580);
+	
+	var SearchMiddleware = function SearchMiddleware(_ref) {
+	  var getState = _ref.getState;
+	  var dispatch = _ref.dispatch;
+	  return function (next) {
+	    return function (action) {
+	      switch (action.type) {
+	        case _search_actions.SEARCH:
+	          return (0, _search_api_util.search)(action.string, function (res) {
+	            console.log(res.artists.length);
+	            dispatch((0, _search_actions.receiveResults)(res));
+	            //action.callback()
+	          });
+	        default:
+	          return next(action);
+	      }
+	    };
+	  };
+	};
+	
+	exports.default = SearchMiddleware;
+
+/***/ },
+/* 579 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var SEARCH = exports.SEARCH = "SEARCH";
+	var RECEIVE_RESULTS = exports.RECEIVE_RESULTS = "RECEIVE_RESULTS";
+	var CLEAR_RESULTS = exports.CLEAR_RESULTS = "CLEAR_RESULTS";
+	
+	var search = exports.search = function search(string, callback) {
+	  return {
+	    type: SEARCH,
+	    string: string,
+	    callback: callback
+	  };
+	};
+	
+	var receiveResults = exports.receiveResults = function receiveResults(results) {
+	  return {
+	    type: RECEIVE_RESULTS,
+	    results: results
+	  };
+	};
+	
+	var clearResults = exports.clearResults = function clearResults() {
+	  return {
+	    type: CLEAR_RESULTS
+	  };
+	};
+
+/***/ },
+/* 580 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var search = exports.search = function search(string, callback) {
+	  $.ajax({
+	    url: '/api/search/',
+	    method: 'GET',
+	    success: callback,
+	    dataType: 'json',
+	    data: { search: { string: string } }
 	  });
 	};
 

@@ -6,6 +6,7 @@ import LikesReducer from './likes_reducer';
 import NowPlayingReducer from './now_playing_reducer';
 import TrackReducer from './track_reducer';
 import RetrackReducer from './retrack_reducer';
+import SearchReducer from './search_reducer';
 
 export default combineReducers({
   session: SessionReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   likes: LikesReducer,
   nowPlaying: NowPlayingReducer,
   track: TrackReducer,
-  retracks: RetrackReducer
+  retracks: RetrackReducer,
+  search: SearchReducer
 });

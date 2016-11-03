@@ -22,6 +22,7 @@ class UploadForm extends React.Component{
     this._showTrackInfo = this._showTrackInfo.bind(this);
     this._fadeOut = this._fadeOut.bind(this);
     this._fadeIn = this._fadeIn.bind(this);
+    this._returnAll = this._returnAll.bind(this);
   }
 
   _handleInput(type){
@@ -112,12 +113,17 @@ class UploadForm extends React.Component{
     $(this.refs.uploadButton).prop('disabled', false);
   }
 
+  _returnAll(){
+    this.props.returnUploadForm();
+    this.props.returnSearch();
+  }
+
   render(){
     return (
       <div className='upload-container'>
         <div className='upload-background'
           ref="uploadBackground"
-          onClick={this.props.returnUploadForm}>
+          onClick={this._returnAll}>
         </div>
         <div className="upload-sheet" ref='uploadSheet'>
           <img className="upload-loading-icon"
