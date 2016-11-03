@@ -100,7 +100,7 @@ class Api::StreamsController < ApplicationController
       @stream = @stream.map { |like| like.track }
 
     elsif stream_params[:tab] == 'discover'
-      @stream = Track.all
+      @stream = Track.all.order('created_at DESC')
     end
     render :show
   end
