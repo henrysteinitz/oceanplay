@@ -1,8 +1,8 @@
 class Api::SearchController < ApplicationController
 
   def index
-    @artists = User.where("username like ?", "%#{search_params[:string]}%")
-    @tracks = Track.where("title like ?", "%#{search_params[:string]}%")
+    @artists = User.where("lower(username) like ?", "%#{search_params[:string].downcase}%")
+    @tracks = Track.where("lower(title) like ?", "%#{search_params[:string].downcase}%")
     render :index
   end
 
