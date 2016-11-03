@@ -22,6 +22,7 @@ class MenuBar extends React.Component{
     this._handleSearch = this._handleSearch.bind(this);
     this._releaseSearch = this._releaseSearch.bind(this);
     this._returnSearch = this._returnSearch.bind(this);
+    this._returnAll = this._returnAll.bind(this);
   }
 
   _toggleUploadForm(){
@@ -35,20 +36,24 @@ class MenuBar extends React.Component{
   }
 
   _releaseUploadForm(){
-    if (!this.state.locked && this.state.hidden){
-      this.state.uploadX = true;
-      console.log('asdfasd');
-      this.setState({locked: true});
-      $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
-      $(this.refs.uploadForm.refs.uploadSheet).css('visibility', 'visible');
-      $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
-      $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
+    if(!this.state.searchHidden){
+      this._returnSearch();
+    } else {
+      if (!this.state.locked && this.state.hidden){
+        this.state.uploadX = true;
+        console.log('asdfasd');
+        this.setState({locked: true});
+        $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
+        $(this.refs.uploadForm.refs.uploadSheet).css('visibility', 'visible');
+        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
+        $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
 
-      setTimeout(() => {
-        $(this.refs.uploadForm.refs.uploadSheet).removeClass('animated fadeInDown');
-        $(this.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
-        this.setState({hidden: false, locked: false});
-      }, 570);
+        setTimeout(() => {
+          $(this.refs.uploadForm.refs.uploadSheet).removeClass('animated fadeInDown');
+          $(this.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
+          this.setState({hidden: false, locked: false});
+        }, 570);
+      }
     }
   }
 
@@ -87,17 +92,21 @@ class MenuBar extends React.Component{
   }
 
   _releaseSearch(){
-    if (this.state.searchHidden && !this.state.locked){
-      this.state.locked = true;
-      $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
-      $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
-      $(this.refs.searchResults.refs.searchResults).addClass('animated fadeInDown');
-      $(this.refs.searchResults.refs.searchResults).css('visibility', 'visible');
-      setTimeout(() => {
-        $(this.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
-        $(this.refs.uploadForm.refs.searchResults).removeClass('animated fadeInDown');
-        this.setState({searchHidden: false, locked: false});
-      }, 570);
+    if(!this.state.hidden){
+      this._returnUploadForm();
+    } else {
+      if (this.state.searchHidden && !this.state.locked){
+        this.state.locked = true;
+        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
+        $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
+        $(this.refs.searchResults.refs.searchResults).addClass('animated fadeInDown');
+        $(this.refs.searchResults.refs.searchResults).css('visibility', 'visible');
+        setTimeout(() => {
+          $(this.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
+          $(this.refs.uploadForm.refs.searchResults).removeClass('animated fadeInDown');
+          this.setState({searchHidden: false, locked: false});
+        }, 570);
+      }
     }
   }
 
@@ -113,6 +122,13 @@ class MenuBar extends React.Component{
         $(this.refs.searchResults.refs.searchResults).css('visibility', 'hidden');
         this.setState({searchHidden: true, locked: false});
       }, 570);
+    }
+  }
+
+  _returnAll(e){
+    if (!e.target.className.includes("search-box") || this.state.searchHidden){
+      this._returnUploadForm();
+      this._returnSearch();
     }
   }
 
@@ -138,7 +154,7 @@ class MenuBar extends React.Component{
 
     return (
       <div className='menu-bar-wrapper'>
-        <nav className="menu-bar" onClick={this._returnUploadForm}>
+        <nav className="menu-bar" onClick={this._returnAll}>
           <Link to="/stream"><Logo type="menu"/></Link>
           <nav className="left-menu">
             <Link to={"/stream"} className="link">Stream</Link>

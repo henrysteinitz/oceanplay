@@ -98,6 +98,9 @@ class Api::StreamsController < ApplicationController
           created_at DESC
       SQL
       @stream = @stream.map { |like| like.track }
+
+    elsif stream_params[:tab] == 'discover'
+      @stream = Track.all
     end
     render :show
   end

@@ -28996,6 +28996,7 @@
 	    _this._handleSearch = _this._handleSearch.bind(_this);
 	    _this._releaseSearch = _this._releaseSearch.bind(_this);
 	    _this._returnSearch = _this._returnSearch.bind(_this);
+	    _this._returnAll = _this._returnAll.bind(_this);
 	    return _this;
 	  }
 	
@@ -29015,20 +29016,24 @@
 	    value: function _releaseUploadForm() {
 	      var _this2 = this;
 	
-	      if (!this.state.locked && this.state.hidden) {
-	        this.state.uploadX = true;
-	        console.log('asdfasd');
-	        this.setState({ locked: true });
-	        $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
-	        $(this.refs.uploadForm.refs.uploadSheet).css('visibility', 'visible');
-	        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
-	        $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
+	      if (!this.state.searchHidden) {
+	        this._returnSearch();
+	      } else {
+	        if (!this.state.locked && this.state.hidden) {
+	          this.state.uploadX = true;
+	          console.log('asdfasd');
+	          this.setState({ locked: true });
+	          $(this.refs.uploadForm.refs.uploadSheet).addClass('animated fadeInDown');
+	          $(this.refs.uploadForm.refs.uploadSheet).css('visibility', 'visible');
+	          $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
+	          $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
 	
-	        setTimeout(function () {
-	          $(_this2.refs.uploadForm.refs.uploadSheet).removeClass('animated fadeInDown');
-	          $(_this2.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
-	          _this2.setState({ hidden: false, locked: false });
-	        }, 570);
+	          setTimeout(function () {
+	            $(_this2.refs.uploadForm.refs.uploadSheet).removeClass('animated fadeInDown');
+	            $(_this2.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
+	            _this2.setState({ hidden: false, locked: false });
+	          }, 570);
+	        }
 	      }
 	    }
 	  }, {
@@ -29074,17 +29079,21 @@
 	    value: function _releaseSearch() {
 	      var _this4 = this;
 	
-	      if (this.state.searchHidden && !this.state.locked) {
-	        this.state.locked = true;
-	        $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
-	        $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
-	        $(this.refs.searchResults.refs.searchResults).addClass('animated fadeInDown');
-	        $(this.refs.searchResults.refs.searchResults).css('visibility', 'visible');
-	        setTimeout(function () {
-	          $(_this4.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
-	          $(_this4.refs.uploadForm.refs.searchResults).removeClass('animated fadeInDown');
-	          _this4.setState({ searchHidden: false, locked: false });
-	        }, 570);
+	      if (!this.state.hidden) {
+	        this._returnUploadForm();
+	      } else {
+	        if (this.state.searchHidden && !this.state.locked) {
+	          this.state.locked = true;
+	          $(this.refs.uploadForm.refs.uploadBackground).addClass('animated fadeIn');
+	          $(this.refs.uploadForm.refs.uploadBackground).css('visibility', 'visible');
+	          $(this.refs.searchResults.refs.searchResults).addClass('animated fadeInDown');
+	          $(this.refs.searchResults.refs.searchResults).css('visibility', 'visible');
+	          setTimeout(function () {
+	            $(_this4.refs.uploadForm.refs.uploadBackground).removeClass('animated fadeIn');
+	            $(_this4.refs.uploadForm.refs.searchResults).removeClass('animated fadeInDown');
+	            _this4.setState({ searchHidden: false, locked: false });
+	          }, 570);
+	        }
 	      }
 	    }
 	  }, {
@@ -29103,6 +29112,14 @@
 	          $(_this5.refs.searchResults.refs.searchResults).css('visibility', 'hidden');
 	          _this5.setState({ searchHidden: true, locked: false });
 	        }, 570);
+	      }
+	    }
+	  }, {
+	    key: '_returnAll',
+	    value: function _returnAll(e) {
+	      if (!e.target.className.includes("search-box") || this.state.searchHidden) {
+	        this._returnUploadForm();
+	        this._returnSearch();
 	      }
 	    }
 	  }, {
@@ -29132,7 +29149,7 @@
 	        { className: 'menu-bar-wrapper' },
 	        _react2.default.createElement(
 	          'nav',
-	          { className: 'menu-bar', onClick: this._returnUploadForm },
+	          { className: 'menu-bar', onClick: this._returnAll },
 	          _react2.default.createElement(
 	            _reactRouter.Link,
 	            { to: '/stream' },
